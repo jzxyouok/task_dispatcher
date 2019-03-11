@@ -1,0 +1,3 @@
+<!--pages/market/market.wxml-->
+<text>任务市场页面</text>
+ <i-button type="primary" bind:click="handleClick">iview button这是一个按钮        </i-button>
