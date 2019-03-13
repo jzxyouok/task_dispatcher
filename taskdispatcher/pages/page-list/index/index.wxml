@@ -1,0 +1,7 @@
+<!--pages/page-list/index/index.wxml-->
+<i-panel title="原型页面">
+    <i-cell-group>
+        <i-cell title="任务详情" is-link url="../../taskdetail/taskdetail"></i-cell>
+        <i-cell title="人员列表" is-link url="../../peoplelist/peoplelist"></i-cell>
+    </i-cell-group>
+</i-panel>

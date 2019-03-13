@@ -1,0 +1,28 @@
+<!--pages/myinfo/myinfo.wxml-->
+<i-row>
+  <i-panel>
+    <i-card title="卡片标题" extra="额外内容" thumb="https://i.loli.net/2017/08/21/599a521472424.jpg">
+        <!-- <view slot="content">内容不错</view>
+        <view slot="footer">尾部内容</view> -->
+    </i-card>
+  </i-panel>
+  <i-panel class="cell-panel-demo">
+    <view>
+      <i-cell-group>
+        <i-cell title="已完成任务" is-link></i-cell>
+        <i-cell title="未完成任务" is-link></i-cell>
+        <i-cell title="我发布的任务" is-link></i-cell>
+        <i-cell title="待审核任务" is-link></i-cell>
+      </i-cell-group>
+    </view>
+  </i-panel>
+  <i-panel class="cell-panel-demo">
+    <view>
+      <i-cell-group>
+        <i-cell title="个人资料" is-link></i-cell>
+        <i-cell title="我的产值" is-link></i-cell>
+      </i-cell-group>
+    </view>
+  </i-panel>
+</i-row>
+

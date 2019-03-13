@@ -1,0 +1,5 @@
+/* pages/myinfo/myinfo.wxss */
+.cell-panel-demo{
+    display: block;
+    margin-top: 10px;
+}

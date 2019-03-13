@@ -3,35 +3,53 @@
     "pages/index/index",
     "pages/logs/logs",
     "pages/issue/issue",
-    "pages/market/market"
+    "pages/market/market",
+    "pages/page-list/index/index",
+    "pages/myinfo/myinfo",
+    "pages/taskdetail/taskdetail",
+    "pages/peoplelist/peoplelist"
   ],
   "window": {
-    "backgroundTextStyle": "light",
+    "backgroundTextStyle": "dark",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "任务发布小程序",
-    "navigationBarTextStyle": "black"
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f9f9f9"
   },
   "tabBar": {
     "list": [
       {
         "pagePath": "pages/index/index",
         "text": "个人",
-        "iconPath": "images/tab/market.png",
+        "iconPath": "images/tab/shebei.png",
+        "selectedIconPath": "images/tab/market.png"
+      },
+      {
+        "pagePath": "pages/market/market",
+        "text": "任务市场",
+        "iconPath": "images/tab/shebei.png",
         "selectedIconPath": "images/tab/market.png"
       },
       {
         "pagePath": "pages/issue/issue",
-        "text": "发布",
+        "text": "任务发布",
         "iconPath": "images/tab/shebei.png",
-        "selectedIconPath": "images/tab/shebei.png"
+        "selectedIconPath": "images/tab/market.png"
       },
       {
-        "pagePath": "pages/market/market",
-        "text": "市场",
+        "pagePath": "pages/page-list/index/index",
+        "text": "原型页面",
         "iconPath": "images/tab/shebei.png",
-        "selectedIconPath": "images/tab/shebei.png"
+        "selectedIconPath": "images/tab/market.png"
+      },
+      {
+        "pagePath": "pages/myinfo/myinfo",
+        "text": "我的",
+        "iconPath": "images/tab/shebei.png",
+        "selectedIconPath": "images/tab/market.png"
       }
     ],
-    "position": "bottom"
+    "position": "bottom",
+    "debug": true
   }
 }
