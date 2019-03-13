@@ -1,6 +1,25 @@
 <!--pages/issue/issue.wxml-->
-<text>r任务发布页面</text>
-<i-card title="卡片标题" extra="额外内容" thumb="https://i.loli.net/2017/08/21/599a521472424.jpg">
-    <view slot="content">内容不错</view>
-    <view slot="footer">尾部内容</view>
-</i-card>
+<i-tabs current="{{ current }}" bindchange="handleChange">
+    <i-tab key="tab1" title="定向任务"></i-tab>
+    <i-tab key="tab2" title="非定向任务"></i-tab>
+</i-tabs>
+
+<i-panel title="任务">
+  <i-input  value="{{ value1 }}" title="项目名称" autofocus placeholder="任务名称"/>
+  <i-input  value="{{ value2 }}" title="任务描述" autofocus placeholder="任务描述" />  
+  <i-input  value="{{ value3 }}" title="审核人"  autofocus placeholder="审核人" />
+  <i-input  value="{{ value4 }}"  type ="number" title="标签" autofocus placeholder="标签" />
+  <i-input  value="{{ value5 }}" title="开始时间" autofocus placeholder="开始时间" />
+  <i-input  value="{{ value6 }}" title="结束时间"  autofocus placeholder="结束时间" />
+  <i-input  value="{{ value7 }}" title="工作量" autofocus placeholder="工作量" />  
+<view wx:if="{{current=='tab1'}}"> 
+<i-input  value="{{ value8 }}" title="承接人" autofocus placeholder="承接人" />
+</view>
+        <i-row>
+          <i-col span="8" offset="3" i-class="col-class"><i-button bind:click="handleSave" type="success">任务保存</i-button>
+          </i-col>
+           <i-col span="8" offset="2" i-class="col-class"><i-button bind:click="handleIssue" type="success">任务发布</i-button>
+          </i-col>
+        </i-row>
+</i-panel>
+
