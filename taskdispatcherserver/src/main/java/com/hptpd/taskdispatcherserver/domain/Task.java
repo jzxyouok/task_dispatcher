@@ -1,0 +1,87 @@
+package com.hptpd.taskdispatcherserver.domain;
+
+
+import com.google.common.collect.Sets;
+import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import java.util.Date;
+import java.util.Set;
+
+/**
+ * \* Created with IntelliJ IDEA.
+ * \* Date: 2019-03-14 09:15
+ * \*
+ * \* Description: 任务实体
+ * \
+ *
+ * @author liucheng
+ */
+@Entity
+@Table(name = "task")
+@Data
+public class Task {
+
+
+    @Id
+    @GenericGenerator(name = "system_uuid", strategy = "uuid")
+    @GeneratedValue(generator = "system_uuid")
+    @Column(name = "task_id")
+    private String id;
+
+    /**
+     *  任务名称
+     */
+    @Column(name = "task_name")
+    private String taskName;
+
+    /**
+     *   任务描述
+     */
+    @Column(name = "task_description")
+    private String taskDescription;
+
+
+    /**
+     *  任务开始时间
+     */
+    @Column(name = "start_time")
+    private Date startTime;
+
+    /**
+     *  任务 结束时间
+     */
+    @Column(name="end_time")
+    private Date endTime;
+
+    /**
+     *  任务是否定向
+     */
+    @Column(name="orient")
+    private boolean orient;
+
+    /**
+     *  工作量
+     * （人天数）
+     */
+    @Column(name = "workload")
+    private String workload;
+
+
+    /**
+     * 任务状态
+     */
+    @Column(name="task_state")
+    private String  taskState;
+
+    @ManyToMany(mappedBy = "tasks", cascade ={CascadeType.PERSIST,CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    private Set<Role> roles = Sets.newLinkedHashSet();
+
+    @ManyToMany(mappedBy = "tasks", cascade ={CascadeType.PERSIST,CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    private Set<Label> labels =Sets.newLinkedHashSet();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
+}
