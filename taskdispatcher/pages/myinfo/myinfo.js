@@ -1,45 +1,13 @@
-// pages/issue/issue.js
+// pages/myinfo/myinfo.js
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    current: 'tab1',
-    current_scroll: 'tab1',
-    value1: '',
-    value2: '',
-    value3: '',
-    value4: '',
-    value5: '',
-    value6: '',
-    value7: '',
-    value8: '',
+
   },
 
-  handleChange({ detail }) {
-    this.setData({
-      current: detail.key
-    });
-  },
-
-  handleSave(){
-    wx.showToast({
-      title: '已保存到草稿箱',
-      icon: 'succes',
-      duration: 1000,
-      mask: true
-    })
-  },
-
-  handleIssue() {
-    wx.showToast({
-      title: '已经成功发布',
-      icon: 'succes',
-      duration: 1000,
-      mask: true
-    })
-  },
   /**
    * 生命周期函数--监听页面加载
    */

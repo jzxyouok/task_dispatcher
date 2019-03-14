@@ -1,0 +1,32 @@
+<!--pages/taskdetail/taskdetail.wxml-->
+<i-row>
+  <i-panel title="任务标题">
+    <view style="padding: 15px;">
+      <i-cell-group>
+        <i-cell title="项目名称：">{{taskDetail.projName}}</i-cell>
+        <i-cell title="任务类型：">{{taskDetail.taskType}}</i-cell>
+        <i-cell title="任务描述：">{{taskDetail.taskDesc}}</i-cell>
+        <i-cell title="发布人：">{{taskDetail.publisher}}</i-cell>
+        <i-cell title="审核人：">{{taskDetail.verifier}}</i-cell>
+        <i-cell title="标签：">{{taskDetail.taskTag}}</i-cell>
+        <i-cell title="承接人：">{{taskDetail.contractor}}</i-cell>
+        <i-cell title="开始时间：">{{taskDetail.startTime}}</i-cell>
+        <i-cell title="结束时间：">{{taskDetail.endTime}}</i-cell>
+        <i-cell title="工作量：">{{taskDetail.workload}}人月</i-cell>
+        <i-cell wx:if="{{6==taskDetail.taskStatus}}" title="点评：">
+          <i-input value="{{ value3 }}" type="textarea" title="" placeholder="点评(最多200字)" maxlength="200" />
+        </i-cell>
+        <view wx:if="{{1==taskDetail.taskStatus}}">
+          <i-cell title="提审原因：">根深蒂固</i-cell>
+          <i-cell title="评审意见：">根深蒂固</i-cell>
+          <i-cell title="状态：">评审通过</i-cell>
+        </view>
+    </i-cell-group>
+    </view>
+  </i-panel>
+</i-row>
+<i-row wx:if="{{6==taskDetail.taskStatus}}">
+    <i-col span="8" i-class="col-class"><i-button bind:click="handleClick" type="error">不通过</i-button></i-col>
+    <i-col span="8" i-class="col-class"><i-button bind:click="handleClick" type="success">通过</i-button></i-col>
+    <i-col span="8" i-class="col-class"><i-button bind:click="handleClick" type="info">提交专家</i-button></i-col>
+</i-row>

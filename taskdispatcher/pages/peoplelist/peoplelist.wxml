@@ -1,0 +1,10 @@
+<!--pages/peoplelist/peoplelist.wxml-->
+<i-panel title="">
+    <i-input value="{{ value1 }}" title="搜索" autofocus placeholder="名字" />
+</i-panel>
+<i-panel title="" style="display:block;margin-top:10px;">
+    <i-checkbox-group current="{{current}}" bindchange="handleCheckBoxtChange">
+        <i-checkbox wx:for="{{people}}" position="right" wx:key="{{item.id}}" value="{{item.name}}">
+        </i-checkbox>
+    </i-checkbox-group>
+</i-panel>
