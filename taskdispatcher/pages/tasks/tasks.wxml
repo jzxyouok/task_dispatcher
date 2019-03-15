@@ -1,0 +1,7 @@
+<!--pages/completed/completed.wxml-->
+
+<i-cell-group>
+  <view wx:for="{{tasks}}" wx:key="id">
+  <i-cell title="已完成任务{{index+1}}" is-link url="../taskdetail/taskdetail" data-index="{{index}}" value="详细信息" ></i-cell>
+  </view>
+</i-cell-group>
