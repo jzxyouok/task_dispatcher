@@ -15,8 +15,8 @@
   <i-panel class="cell-panel-demo">
     <view>
       <i-cell-group>
-        <i-cell title="已完成任务" is-link></i-cell>
-        <i-cell title="未完成任务" is-link></i-cell>
+        <i-cell title="已完成任务" is-link url="../tasks/tasks"></i-cell>
+        <i-cell title="未完成任务" is-link ></i-cell>
         <i-cell title="我发布的任务" is-link></i-cell>
         <i-cell title="待审核任务" is-link></i-cell>
       </i-cell-group>
