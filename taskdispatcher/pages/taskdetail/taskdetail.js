@@ -1,4 +1,10 @@
 // pages/taskdetail/taskdetail.js
+/**
+ \* Created with 微信开发者工具.
+ \* @author: 龙威
+ \* @time: 2019/3/13 10:14
+ \* Description: 任务详情
+ \*/
 Page({
 
   /**
@@ -18,6 +24,20 @@ Page({
       endTime: '2019-03-11 20:00:00',
       taskStatus: 0
     }
+  },
+  noPass(){
+
+  },
+  commitExpert(){
+
+  },
+  pass(){
+    wx.request({
+      url: 'http://localhost:8080/base_task/users',
+      success: (res) => {
+        console.log(res.data);
+      }
+    });
   },
   /**
    * 改变当前页面的标题
@@ -43,7 +63,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    console.log(options);
   },
 
   /**
@@ -54,7 +74,7 @@ Page({
     this.setData({
       'taskDetail.taskStatus': taskStatus
     });
-    this.changeNavigationBarTitle(1);
+    this.changeNavigationBarTitle(taskStatus);
   },
 
   /**

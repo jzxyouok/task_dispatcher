@@ -1,4 +1,10 @@
 // pages/peoplelist/peoplelist.js
+/**
+ \* Created with 微信开发者工具.
+ \* @author: 龙威
+ \* @time: 2019/3/13 10:14
+ \* Description: 人员列表
+ \*/
 Page({
 
   /**

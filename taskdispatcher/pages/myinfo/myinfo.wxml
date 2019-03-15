@@ -1,9 +1,15 @@
 <!--pages/myinfo/myinfo.wxml-->
+<!-- /**
+ \* Created with 微信开发者工具.
+ \* @author: 龙威
+ \* @time: 2019/3/13 10:14
+ \* Description: 我的信息
+ \*/ -->
 <i-row>
   <i-panel>
-    <i-card title="卡片标题" extra="额外内容" thumb="https://i.loli.net/2017/08/21/599a521472424.jpg">
-        <!-- <view slot="content">内容不错</view>
-        <view slot="footer">尾部内容</view> -->
+    <i-card title="{{userVo.nickName}}" extra="" thumb="{{userVo.avatarUrl}}">
+        <view slot="content">内容不错</view>
+        <!-- <view slot="footer">尾部内容</view> -->
     </i-card>
   </i-panel>
   <i-panel class="cell-panel-demo">

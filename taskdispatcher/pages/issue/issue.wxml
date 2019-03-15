@@ -1,25 +1,35 @@
 <!--pages/issue/issue.wxml-->
-<i-tabs current="{{ current }}" bindchange="handleChange">
-    <i-tab key="tab1" title="定向任务"></i-tab>
-    <i-tab key="tab2" title="非定向任务"></i-tab>
+<i-tabs current="{{ taskVo.orient }}" bindchange="handleChange">
+    <i-tab key="direc" title="定向任务"></i-tab>
+    <i-tab key="undirec" title="非定向任务"></i-tab>
 </i-tabs>
-
 <i-panel title="任务">
-  <i-input  value="{{ value1 }}" title="项目名称" autofocus placeholder="任务名称"/>
-  <i-input  value="{{ value2 }}" title="任务描述" autofocus placeholder="任务描述" />  
-  <i-input  value="{{ value3 }}" title="审核人"  autofocus placeholder="审核人" />
-  <i-input  value="{{ value4 }}"  type ="number" title="标签" autofocus placeholder="标签" />
-  <i-input  value="{{ value5 }}" title="开始时间" autofocus placeholder="开始时间" />
-  <i-input  value="{{ value6 }}" title="结束时间"  autofocus placeholder="结束时间" />
-  <i-input  value="{{ value7 }}" title="工作量" autofocus placeholder="工作量" />  
-<view wx:if="{{current=='tab1'}}"> 
-<i-input  value="{{ value8 }}" title="承接人" autofocus placeholder="承接人" />
-</view>
-        <i-row>
-          <i-col span="8" offset="3" i-class="col-class"><i-button bind:click="handleSave" type="success">任务保存</i-button>
-          </i-col>
-           <i-col span="8" offset="2" i-class="col-class"><i-button bind:click="handleIssue" type="success">任务发布</i-button>
-          </i-col>
-        </i-row>
+  <i-input  value="{{ taskVo.taskName }}" title="任务名称" placeholder="点击输入任务名称"/>
+  <i-input  value="{{ taskVo.projVo.projName }}" title="项目名称" placeholder="点击选择项目"/>
+  <i-input  value="{{ taskVo.taskDescription }}" title="任务描述" placeholder="点击输入任务描述" />
+  <i-input  value="{{ value3 }}" title="审核人"  placeholder="点击选择审核人" />
+  <i-input  value="{{ value4 }}" title="标签" placeholder="点击选择标签" />
+  <picker
+    mode="date"
+    value="{{taskVo.startTime}}"
+    bindchange="bindStartTimeChange"
+  >
+    <i-input  value="{{ taskVo.startTime }}" title="开始时间" disabled placeholder="点击选择开始时间" />
+  </picker>
+  <picker
+    mode="date"
+    value="{{taskVo.endTime}}"
+    bindchange="bindEndTimeChange"
+  >
+    <i-input  value="{{ taskVo.endTime }}" title="结束时间" disabled placeholder="点击选择结束时间" />
+  </picker>
+  <i-input  value="{{ taskVo.workload }}" type="number" title="工作量（人月）" placeholder="点击输入工作量" />
+  <i-input wx:if="{{taskVo.orient=='direc'}}"  value="{{ value8 }}" title="承接人" placeholder="点击选择承接人" />
+  <i-row>
+    <i-col span="8" offset="3" i-class="col-class"><i-button bind:click="handleSave" type="success">任务保存</i-button>
+    </i-col>
+    <i-col span="8" offset="2" i-class="col-class"><i-button bind:click="handleIssue" type="success">任务发布</i-button>
+    </i-col>
+  </i-row>
 </i-panel>
 

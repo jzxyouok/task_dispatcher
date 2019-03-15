@@ -5,21 +5,34 @@ Page({
    * 页面的初始数据
    */
   data: {
-    current: 'tab1',
-    current_scroll: 'tab1',
-    value1: '',
-    value2: '',
-    value3: '',
-    value4: '',
-    value5: '',
-    value6: '',
-    value7: '',
-    value8: '',
+    taskVo: {
+      taskName: '',
+      taskDescription: '',
+      startTime: '',
+      endTime: '',
+      orient: 'direc',
+      workload: '',
+      taskState: '',
+      projVo: {
+        projName: ''
+      },
+      roleVos: [],
+      labelVos: []
+    }
   },
-
+  bindStartTimeChange(e){
+    this.setData({
+      'taskVo.startTime': e.detail.value
+    });
+  },
+  bindEndTimeChange(e) {
+    this.setData({
+      'taskVo.endTime': e.detail.value
+    });
+  },
   handleChange({ detail }) {
     this.setData({
-      current: detail.key
+      'taskVo.orient': detail.key
     });
   },
 
@@ -33,8 +46,23 @@ Page({
   },
 
   handleIssue() {
+    wx.request({
+      url: 'https://localhost:8080',
+      data: this.taskVo,
+      success: (res) => {
+        showSuccToast("已经成功发布");
+      },
+      fail: (e) => {
+        console.log("fail");
+      }
+    });
+  },
+  /**
+   * 显示成功的气泡
+   */
+  showSuccToast(title){
     wx.showToast({
-      title: '已经成功发布',
+      title,
       icon: 'succes',
       duration: 1000,
       mask: true

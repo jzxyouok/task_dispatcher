@@ -1,4 +1,10 @@
 // pages/market/market.js
+/**
+ \* Created with 微信开发者工具.
+ \* @author: 龙威
+ \* @time: 2019/3/13 10:14
+ \* Description: 任务市场
+ \*/
 Page({
 
   /**
@@ -46,6 +52,56 @@ Page({
         publisher: '威弟',
         workload: 100,
         outputValue: 0.5
+      },
+      {
+        id: 'gasggsdfsag',
+        name: '任务3',
+        projName: '项目3',
+        taskDesc: '描述3',
+        projPeriod: '1个月',
+        publisher: '彭博',
+        workload: 1,
+        outputValue: 1000000000
+      },
+      {
+        id: 'gasgfdssag',
+        name: '任务3',
+        projName: '项目3',
+        taskDesc: '描述3',
+        projPeriod: '1个月',
+        publisher: '彭博',
+        workload: 1,
+        outputValue: 1000000000
+      },
+      {
+        id: 'gasggdssag',
+        name: '任务3',
+        projName: '项目3',
+        taskDesc: '描述3',
+        projPeriod: '1个月',
+        publisher: '彭博',
+        workload: 1,
+        outputValue: 1000000000
+      },
+      {
+        id: 'gasgsgsdag',
+        name: '任务3',
+        projName: '项目3',
+        taskDesc: '描述3',
+        projPeriod: '1个月',
+        publisher: '彭博',
+        workload: 1,
+        outputValue: 1000000000
+      },
+      {
+        id: 'gasg324sag',
+        name: '任务3',
+        projName: '项目3',
+        taskDesc: '描述3',
+        projPeriod: '1个月',
+        publisher: '彭博',
+        workload: 1,
+        outputValue: 1000000000
       }
     ]
   },

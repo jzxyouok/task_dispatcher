@@ -6,12 +6,24 @@ App({
     logs.unshift(Date.now())
     wx.setStorageSync('logs', logs)
 
-    // 登录
+    //获取用户openid
     wx.login({
-      success: res => {
-        // 发送 res.code 到后台换取 openId, sessionKey, unionId
+      success: (res) => {
+        if (res.code) {
+          var url = 'https://api.weixin.qq.com/sns/jscode2session?appid=' + this.globalData.appid + '&secret=' + this.globalData.secret + '&js_code=' + res.code + '&grant_type=authorization_code';
+          wx.request({
+            url,
+            success: res => {
+              if (res.data) {
+                this.globalData.openid = res.data.openid;
+              } 
+            }
+          });
+        } else {
+          console.log('获取用户登录态失败！' + res.errMsg)
+        }
       }
-    })
+    });
     // 获取用户信息
     wx.getSetting({
       success: res => {
@@ -34,6 +46,9 @@ App({
     })
   },
   globalData: {
-    userInfo: null
+    userInfo: null,
+    appid: 'wx07a87aa3fd0cc53a',
+    secret: 'b96816b6e0d6e95d700443e88ba86396',
+    openid: ''
   }
 })
