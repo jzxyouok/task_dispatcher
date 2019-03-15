@@ -1,4 +1,4 @@
-<!--pages/market/market.wxml-->
+ <!--pages/market/market.wxml-->
 <i-cell-group>
   <view wx:for="{{tasks}}" wx:key="id">
     <i-cell title="任务{{index+1}}" data-index="{{index}}" is-link bind:click="expandTask" value="详细信息">
