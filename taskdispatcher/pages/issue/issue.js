@@ -35,7 +35,11 @@ Page({
       'taskVo.orient': detail.key
     });
   },
-
+  choosePeople(e){
+    wx.navigateTo({
+      url: '../peoplelist/peoplelist?roleType=' + e.target.dataset.roletype,
+    })
+  },
   handleSave(){
     wx.showToast({
       title: '已保存到草稿箱',
@@ -86,7 +90,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    console.log(wx.getStorageSync('selectPeople'));
   },
 
   /**

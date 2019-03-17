@@ -43,7 +43,7 @@ Page({
    * 改变当前页面的标题
    */
   changeNavigationBarTitle(index) {
-    let barTitle = [
+    const barTitle = [
       '加载中...',
       '已完成的任务',
       '我发布的任务',
