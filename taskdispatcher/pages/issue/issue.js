@@ -5,24 +5,41 @@ Page({
    * 页面的初始数据
    */
   data: {
-    current: 'tab1',
-    current_scroll: 'tab1',
-    value1: '',
-    value2: '',
-    value3: '',
-    value4: '',
-    value5: '',
-    value6: '',
-    value7: '',
-    value8: '',
+    taskVo: {
+      taskName: '',
+      taskDescription: '',
+      startTime: '',
+      endTime: '',
+      orient: 'direc',
+      workload: '',
+      taskState: '',
+      projVo: {
+        projName: ''
+      },
+      roleVos: [],
+      labelVos: []
+    }
   },
-
-  handleChange({ detail }) {
+  bindStartTimeChange(e){
     this.setData({
-      current: detail.key
+      'taskVo.startTime': e.detail.value
     });
   },
-
+  bindEndTimeChange(e) {
+    this.setData({
+      'taskVo.endTime': e.detail.value
+    });
+  },
+  handleChange({ detail }) {
+    this.setData({
+      'taskVo.orient': detail.key
+    });
+  },
+  choosePeople(e){
+    wx.navigateTo({
+      url: '../peoplelist/peoplelist?roleType=' + e.target.dataset.roletype,
+    })
+  },
   handleSave(){
     wx.showToast({
       title: '已保存到草稿箱',
@@ -33,8 +50,23 @@ Page({
   },
 
   handleIssue() {
+    wx.request({
+      url: 'https://localhost:8080',
+      data: this.taskVo,
+      success: (res) => {
+        showSuccToast("已经成功发布");
+      },
+      fail: (e) => {
+        console.log("fail");
+      }
+    });
+  },
+  /**
+   * 显示成功的气泡
+   */
+  showSuccToast(title){
     wx.showToast({
-      title: '已经成功发布',
+      title,
       icon: 'succes',
       duration: 1000,
       mask: true
@@ -58,7 +90,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    console.log(wx.getStorageSync('selectPeople'));
   },
 
   /**

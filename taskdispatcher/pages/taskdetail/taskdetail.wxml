@@ -1,4 +1,10 @@
 <!--pages/taskdetail/taskdetail.wxml-->
+<!-- /**
+ \* Created with 微信开发者工具.
+ \* @author: 龙威
+ \* @time: 2019/3/13 10:14
+ \* Description: 任务详情
+ \*/ -->
 <i-row>
   <i-panel title="任务标题">
     <view style="padding: 15px;">
@@ -26,7 +32,7 @@
   </i-panel>
 </i-row>
 <i-row wx:if="{{6==taskDetail.taskStatus}}">
-    <i-col span="8" i-class="col-class"><i-button bind:click="handleClick" type="error">不通过</i-button></i-col>
-    <i-col span="8" i-class="col-class"><i-button bind:click="handleClick" type="success">通过</i-button></i-col>
-    <i-col span="8" i-class="col-class"><i-button bind:click="handleClick" type="info">提交专家</i-button></i-col>
+    <i-col span="8" i-class="col-class"><i-button bind:click="notPass" type="error">不通过</i-button></i-col>
+    <i-col span="8" i-class="col-class"><i-button bind:click="pass" type="success">通过</i-button></i-col>
+    <i-col span="8" i-class="col-class"><i-button bind:click="commit2Expert" type="info">提交专家</i-button></i-col>
 </i-row>

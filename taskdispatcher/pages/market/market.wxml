@@ -1,4 +1,10 @@
- <!--pages/market/market.wxml-->
+<!--pages/market/market.wxml-->
+<!-- /**
+ \* Created with 微信开发者工具.
+ \* @author: 龙威
+ \* @time: 2019/3/13 10:14
+ \* Description: 任务市场
+ \*/ -->
 <i-cell-group>
   <view wx:for="{{tasks}}" wx:key="id">
     <i-cell title="任务{{index+1}}" data-index="{{index}}" is-link bind:click="expandTask" value="详细信息">

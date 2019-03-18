@@ -21,12 +21,6 @@
     "list": [
       {
         "pagePath": "pages/index/index",
-        "text": "个人",
-        "iconPath": "images/tab/shebei.png",
-        "selectedIconPath": "images/tab/market.png"
-      },
-      {
-        "pagePath": "pages/market/market",
         "text": "任务市场",
         "iconPath": "images/tab/shebei.png",
         "selectedIconPath": "images/tab/market.png"
