@@ -16,4 +16,6 @@ import org.springframework.stereotype.Repository;
 @Repository("userRep")
 public interface UserRep extends JpaRepository<User,String> {
 
+    User findByWeChat(String weChat);
+
 }

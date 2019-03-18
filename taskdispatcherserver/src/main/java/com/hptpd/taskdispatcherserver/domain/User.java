@@ -1,10 +1,13 @@
 package com.hptpd.taskdispatcherserver.domain;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -23,11 +26,13 @@ import java.util.Set;
 public class User {
 
     @Id
-    @GenericGenerator(name = "system_uuid", strategy = "uuid")
-    @GeneratedValue(generator = "system_uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid")//声明策略通用生成器system_uuid，策略为uuid
+    @GeneratedValue(generator = "uuid")//用generator属性指定要用的策略生成器
     @Column(name = "weChat_id")
-    private String weChat;
+    private String id;
 
+    @Column(name = "weChat")
+    private String weChat;
 
     @Column(name="name")
     private String name;
@@ -40,6 +45,17 @@ public class User {
     @Column(name = "position")
     private String position;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
-    private Set<Role> roles = Sets.newLinkedHashSet();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

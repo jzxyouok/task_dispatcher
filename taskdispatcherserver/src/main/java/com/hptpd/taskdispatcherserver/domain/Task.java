@@ -1,12 +1,15 @@
 package com.hptpd.taskdispatcherserver.domain;
 
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -75,13 +78,43 @@ public class Task {
     @Column(name="task_state")
     private String  taskState;
 
-    @ManyToMany(mappedBy = "tasks", cascade ={CascadeType.PERSIST,CascadeType.REMOVE}, fetch = FetchType.LAZY)
-    private Set<Role> roles = Sets.newLinkedHashSet();
+    @OneToMany(mappedBy = "task", cascade = {CascadeType.ALL,CascadeType.REMOVE},fetch = FetchType.LAZY)
+    private List<Role> roles = Lists.newArrayList();
 
-    @ManyToMany(mappedBy = "tasks", cascade ={CascadeType.PERSIST,CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "tasks", cascade ={CascadeType.ALL,CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private Set<Label> labels =Sets.newLinkedHashSet();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return id.equals(task.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id='" + id + '\'' +
+                ", taskName='" + taskName + '\'' +
+                ", taskDescription='" + taskDescription + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", orient=" + orient +
+                ", workload='" + workload + '\'' +
+                ", taskState='" + taskState + '\'' +
+                ", roles=" + roles +
+                ", labels=" + labels +
+                ", project=" + project +
+                '}';
+    }
 }

@@ -6,6 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -41,4 +42,18 @@ public class Label {
 
      @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
      private Set<Task> tasks = Sets.newLinkedHashSet();
+
+
+     @Override
+     public boolean equals(Object o) {
+          if (this == o) return true;
+          if (o == null || getClass() != o.getClass()) return false;
+          Label label = (Label) o;
+          return id.equals(label.id);
+     }
+
+     @Override
+     public int hashCode() {
+          return Objects.hash(id);
+     }
 }
