@@ -20,6 +20,8 @@ import java.util.List;
 @Data
 public class UserVo {
 
+    private String id;
+
     private String weChat;
 
 
@@ -44,4 +46,6 @@ public class UserVo {
         }
         return userVos;
     }
+
+
 }

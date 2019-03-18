@@ -1,12 +1,15 @@
 package com.hptpd.taskdispatcherserver.domain;
 
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -75,13 +78,24 @@ public class Task {
     @Column(name="task_state")
     private String  taskState;
 
-    @ManyToMany(mappedBy = "tasks", cascade ={CascadeType.PERSIST,CascadeType.REMOVE}, fetch = FetchType.LAZY)
-    private Set<Role> roles = Sets.newLinkedHashSet();
 
-    @ManyToMany(mappedBy = "tasks", cascade ={CascadeType.PERSIST,CascadeType.REMOVE}, fetch = FetchType.LAZY)
+
+    @ManyToMany(mappedBy = "tasks", cascade ={CascadeType.ALL,CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private Set<Label> labels =Sets.newLinkedHashSet();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
+
+    @OneToOne(mappedBy = "task", cascade = {CascadeType.PERSIST,CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    private Proposer proposer;
+
+
+    @OneToOne(mappedBy = "task", cascade = {CascadeType.PERSIST,CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    private Auditor auditor;
+
+    @OneToMany(mappedBy = "task", cascade = {CascadeType.PERSIST,CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    private List<Staff> staffs =Lists.newArrayList();
+
+
 }
