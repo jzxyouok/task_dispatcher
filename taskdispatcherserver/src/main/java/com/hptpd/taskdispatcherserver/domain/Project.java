@@ -29,7 +29,7 @@ public class Project {
     private String id;
 
     @Column(name = "project_name")
-    private String projectName;
+    private String Name;
 
     @Column(name = "department")
     private String department;

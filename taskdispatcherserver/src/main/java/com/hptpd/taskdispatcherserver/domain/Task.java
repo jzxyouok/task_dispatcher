@@ -78,8 +78,7 @@ public class Task {
     @Column(name="task_state")
     private String  taskState;
 
-    @OneToMany(mappedBy = "task", cascade = {CascadeType.ALL,CascadeType.REMOVE},fetch = FetchType.LAZY)
-    private List<Role> roles = Lists.newArrayList();
+
 
     @ManyToMany(mappedBy = "tasks", cascade ={CascadeType.ALL,CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private Set<Label> labels =Sets.newLinkedHashSet();
@@ -88,33 +87,15 @@ public class Task {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Task task = (Task) o;
-        return id.equals(task.id);
-    }
+    @OneToOne(mappedBy = "task", cascade = {CascadeType.PERSIST,CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    private Proposer proposer;
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 
-    @Override
-    public String toString() {
-        return "Task{" +
-                "id='" + id + '\'' +
-                ", taskName='" + taskName + '\'' +
-                ", taskDescription='" + taskDescription + '\'' +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", orient=" + orient +
-                ", workload='" + workload + '\'' +
-                ", taskState='" + taskState + '\'' +
-                ", roles=" + roles +
-                ", labels=" + labels +
-                ", project=" + project +
-                '}';
-    }
+    @OneToOne(mappedBy = "task", cascade = {CascadeType.PERSIST,CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    private Auditor auditor;
+
+    @OneToMany(mappedBy = "task", cascade = {CascadeType.PERSIST,CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    private List<Staff> staffs =Lists.newArrayList();
+
+
 }

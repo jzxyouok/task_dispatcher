@@ -28,7 +28,7 @@ public class User {
     @Id
     @GenericGenerator(name = "uuid", strategy = "uuid")//声明策略通用生成器system_uuid，策略为uuid
     @GeneratedValue(generator = "uuid")//用generator属性指定要用的策略生成器
-    @Column(name = "weChat_id")
+    @Column(name = "user_id")
     private String id;
 
     @Column(name = "weChat")
@@ -45,6 +45,14 @@ public class User {
     @Column(name = "position")
     private String position;
 
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
+    private Set<Proposer> proposers =Sets.newLinkedHashSet();
+
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
+    private Set<Auditor> auditors =Sets.newLinkedHashSet();
+
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
+    private Set<Staff> staffs =Sets.newLinkedHashSet();
 
     @Override
     public boolean equals(Object o) {

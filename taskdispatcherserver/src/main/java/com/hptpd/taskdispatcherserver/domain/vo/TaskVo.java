@@ -1,6 +1,5 @@
 package com.hptpd.taskdispatcherserver.domain.vo;
 
-import com.hptpd.taskdispatcherserver.domain.Role;
 import lombok.Data;
 
 import java.util.Date;
@@ -40,5 +39,15 @@ public class TaskVo {
 
     private LabelVo labelVo;
 
-    private List<RoleVo> roleVos;
+    /**
+     *  发布者
+     */
+    private ProposerVo proposerVo;
+
+    /**
+     *  审核人
+     */
+    private AuditorVo auditorVo;
+
+    private List<StaffVo> staffVos;
 }

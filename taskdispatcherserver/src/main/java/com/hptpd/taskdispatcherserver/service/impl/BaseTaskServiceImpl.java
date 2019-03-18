@@ -1,18 +1,13 @@
 package com.hptpd.taskdispatcherserver.service.impl;
 
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.hptpd.taskdispatcherserver.common.util.AbstractMyBeanUtils;
 import com.hptpd.taskdispatcherserver.component.Result;
-import com.hptpd.taskdispatcherserver.domain.Role;
-import com.hptpd.taskdispatcherserver.domain.Task;
-import com.hptpd.taskdispatcherserver.domain.User;
-import com.hptpd.taskdispatcherserver.domain.vo.RoleVo;
-import com.hptpd.taskdispatcherserver.domain.vo.TaskVo;
-import com.hptpd.taskdispatcherserver.domain.vo.UserVo;
-import com.hptpd.taskdispatcherserver.repository.RoleRep;
-import com.hptpd.taskdispatcherserver.repository.TaskRep;
-import com.hptpd.taskdispatcherserver.repository.UserRep;
+import com.hptpd.taskdispatcherserver.domain.*;
+import com.hptpd.taskdispatcherserver.domain.vo.*;
+import com.hptpd.taskdispatcherserver.repository.*;
 import com.hptpd.taskdispatcherserver.service.BaseTaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,73 +33,70 @@ public class BaseTaskServiceImpl implements BaseTaskService {
 
     private Logger logger = LoggerFactory.getLogger(BaseTaskServiceImpl.class);
 
-    @Resource(name = "userRep")
-    private UserRep userRep;
-
     @Resource(name = "taskRep")
     private TaskRep taskRep;
 
-    @Resource(name = "roleRep")
-    private RoleRep roleRep;
+    @Resource(name = "userRep")
+    private UserRep userRep;
 
-    /**
-     * 获取所以用户列表
-     */
+    @Resource(name = "proposerRep")
+    private ProposerRep proposerRep;
+
+    @Resource(name = "auditorRep")
+    private AuditorRep auditorRep;
+
+    @Resource(name = "staffRep")
+    private StaffRep staffRep;
+
+
     @Override
-    public List<UserVo> getUsers() {
+    public Result DispatchTask(TaskVo taskVo) {
 
-        List<User> users =userRep.findAll();
-
-        return UserVo.userToVo(users);
-    }
-
-    /**
-     * 发布任务接口
-     */
-    @Override
-    public Result dispatchTask(TaskVo taskVo) {
-
-
-        logger.info(taskVo.toString());
-        Task task = new Task();
+        Task task =new Task();
         AbstractMyBeanUtils.copyProperties(taskVo,task);
 
-        //的到任务的角色
-        List<RoleVo> roleVos =taskVo.getRoleVos();
-        List<Role> roles =Lists.newArrayList();
+        ProposerVo proposerVo =taskVo.getProposerVo();
+        Proposer proposer =new Proposer();
+        UserVo userVo =proposerVo.getUserVo();
+        Optional<User> optionalUser =userRep.findById(userVo.getId());
+        proposer.setUser(optionalUser.get());
+        proposer.setName("发布者");
+        proposer.setTask(task);
+//        proposerRep.save(proposer);
 
-        task.setRoles(roles);
+        AuditorVo auditorVo =taskVo.getAuditorVo();
+        Auditor auditor =new Auditor();
+        logger.info(auditorVo.toString());
+        Optional<User> optionalUser1 =userRep.findById(auditorVo.getUserVo().getId());
+        auditor.setUser(optionalUser1.get());
+        auditor.setName("审批人");
+        auditor.setTask(task);
+//        auditorRep.save(auditor);
 
-        for (RoleVo roleVo:roleVos){
-            //获取角色的成员
-            logger.info(roleVo.toString());
-            List<User> users = Lists.newArrayList();
-            List<UserVo> userVos =roleVo.getUserVos();
-            Role role =new Role();
-            //角色
-            role.setRoleInfo(roleVo.getRoleInfo());
-
-            for (UserVo userVo:userVos){
-//                User user =new User();
-                logger.info(userVo.toString());
-//                AbstractMyBeanUtils.copyProperties(userVo,user);
-                User user =userRep.findByWeChat(userVo.getWeChat());
-//                user.setRoles(roles);
-                logger.info(user.getId());
-//                userRep.save(user);
-                users.add(user);
-            }
-            role.setUsers(users);
-            role.setTask(task);
-//            roleRep.save(role);
-
-            roles.add(role);
-            roleRep.saveAll(roles);
+        List<StaffVo> staffVos =taskVo.getStaffVos();
+//        Set<Staff> staffSet =Sets.newLinkedHashSet();
+        List<Staff> staffList =Lists.newArrayList();
+        for (StaffVo staffVo:staffVos){
+            Staff staff =new Staff();
+            UserVo userVo1 =staffVo.getUserVo();
+            Optional<User> optionalUser2 =userRep.findById(userVo1.getId());
+            staff.setUser(optionalUser2.get());
+            staff.setName("成员");
+            logger.info("1");
+            staff.setTask(task);
+            staffList.add(staff);
 
 
         }
+        logger.info(staffList.size()+"");
+        task.setStaffs(staffList);
+
+        task.setProposer(proposer);
+        task.setAuditor(auditor);
 
 
-        return Result.setResult(0,"发布任务成功");
+        taskRep.save(task);
+        return null;
+
     }
 }
