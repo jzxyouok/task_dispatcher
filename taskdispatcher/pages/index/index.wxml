@@ -1,22 +1,13 @@
 <!--index.wxml-->
-<i-cell-group>
-  <view wx:for="{{tasks}}" wx:key="id">
-    <i-cell title="任务{{index+1}}" data-index="{{index}}" is-link bind:click="expandTask" value="详细信息">
-    </i-cell>
-    <i-panel wx:if="{{index==selectIndex}}">
-      <view style="padding:5px 20px 10px;">
-        <i-cell-group>
-          <i-cell>项目名称：{{item.projName}}</i-cell>
-          <i-cell>任务描述：{{item.taskDesc}}</i-cell>
-          <i-cell>项目周期：{{item.projPeriod}}</i-cell>
-          <i-cell>发布人：{{item.publisher}}</i-cell>
-          <i-cell>工作量：{{item.workload}}人月</i-cell>
-          <i-cell>任务产值：{{item.outputValue}}元</i-cell>
-        </i-cell-group>
-        <i-row>
-          <i-col span="10" offset="14" i-class="col-class"><i-button bind:click="handleClick" type="success">任务认领</i-button></i-col>
-        </i-row>
-      </view>
-    </i-panel>
+<view class="container">
+  <view class="userinfo">
+    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
+    <block wx:else>
+      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+    </block>
   </view>
-</i-cell-group>
+  <view class="usermotto">
+    <text class="user-motto">{{motto}}</text>
+  </view>
+</view>

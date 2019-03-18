@@ -2,11 +2,11 @@
 <!-- /**
  \* Created with 微信开发者工具.
  \* @author: 龙威
- \* @time: 2019/3/13 10:14
- \* Description: 任务市场
+ \* @time: 2019/3/18 10:14
+ \* Description: 首页-任务市场
  \*/ -->
-<i-cell-group>
-  <view wx:for="{{tasks}}" wx:key="id">
+<i-cell-group wx:if="{{!isModalShow}}">
+  <view wx:for="{{tasks}}" wx:key="id" class="mb5">
     <i-cell title="任务{{index+1}}" data-index="{{index}}" is-link bind:click="expandTask" value="详细信息">
     </i-cell>
     <i-panel wx:if="{{index==selectIndex}}">
@@ -26,3 +26,9 @@
     </i-panel>
   </view>
 </i-cell-group>
+<i-modal title="账号未激活" visible="{{ isModalShow }}" actions="{{ modalActions }}" catch:click="handleModalClick">
+    <view>
+      <i-input value="{{user.realName}}" title="真实姓名" placeholder='点击输入姓名'/>
+      <i-input type="number" value="{{user.phoneNumber}}" title="手机号" placeholder='点击输入手机号'/></view>
+</i-modal>
+<i-toast id="toast" />

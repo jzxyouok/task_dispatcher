@@ -1,1 +1,5 @@
 /* pages/issue/issue.wxss */
+i-input {
+  display: block;
+  margin-bottom: 5px;
+}

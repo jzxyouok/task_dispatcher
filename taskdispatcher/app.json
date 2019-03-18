@@ -1,9 +1,9 @@
 {
   "pages": [
+    "pages/market/market",
     "pages/index/index",
     "pages/logs/logs",
     "pages/issue/issue",
-    "pages/market/market",
     "pages/page-list/index/index",
     "pages/myinfo/myinfo",
     "pages/taskdetail/taskdetail",
@@ -20,7 +20,7 @@
   "tabBar": {
     "list": [
       {
-        "pagePath": "pages/index/index",
+        "pagePath": "pages/market/market",
         "text": "任务市场",
         "iconPath": "images/tab/shebei.png",
         "selectedIconPath": "images/tab/market.png"
@@ -44,7 +44,7 @@
         "selectedIconPath": "images/tab/market.png"
       }
     ],
-    "position": "bottom",
-    "debug": true
-  }
+    "position": "bottom"
+  },
+  "debug": true
 }

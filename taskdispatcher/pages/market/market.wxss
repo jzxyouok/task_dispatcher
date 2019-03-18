@@ -1,1 +1,5 @@
 /* pages/market/market.wxss */
+.mb5 {
+  display: block;
+  margin-bottom: 5px;
+}

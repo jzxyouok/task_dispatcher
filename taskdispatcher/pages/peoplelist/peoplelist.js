@@ -77,29 +77,33 @@ Page({
    * 处理checkbox事件
    */
   handleCheckChange(e){
-    this.data.people.forEach((v, k) => {
-      console.log(v);
-      if (v.id == e.target.dataset.itemid) {
-        v.isChecked = !(v.isChecked?true:false);
-        return;
-      }
+    // this.data.people.forEach((v, k) => {
+    //   if (v.id == e.target.dataset.itemid) {
+    //     v.isChecked = !(v.isChecked?true:false);
+    //     return;
+    //   }
+    // });
+    this.data.indexList.forEach((val, key) => {
+      val.list.forEach((v, k) => {
+        if (v.id == e.target.dataset.itemid) {
+          v.isChecked = !(v.isChecked ? true : false);
+          return;
+        }
+      });
     });
     this.setData({
-      people: this.data.people
-    });
-    this.refreshIndexList();
+      // people: this.data.people,
+      indexList: this.data.indexList
+    })
   },
-  onChange(event) {
+  onIndexListChange(event) {
     console.log(event.detail, 'click right menu callback data')
   },
   
   /**
-   * 刷新索引列表
+   * 初始化索引列表
    */
-  refreshIndexList() {
-    this.data.people.forEach((v, k) => {
-      console.log(pinyinUtil.chineseToPinYin(v.name));
-    });
+  initIndexList() {
     let indexStore = new Array(27);
     const words = ["#", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
     words.forEach((item, index) => {
@@ -164,7 +168,16 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-    this.refreshIndexList();
+    let requestIp = getApp().globalData.requestIp;
+    wx.request({
+      url: requestIp + '/base_task/users',
+      success: res => {
+        this.initIndexList();
+      },
+      fail: e => {
+        this.initIndexList();
+      }
+    })
   },
 
   /**
@@ -178,8 +191,14 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
+  },
+
+  /**
+   * 生命周期函数--监听页面卸载
+   */
+  onUnload: function () {
     let selectPeople = {
-      roleType: this.data.people.roleType,
+      roleType: this.data.roleType,
       peopleArr: []
     };
     this.data.people.forEach((v, k) => {
@@ -189,12 +208,6 @@ Page({
     });
     wx.setStorageSync('selectPeople', selectPeople);
     console.log(selectPeople);
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
 
   },
 

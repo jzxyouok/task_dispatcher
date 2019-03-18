@@ -2,9 +2,10 @@
 /**
  \* Created with 微信开发者工具.
  \* @author: 龙威
- \* @time: 2019/3/13 10:14
- \* Description: 任务市场
+ \* @time: 2019/3/18 10:14
+ \* Description: 首页-任务市场
  \*/
+const { $Toast } = require('../../dist/base/index');
 Page({
 
   /**
@@ -12,16 +13,26 @@ Page({
    */
   data: {
     selectIndex: 0,
-    tasks:[
+    isModalShow: true,
+    user: {
+      realName: "",
+      phoneNumber: ""
+    },
+    modalActions: [{
+      name: "激活",
+      color: '#2d8cf0',
+      loading: false
+    }],
+    tasks: [
       {
-        id:'fsdfs',
-        name:'任务1',
-        projName:'项目1',
-        taskDesc:'描述1',
-        projPeriod:'1年',
-        publisher:'辉神',
-        workload:3,
-        outputValue:500000000
+        id: 'fsdfs',
+        name: '任务1',
+        projName: '项目1',
+        taskDesc: '描述1',
+        projPeriod: '1年',
+        publisher: '辉神',
+        workload: 3,
+        outputValue: 500000000
       },
       {
         id: 'grgeg',
@@ -52,69 +63,58 @@ Page({
         publisher: '威弟',
         workload: 100,
         outputValue: 0.5
-      },
-      {
-        id: 'gasggsdfsag',
-        name: '任务3',
-        projName: '项目3',
-        taskDesc: '描述3',
-        projPeriod: '1个月',
-        publisher: '彭博',
-        workload: 1,
-        outputValue: 1000000000
-      },
-      {
-        id: 'gasgfdssag',
-        name: '任务3',
-        projName: '项目3',
-        taskDesc: '描述3',
-        projPeriod: '1个月',
-        publisher: '彭博',
-        workload: 1,
-        outputValue: 1000000000
-      },
-      {
-        id: 'gasggdssag',
-        name: '任务3',
-        projName: '项目3',
-        taskDesc: '描述3',
-        projPeriod: '1个月',
-        publisher: '彭博',
-        workload: 1,
-        outputValue: 1000000000
-      },
-      {
-        id: 'gasgsgsdag',
-        name: '任务3',
-        projName: '项目3',
-        taskDesc: '描述3',
-        projPeriod: '1个月',
-        publisher: '彭博',
-        workload: 1,
-        outputValue: 1000000000
-      },
-      {
-        id: 'gasg324sag',
-        name: '任务3',
-        projName: '项目3',
-        taskDesc: '描述3',
-        projPeriod: '1个月',
-        publisher: '彭博',
-        workload: 1,
-        outputValue: 1000000000
       }
     ]
   },
-  expandTask(event){
+  /**
+   * 展开任务详情
+   */
+  expandTask(event) {
     this.setData({
       selectIndex: event.target.dataset.index
     });
   },
   /**
+   * 模态框激活按钮
+   */
+  handleModalClick() {
+    if (!this.data.user.realName) {
+      $Toast({
+        content: '请输入姓名',
+        type: 'warning'
+      });
+      return;
+    }
+    if (!this.data.user.phoneNumber) {
+      $Toast({
+        content: '请输入电话',
+        type: 'warning'
+      });
+      return;
+    }
+    this.data.modalActions[0].loading = true;
+
+    this.setData({
+      modalActions: this.data.modalActions
+    });
+
+    setTimeout(() => {
+      this.data.modalActions[0].loading = false;
+      wx.showTabBar();
+      $Toast({
+        content: '激活成功',
+        type: 'success'
+      });
+      this.setData({
+        isModalShow: false,
+        modalActions: this.data.modalActions
+      });
+    }, 2000);
+  },
+  /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
   },
 
   /**
@@ -128,7 +128,10 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    this.setData({
+      isModalShow: false
+    });
+    wx.showTabBar();
   },
 
   /**

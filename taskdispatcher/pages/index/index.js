@@ -1,112 +1,54 @@
 //index.js
+//获取应用实例
+const app = getApp()
+
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-    selectIndex: 0,
-    tasks: [
-      {
-        id: 'fsdfs',
-        name: '任务1',
-        projName: '项目1',
-        taskDesc: '描述1',
-        projPeriod: '1年',
-        publisher: '辉神',
-        workload: 3,
-        outputValue: 500000000
-      },
-      {
-        id: 'grgeg',
-        name: '任务2',
-        projName: '项目2',
-        taskDesc: '描述2',
-        projPeriod: '3年',
-        publisher: '刘神',
-        workload: 2,
-        outputValue: 50000000
-      },
-      {
-        id: 'gasgsag',
-        name: '任务3',
-        projName: '项目3',
-        taskDesc: '描述3',
-        projPeriod: '1个月',
-        publisher: '彭博',
-        workload: 1,
-        outputValue: 1000000000
-      },
-      {
-        id: 'grgegere',
-        name: '任务4',
-        projName: '项目4',
-        taskDesc: '描述4',
-        projPeriod: '100年',
-        publisher: '威弟',
-        workload: 100,
-        outputValue: 0.5
+    motto: 'Hello World',
+    userInfo: {},
+    hasUserInfo: false,
+    canIUse: wx.canIUse('button.open-type.getUserInfo')
+  },
+  //事件处理函数
+  bindViewTap: function() {
+    wx.navigateTo({
+      url: '../logs/logs'
+    })
+  },
+  onLoad: function () {
+    if (app.globalData.userInfo) {
+      this.setData({
+        userInfo: app.globalData.userInfo,
+        hasUserInfo: true
+      })
+    } else if (this.data.canIUse){
+      // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
+      // 所以此处加入 callback 以防止这种情况
+      app.userInfoReadyCallback = res => {
+        this.setData({
+          userInfo: res.userInfo,
+          hasUserInfo: true
+        })
       }
-    ]
+    } else {
+      // 在没有 open-type=getUserInfo 版本的兼容处理
+      wx.getUserInfo({
+        success: res => {
+          app.globalData.userInfo = res.userInfo
+          this.setData({
+            userInfo: res.userInfo,
+            hasUserInfo: true
+          })
+        }
+      })
+    }
   },
-  expandTask(event) {
+  getUserInfo: function(e) {
+    console.log(e)
+    app.globalData.userInfo = e.detail.userInfo
     this.setData({
-      selectIndex: event.target.dataset.index
-    });
-  },
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: function (options) {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
+      userInfo: e.detail.userInfo,
+      hasUserInfo: true
+    })
   }
 })

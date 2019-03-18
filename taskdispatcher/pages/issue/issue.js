@@ -50,8 +50,9 @@ Page({
   },
 
   handleIssue() {
+    let requestIp = getApp().globalData.requestIp;
     wx.request({
-      url: 'https://localhost:8080',
+      url: requestIp + 'https://localhost:8080',
       data: this.taskVo,
       success: (res) => {
         showSuccToast("已经成功发布");
