@@ -2,6 +2,8 @@ package com.hptpd.taskdispatcherserver.domain;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.hptpd.taskdispatcherserver.common.util.AbstractMyBeanUtils;
+import com.hptpd.taskdispatcherserver.domain.vo.UserVo;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -53,6 +55,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
     private Set<Staff> staffs =Sets.newLinkedHashSet();
+
 
     @Override
     public boolean equals(Object o) {

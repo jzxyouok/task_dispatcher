@@ -11,6 +11,7 @@ import com.hptpd.taskdispatcherserver.repository.*;
 import com.hptpd.taskdispatcherserver.service.BaseTaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -50,7 +51,7 @@ public class BaseTaskServiceImpl implements BaseTaskService {
 
 
     @Override
-    public Result DispatchTask(TaskVo taskVo) {
+    public Result dispatchTask(TaskVo taskVo) {
 
         Task task =new Task();
         AbstractMyBeanUtils.copyProperties(taskVo,task);
@@ -62,7 +63,7 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         proposer.setUser(optionalUser.get());
         proposer.setName("发布者");
         proposer.setTask(task);
-//        proposerRep.save(proposer);
+
 
         AuditorVo auditorVo =taskVo.getAuditorVo();
         Auditor auditor =new Auditor();
@@ -71,10 +72,10 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         auditor.setUser(optionalUser1.get());
         auditor.setName("审批人");
         auditor.setTask(task);
-//        auditorRep.save(auditor);
+
 
         List<StaffVo> staffVos =taskVo.getStaffVos();
-//        Set<Staff> staffSet =Sets.newLinkedHashSet();
+
         List<Staff> staffList =Lists.newArrayList();
         for (StaffVo staffVo:staffVos){
             Staff staff =new Staff();
@@ -94,9 +95,21 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         task.setProposer(proposer);
         task.setAuditor(auditor);
 
-
         taskRep.save(task);
         return null;
 
+    }
+
+
+    /**
+     * 获取所有用户信息
+     *
+     * @return
+     */
+    @Override
+    public List<UserVo> getAllUsers() {
+        Sort sort = new Sort(Sort.Direction.DESC, "name");
+        List<User> users =userRep.findAll(sort);
+        return UserVo.userToVo(users);
     }
 }

@@ -52,6 +52,7 @@ public class TaskTest {
         taskVo.setTaskDescription("任务描述");
         taskVo.setTaskName("名称");
 
+
         ProposerVo proposerVo =new ProposerVo();
         proposerVo.setUserVo(userVo1);
         taskVo.setProposerVo(proposerVo);
@@ -70,6 +71,6 @@ public class TaskTest {
         staffVos.add(staffVo1);
         taskVo.setStaffVos(staffVos);
 
-        baseTaskService.DispatchTask(taskVo);
+        baseTaskService.dispatchTask(taskVo);
     }
 }

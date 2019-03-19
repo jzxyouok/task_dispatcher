@@ -1,6 +1,7 @@
 package com.hptpd.taskdispatcherserver.controller;
 
 import com.hptpd.taskdispatcherserver.component.Result;
+import com.hptpd.taskdispatcherserver.domain.User;
 import com.hptpd.taskdispatcherserver.domain.vo.TaskVo;
 import com.hptpd.taskdispatcherserver.domain.vo.UserVo;
 import com.hptpd.taskdispatcherserver.service.BaseTaskService;
@@ -30,8 +31,8 @@ public class BaseTaskController {
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     public List<UserVo> getAllUsers(){
-
-        return  null;
+        List<UserVo> userVos =baseTaskService.getAllUsers();
+        return  userVos;
     }
 
     /**
@@ -42,7 +43,7 @@ public class BaseTaskController {
     @RequestMapping(value = "/dispatchTask", method = RequestMethod.POST)
     public Result dispatchTask(@RequestBody TaskVo taskVo){
 
-        Result result =baseTaskService.DispatchTask(taskVo);
+        Result result =baseTaskService.dispatchTask(taskVo);
         return result;
 
     }
