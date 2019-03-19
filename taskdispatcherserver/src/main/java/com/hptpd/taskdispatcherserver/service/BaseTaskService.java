@@ -2,6 +2,8 @@ package com.hptpd.taskdispatcherserver.service;
 
 
 import com.hptpd.taskdispatcherserver.component.Result;
+import com.hptpd.taskdispatcherserver.domain.User;
+import com.hptpd.taskdispatcherserver.domain.vo.ProjectVo;
 import com.hptpd.taskdispatcherserver.domain.vo.TaskVo;
 import com.hptpd.taskdispatcherserver.domain.vo.UserVo;
 
@@ -12,6 +14,8 @@ import java.util.List;
  *
  * @author apple
  */
+
+import java.util.List;
 
 public interface BaseTaskService {
 
@@ -29,4 +33,9 @@ public interface BaseTaskService {
      */
     List<UserVo> getAllUsers();
 
+    /**
+     *  获取所有项目信息
+     * @return
+     */
+    List<ProjectVo> getAllProjects();
 }

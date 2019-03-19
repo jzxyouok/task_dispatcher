@@ -51,6 +51,6 @@ App({
     appid: 'wx07a87aa3fd0cc53a',
     secret: 'b96816b6e0d6e95d700443e88ba86396',
     openid: '',
-    requestIp: 'https://localhost:8080'
+    requestIp: 'http://192.168.0.10:8080'
   }
 })

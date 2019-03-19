@@ -10,14 +10,41 @@ Page({
       taskDescription: '',
       startTime: '',
       endTime: '',
-      orient: 'direc',
+      orient: true,
       workload: '',
-      taskState: '',
-      projVo: {
-        projName: ''
+      project: {
+        id: '123456',
+        Name: '项目1',
+        department: '测试1'
       },
-      roleVos: [],
-      labelVos: []
+      proposerVo: {
+        userVo: {
+          id: '402880e76990a8b4016990a8c4c60000',
+          weChat: 'lc',
+          name: '刘成',
+        }
+      },
+      auditorVo: {
+        userVo: {
+          id: '402880e76990a8b4016990a8c4f30003',
+          weChat: 'doctor彭',
+          name: 'doctor',
+        }
+      },
+      staffVos: [{
+        userVo: {
+          id: '402880e76990a8b4016990a8c4f30002',
+          weChat: 'ymh',
+          name: '要梦回',
+        }
+      }, 
+      {
+        userVo: {
+          id: '402880e76990a8b4016990a8c4f20001',
+          weChat: 'lw',
+          name: '龙威',
+        }
+      }]
     }
   },
   bindStartTimeChange(e){
@@ -30,9 +57,10 @@ Page({
       'taskVo.endTime': e.detail.value
     });
   },
-  handleChange({ detail }) {
+  handleTabChange({ detail }) {
+    console.log(detail);
     this.setData({
-      'taskVo.orient': detail.key
+      'taskVo.orient': detail.key == "true"
     });
   },
   choosePeople(e){
@@ -50,15 +78,18 @@ Page({
   },
 
   handleIssue() {
+    console.log(this.data.taskVo);
     let requestIp = getApp().globalData.requestIp;
     wx.request({
-      url: requestIp + 'https://localhost:8080',
-      data: this.taskVo,
-      success: (res) => {
-        showSuccToast("已经成功发布");
+      url: requestIp + '/base_task/dispatchTask',
+      method: "POST",
+      data: this.data.taskVo,
+      success: res => {
+        console.log(res);
+        this.showSuccToast("已经成功发布");
       },
-      fail: (e) => {
-        console.log("fail");
+      fail: e => {
+        console.log(e);
       }
     });
   },

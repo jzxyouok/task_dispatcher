@@ -2,6 +2,7 @@ package com.hptpd.taskdispatcherserver.controller;
 
 import com.hptpd.taskdispatcherserver.component.Result;
 import com.hptpd.taskdispatcherserver.domain.User;
+import com.hptpd.taskdispatcherserver.domain.vo.ProjectVo;
 import com.hptpd.taskdispatcherserver.domain.vo.TaskVo;
 import com.hptpd.taskdispatcherserver.domain.vo.UserVo;
 import com.hptpd.taskdispatcherserver.service.BaseTaskService;
@@ -46,5 +47,14 @@ public class BaseTaskController {
         Result result =baseTaskService.dispatchTask(taskVo);
         return result;
 
+    }
+
+    /**
+     *  获取所有项目信息
+     * @return
+     */
+    @RequestMapping(value = "/projects", method = RequestMethod.GET)
+    public List<ProjectVo> getAllProjects(){
+        return baseTaskService.getAllProjects();
     }
 }

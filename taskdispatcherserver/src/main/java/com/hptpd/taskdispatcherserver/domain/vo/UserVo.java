@@ -36,6 +36,8 @@ public class UserVo {
 
     private String position;
 
+    private String firstLetter;
+
 
     public static List<UserVo> userToVo(List<User> users){
         List<UserVo> userVos = Lists.newArrayList();

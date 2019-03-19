@@ -49,6 +49,8 @@ public class BaseTaskServiceImpl implements BaseTaskService {
     @Resource(name = "staffRep")
     private StaffRep staffRep;
 
+    @Resource(name = "projectRep")
+    private ProjectRep projectRep;
 
     @Override
     public Result dispatchTask(TaskVo taskVo) {
@@ -111,5 +113,17 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         Sort sort = new Sort(Sort.Direction.DESC, "name");
         List<User> users =userRep.findAll(sort);
         return UserVo.userToVo(users);
+    }
+
+
+    /**
+     * 获取所有项目信息
+     *
+     * @return
+     */
+    @Override
+    public List<ProjectVo> getAllProjects() {
+        List<Project> projs =projectRep.findAll();
+        return ProjectVo.projectToVo(projs);
     }
 }
