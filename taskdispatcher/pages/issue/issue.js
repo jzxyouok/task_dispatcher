@@ -1,4 +1,7 @@
 // pages/issue/issue.js
+
+const { $Toast } = require('../../dist/base/index');
+const { watch, computed } = require('../../utils/vuefy.js')
 Page({
 
   /**
@@ -86,7 +89,7 @@ Page({
       data: this.data.taskVo,
       success: res => {
         console.log(res);
-        this.showSuccToast("已经成功发布");
+        this.showToast("已经成功发布", 'success');
       },
       fail: e => {
         console.log(e);
@@ -94,21 +97,23 @@ Page({
     });
   },
   /**
-   * 显示成功的气泡
-   */
-  showSuccToast(title){
-    wx.showToast({
-      title,
-      icon: 'succes',
-      duration: 1000,
-      mask: true
-    })
-  },
-  /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    computed(this, {
+      staffNames: function () {
+        let destStr = "";
+        this.data.taskVo.staffVos.forEach((v, k) => {
+          destStr += v.userVo.name + ",";
+        });
+        if (destStr.indexOf(",") > -1) {
+          destStr = destStr.substring(0, destStr.length - 1);
+        }
+        console.log("destStr:");
+        console.log(destStr);
+        return destStr;
+      }
+    })
   },
 
   /**
@@ -122,7 +127,41 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    console.log(wx.getStorageSync('selectPeople'));
+    console.log("issue.js onShow");
+    let selectPeople = wx.getStorageSync('selectPeople');
+    console.log(selectPeople);
+    switch (selectPeople.roleType) {
+      case "auditor":
+        this.setData({
+          "taskVo.auditorVo" : {
+            userVo: {
+              id: selectPeople.peopleArr[0].id,
+              name: selectPeople.peopleArr[0].name,
+              openid: selectPeople.peopleArr[0].openid
+            }
+          }
+        });
+        break;
+      case "staff":
+        let staffVos = [];
+        selectPeople.peopleArr.forEach((v, k) => {
+          staffVos.push({
+            userVo:{
+              id: v.id,
+              name: v.name,
+              openid: v.openid
+            }
+          });
+        });
+        this.data.taskVo.staffVos = staffVos;
+        this.setData({
+          taskVo: this.data.taskVo
+        });
+        console.log(staffVos);
+        console.log(this.data.taskVo);
+        break;
+    }
+    wx.removeStorageSync('selectPeople');
   },
 
   /**
@@ -158,5 +197,15 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+
+  /**
+   * 显示成功的气泡
+   */
+  showToast(content, type) {
+    $Toast({
+      content,
+      type
+    });
   }
 })

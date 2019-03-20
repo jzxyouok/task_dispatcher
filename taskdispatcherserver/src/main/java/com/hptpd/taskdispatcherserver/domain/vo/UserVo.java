@@ -3,6 +3,7 @@ package com.hptpd.taskdispatcherserver.domain.vo;
 
 import com.google.common.collect.Lists;
 import com.hptpd.taskdispatcherserver.common.util.AbstractMyBeanUtils;
+import com.hptpd.taskdispatcherserver.common.util.PinyinUtil;
 import com.hptpd.taskdispatcherserver.domain.User;
 import lombok.Data;
 
@@ -44,6 +45,7 @@ public class UserVo {
         for (User user:users){
             UserVo userVo = new UserVo();
             AbstractMyBeanUtils.copyProperties(user,userVo);
+            userVo.setFirstLetter(PinyinUtil.getFirstLetter(userVo.name));
             userVos.add(userVo);
         }
         return userVos;
