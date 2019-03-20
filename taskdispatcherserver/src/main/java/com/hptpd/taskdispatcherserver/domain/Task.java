@@ -60,6 +60,12 @@ public class Task {
     private Date endTime;
 
     /**
+     * 创建时间
+     */
+    @Column(name = "creat_time")
+    private Date creatTime;
+
+    /**
      *  任务是否定向
      */
     @Column(name="orient")

@@ -2,6 +2,7 @@ package com.hptpd.taskdispatcherserver.controller;
 
 import com.hptpd.taskdispatcherserver.component.Result;
 import com.hptpd.taskdispatcherserver.domain.User;
+import com.hptpd.taskdispatcherserver.domain.vo.LabelVo;
 import com.hptpd.taskdispatcherserver.domain.vo.ProjectVo;
 import com.hptpd.taskdispatcherserver.domain.vo.TaskVo;
 import com.hptpd.taskdispatcherserver.domain.vo.UserVo;
@@ -56,5 +57,34 @@ public class BaseTaskController {
     @RequestMapping(value = "/projects", method = RequestMethod.GET)
     public List<ProjectVo> getAllProjects(){
         return baseTaskService.getAllProjects();
+    }
+
+    /**
+     * 获取所有标签信息
+     * @return
+     */
+    @RequestMapping(value = "/labels", method = RequestMethod.GET)
+    public List<LabelVo> getAllLabels(){
+        return baseTaskService.getAllLabels();
+    }
+
+    /**
+     * 判断User.telephone且User.name在数据库里是否有对应已录数据，有则存入User.weChat，无则激活失败		--激活过程
+     * @return
+     */
+    @RequestMapping(value = "/activate", method = RequestMethod.POST)
+    public Result activateUser(@RequestBody UserVo userVo){
+
+        return  baseTaskService.activateUser(userVo);
+    }
+
+    /**
+     * 询所有未定向任务列表，按任务创建时间排序
+     * @return
+     */
+
+    @RequestMapping(value = "/unOrient/tasks", method = RequestMethod.GET)
+    public List<TaskVo> taskVos() {
+        return baseTaskService.queryTaskByUnOrient();
     }
 }

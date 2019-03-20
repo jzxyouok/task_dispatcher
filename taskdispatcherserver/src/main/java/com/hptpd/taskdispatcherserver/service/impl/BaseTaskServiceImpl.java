@@ -2,7 +2,6 @@ package com.hptpd.taskdispatcherserver.service.impl;
 
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.hptpd.taskdispatcherserver.common.util.AbstractMyBeanUtils;
 import com.hptpd.taskdispatcherserver.component.Result;
 import com.hptpd.taskdispatcherserver.domain.*;
@@ -17,7 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
+
 
 
 /**
@@ -51,6 +50,9 @@ public class BaseTaskServiceImpl implements BaseTaskService {
 
     @Resource(name = "projectRep")
     private ProjectRep projectRep;
+
+    @Resource(name = "labelRep")
+    private LabelRep labelRep;
 
     @Override
     public Result dispatchTask(TaskVo taskVo) {
@@ -121,4 +123,52 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         List<Project> projs =projectRep.findAll();
         return ProjectVo.projectToVo(projs);
     }
+
+    /**
+     * 获取所有标签
+     *
+     * @return
+     */
+    @Override
+    public List<LabelVo> getAllLabels() {
+        List<Label> labels =labelRep.findAll();
+        return LabelVo.labelToVo(labels);
+    }
+
+    /**
+     * 用户激活
+     * 判断User.telephone且User.name在数据库里是否有对应已录数据，有则存入User.weChat，无则激活失败		--激活过程
+     *
+     * @param userVo
+     * @return
+     */
+    @Override
+    public Result activateUser(UserVo userVo) {
+
+        String telephone =userVo.getTelephone();
+        User user =userRep.findByTelephone(telephone);
+        if (user != null){
+           user.setWeChat(userVo.getWeChat());
+           userRep.save(user);
+           return Result.setResult(Result.SUCCESS,"用户激活成功");
+        }else {
+            return Result.setResult(Result.ERROR,"用户激活失败");
+        }
+
+    }
+
+    /**
+     * 查询所有未定向任务列表，按任务创建时间排序
+     *
+     * @return
+     */
+    @Override
+    public List<TaskVo> queryTaskByUnOrient() {
+        Sort sort = new Sort(Sort.Direction.DESC, "creatTime");
+        List<Task> tasks=taskRep.findByOrient(TaskVo.UN_ORIENT,sort);
+
+        return TaskVo.convertTask(tasks);
+    }
+
+
 }
