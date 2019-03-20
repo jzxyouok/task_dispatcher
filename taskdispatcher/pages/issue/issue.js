@@ -1,13 +1,15 @@
 // pages/issue/issue.js
 
 const { $Toast } = require('../../dist/base/index');
-const { watch, computed } = require('../../utils/vuefy.js')
+const watch = require('../../utils/watcher.js');
+const { inputgetName } = require('../../utils/bidirectionalBind.js');
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
+    staffNames: '',
     taskVo: {
       taskName: '',
       taskDescription: '',
@@ -27,27 +29,8 @@ Page({
           name: '刘成',
         }
       },
-      auditorVo: {
-        userVo: {
-          id: '402880e76990a8b4016990a8c4f30003',
-          weChat: 'doctor彭',
-          name: 'doctor',
-        }
-      },
-      staffVos: [{
-        userVo: {
-          id: '402880e76990a8b4016990a8c4f30002',
-          weChat: 'ymh',
-          name: '要梦回',
-        }
-      }, 
-      {
-        userVo: {
-          id: '402880e76990a8b4016990a8c4f20001',
-          weChat: 'lw',
-          name: '龙威',
-        }
-      }]
+      auditorVo: {},
+      staffVos: []
     }
   },
   bindStartTimeChange(e){
@@ -66,54 +49,60 @@ Page({
       'taskVo.orient': detail.key == "true"
     });
   },
+  handleInput(e) {
+    inputgetName(e, this);
+  },
   choosePeople(e){
     wx.navigateTo({
       url: '../peoplelist/peoplelist?roleType=' + e.target.dataset.roletype,
     })
   },
   handleSave(){
-    wx.showToast({
-      title: '已保存到草稿箱',
-      icon: 'succes',
-      duration: 1000,
-      mask: true
+    this.showToast("已保存到草稿", 'success');
+    this.setData({
+      taskVo: this.data.taskVo
     })
   },
 
   handleIssue() {
     console.log(this.data.taskVo);
     let requestIp = getApp().globalData.requestIp;
-    wx.request({
-      url: requestIp + '/base_task/dispatchTask',
-      method: "POST",
-      data: this.data.taskVo,
-      success: res => {
-        console.log(res);
-        this.showToast("已经成功发布", 'success');
+    // wx.request({
+    //   url: requestIp + '/base_task/dispatchTask',
+    //   method: "POST",
+    //   data: this.data.taskVo,
+    //   success: res => {
+    //     console.log(res);
+    //     this.showToast("发布成功", 'success');
+    //   },
+    //   fail: e => {
+    //     console.log(e);
+    //   }
+    // });
+  },
+  watch: {
+    'taskVo.staffVos': {
+      handler(newValue) {
+        console.log(newValue);
+        let staffNames = "";
+        newValue.forEach((v, k) => {
+          staffNames += v.userVo.name + ",";
+        });
+        if (staffNames.indexOf(",") > -1) {
+          staffNames = staffNames.substring(0, staffNames.length - 1);
+        }
+        this.setData({
+          staffNames
+        });
       },
-      fail: e => {
-        console.log(e);
-      }
-    });
+      deep: true
+    }
   },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    computed(this, {
-      staffNames: function () {
-        let destStr = "";
-        this.data.taskVo.staffVos.forEach((v, k) => {
-          destStr += v.userVo.name + ",";
-        });
-        if (destStr.indexOf(",") > -1) {
-          destStr = destStr.substring(0, destStr.length - 1);
-        }
-        console.log("destStr:");
-        console.log(destStr);
-        return destStr;
-      }
-    })
+    watch.setWatcher(this); // 设置监听器，建议在onLoad下调用
   },
 
   /**
@@ -129,7 +118,9 @@ Page({
   onShow: function () {
     console.log("issue.js onShow");
     let selectPeople = wx.getStorageSync('selectPeople');
-    console.log(selectPeople);
+    if (!selectPeople || !selectPeople.peopleArr || selectPeople.peopleArr.length < 1) {
+      return;
+    }
     switch (selectPeople.roleType) {
       case "auditor":
         this.setData({
@@ -154,13 +145,15 @@ Page({
           });
         });
         this.data.taskVo.staffVos = staffVos;
+        let taskVo = this.data.taskVo;
         this.setData({
-          taskVo: this.data.taskVo
+          'taskVo.staffVos': staffVos
         });
         console.log(staffVos);
         console.log(this.data.taskVo);
         break;
     }
+    //清楚缓存
     wx.removeStorageSync('selectPeople');
   },
 

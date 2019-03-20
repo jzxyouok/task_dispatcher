@@ -96,7 +96,7 @@ Page({
    */
   onUnload: function () {
     //保存已选人到缓存
-    saveSelectPeople2Storage();
+    this.saveSelectPeople2Storage();
   },
 
   /**
