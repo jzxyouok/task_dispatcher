@@ -19,4 +19,6 @@ public class StaffVo {
     private String id;
 
     private UserVo userVo;
+
+    private String name;
 }

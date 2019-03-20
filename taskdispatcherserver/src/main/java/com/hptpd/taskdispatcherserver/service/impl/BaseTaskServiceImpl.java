@@ -63,7 +63,6 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         UserVo userVo =proposerVo.getUserVo();
         Optional<User> optionalUser =userRep.findById(userVo.getId());
         proposer.setUser(optionalUser.get());
-        proposer.setName("发布者");
         proposer.setTask(task);
 
 
@@ -72,7 +71,6 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         logger.info(auditorVo.toString());
         Optional<User> optionalUser1 =userRep.findById(auditorVo.getUserVo().getId());
         auditor.setUser(optionalUser1.get());
-        auditor.setName("审批人");
         auditor.setTask(task);
 
 
@@ -84,21 +82,18 @@ public class BaseTaskServiceImpl implements BaseTaskService {
             UserVo userVo1 =staffVo.getUserVo();
             Optional<User> optionalUser2 =userRep.findById(userVo1.getId());
             staff.setUser(optionalUser2.get());
-            staff.setName("成员");
-            logger.info("1");
             staff.setTask(task);
             staffList.add(staff);
 
 
         }
-        logger.info(staffList.size()+"");
         task.setStaffs(staffList);
 
         task.setProposer(proposer);
         task.setAuditor(auditor);
 
         taskRep.save(task);
-        return null;
+        return Result.setResult(Result.SUCCESS,"任务发布成功");
 
     }
 
