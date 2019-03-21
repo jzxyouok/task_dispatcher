@@ -14,7 +14,7 @@
  \*/
 module.exports = {
 
-  inputgetName(e, page) {
+  bidirectionalBind(e, page) {
 
     let name = e.currentTarget.dataset.name;
 

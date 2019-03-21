@@ -2,7 +2,8 @@
 
 const { $Toast } = require('../../dist/base/index');
 const watch = require('../../utils/watcher.js');
-const { inputgetName } = require('../../utils/bidirectionalBind.js');
+const { bidirectionalBind } = require('../../utils/bidirectionalBind.js');
+import dateUtil from '../../utils/date_util';
 Page({
 
   /**
@@ -13,8 +14,8 @@ Page({
     taskVo: {
       taskName: '',
       taskDescription: '',
-      startTime: '',
-      endTime: '',
+      startTime: dateUtil.dateFormat(new Date(), "yyyy-MM-dd"),
+      endTime: dateUtil.dateFormat(new Date(new Date().getTime() + 7*24*60*60*1000), "yyyy-MM-dd"),
       orient: true,
       workload: '',
       project: {
@@ -50,7 +51,7 @@ Page({
     });
   },
   handleInput(e) {
-    inputgetName(e, this);
+    bidirectionalBind(e, this);
   },
   choosePeople(e){
     wx.navigateTo({

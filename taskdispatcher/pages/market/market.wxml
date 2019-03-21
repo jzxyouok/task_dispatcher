@@ -5,17 +5,17 @@
  \* @time: 2019/3/18 10:14
  \* Description: 首页-任务市场
  \*/ -->
-<i-cell-group wx:if="{{!isModalShow}}">
+<i-cell-group wx:if="{{isMarketShow}}">
   <view wx:for="{{tasks}}" wx:key="id" class="mb5">
-    <i-cell title="任务{{index+1}}" data-index="{{index}}" is-link bind:click="expandTask" value="详细信息">
+    <i-cell title="{{item.taskName}}" data-index="{{index}}" is-link bind:click="expandTask" value="详细信息">
     </i-cell>
     <i-panel wx:if="{{index==selectIndex}}">
       <view style="padding:5px 20px 10px;">
         <i-cell-group>
-          <i-cell>项目名称：{{item.projName}}</i-cell>
-          <i-cell>任务描述：{{item.taskDesc}}</i-cell>
-          <i-cell>项目周期：{{item.projPeriod}}</i-cell>
-          <i-cell>发布人：{{item.publisher}}</i-cell>
+          <i-cell>项目名称：{{item.project.Name}}</i-cell>
+          <i-cell>任务描述：{{item.taskDescription}}</i-cell>
+          <i-cell>项目周期：{{item.department}}</i-cell>
+          <i-cell>发布人：{{item.proposerVo.name}}</i-cell>
           <i-cell>工作量：{{item.workload}}人月</i-cell>
           <i-cell>任务产值：{{item.outputValue}}元</i-cell>
         </i-cell-group>
@@ -26,9 +26,13 @@
     </i-panel>
   </view>
 </i-cell-group>
-<i-modal title="账号未激活" visible="{{ isModalShow }}" actions="{{ modalActions }}" catch:click="handleModalClick">
+<i-modal style="height:4000px;" title="账号未激活" visible="{{ modal.isModalShow }}" actions="{{ modalActions }}" catch:click="handleModalClick">
     <view>
-      <i-input value="{{user.realName}}" title="真实姓名" placeholder='点击输入姓名'/>
-      <i-input type="number" value="{{user.phoneNumber}}" title="手机号" placeholder='点击输入手机号'/></view>
+      <i-row>
+        <i-col span="24" i-class="col-class"><i-input type="number" catch:change='handleInput' value="{{userVo.telephone}}" data-name="userVo.telephone" title="手机号" placeholder='输入手机号'/></i-col>
+        <i-col span="14" i-class="col-class"><i-input style="display:block;margin-top:8px;" type="number" catch:change='handleInput' value="{{userVo.validateCode}}" data-name="userVo.validateCode" title="验证码" placeholder='验证码'/></i-col>
+        <i-col span="10" i-class="col-class"><i-button bind:click="handleValidateCodeBtnClick" disabled="{{validateCodeButton.disabled}}" type="{{validateCodeButton.type}}" size="small">{{validateCodeButton.text}}</i-button></i-col>
+      </i-row>
+    </view>
 </i-modal>
 <i-toast id="toast" />
