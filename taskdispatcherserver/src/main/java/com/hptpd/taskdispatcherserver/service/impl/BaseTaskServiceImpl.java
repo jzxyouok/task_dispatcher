@@ -11,6 +11,7 @@ import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.google.common.collect.Lists;
 import com.hptpd.taskdispatcherserver.common.util.AbstractMyBeanUtils;
+import com.hptpd.taskdispatcherserver.common.util.JsonUtil;
 import com.hptpd.taskdispatcherserver.component.Result;
 import com.hptpd.taskdispatcherserver.domain.*;
 import com.hptpd.taskdispatcherserver.domain.vo.*;
@@ -238,7 +239,9 @@ public class BaseTaskServiceImpl implements BaseTaskService {
     public Result login(String openId) {
         User user =userRep.findByWeChat(openId);
         if (user!=null){
-            return Result.setResult(Result.SUCCESS,"该用户已激活");
+            UserVo userVo = new UserVo();
+            AbstractMyBeanUtils.copyProperties(user, userVo);
+            return Result.setResult(Result.SUCCESS,"该用户已激活", JsonUtil.objectToJson(userVo));
         }else {
             return Result.setResult(Result.ERROR,"该用户不存在");
         }

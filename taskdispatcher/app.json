@@ -8,7 +8,8 @@
     "pages/myinfo/myinfo",
     "pages/taskdetail/taskdetail",
     "pages/peoplelist/peoplelist",
-    "pages/tasks/tasks"
+    "pages/tasks/tasks",
+    "pages/projlist/projlist"
   ],
   "window": {
     "backgroundTextStyle": "dark",

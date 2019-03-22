@@ -1,0 +1,30 @@
+<!--pages/projlist/projlist.wxml-->
+<!-- /**
+ \* Created with 微信开发者工具.
+ \* @author: 龙威
+ \* @time: 2019/3/22 16:14
+ \* Description: 项目列表
+ \*/ -->
+<i-panel title="">
+    <i-input value="{{ value1 }}" title="搜索" placeholder="名字" />
+</i-panel>
+<view class="i-index-demo">
+    <i-index height="100%" catch:change="onIndexListChange">
+        <i-index-item 
+            wx:if="{{ indexList[index].list.length }}"
+            wx:for="{{ indexList }}" 
+            wx:for-index="index" 
+            wx:key="{{index}}" 
+            wx:for-item="item" name="{{item.key}}">
+            <view 
+                class="i-index-demo-item" 
+                wx:for="{{item.list}}" 
+                wx:for-index="in" 
+                wx:key="{{in}}" 
+                wx:for-item="it">
+              <i-checkbox data-index="{{in}}" data-itemid="{{it.id}}" position="right"  value="{{it.name}}" checked="{{it.isChecked}}" catch:change="handleCheckChange">
+              </i-checkbox>
+            </view>
+        </i-index-item>
+    </i-index>
+</view>

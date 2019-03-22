@@ -45,7 +45,6 @@ Page({
     });
   },
   handleTabChange({ detail }) {
-    console.log(detail);
     this.setData({
       'taskVo.orient': detail.key == "true"
     });
@@ -54,6 +53,22 @@ Page({
     bidirectionalBind(e, this);
   },
   choosePeople(e){
+    switch (e.target.dataset.roletype) {
+      case "staff":
+        if (this.data.taskVo.staffVos && this.data.taskVo.staffVos.length > 0) {
+          let ids = "";
+          this.data.taskVo.staffVos.forEach((v, k) => {
+            ids += v.userVo.id + ",";
+          });
+          wx.setStorageSync("hasSelectPeopleIds", ids.substring(0, ids.length - 1));
+        }
+        break;
+      case "auditor":
+        if (this.data.taskVo.auditorVo && this.data.taskVo.auditorVo.userVo) {
+          wx.setStorageSync("hasSelectPeopleIds", this.data.taskVo.auditorVo.userVo.id);
+        }
+        break;
+    }
     wx.navigateTo({
       url: '../peoplelist/peoplelist?roleType=' + e.target.dataset.roletype,
     })
@@ -74,6 +89,12 @@ Page({
     //   data: this.data.taskVo,
     //   success: res => {
     //     console.log(res);
+    // wx.removeStorage({
+    //   key: 'auditor-selectPeople'
+    // });
+    // wx.removeStorage({
+    //   key: 'staff-selectPeople'
+    // });
     //     this.showToast("发布成功", 'success');
     //   },
     //   fail: e => {
@@ -84,7 +105,6 @@ Page({
   watch: {
     'taskVo.staffVos': {
       handler(newValue) {
-        console.log(newValue);
         let staffNames = "";
         newValue.forEach((v, k) => {
           staffNames += v.userVo.name + ",";
@@ -117,45 +137,46 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    console.log("issue.js onShow");
-    let selectPeople = wx.getStorageSync('selectPeople');
-    if (!selectPeople || !selectPeople.peopleArr || selectPeople.peopleArr.length < 1) {
-      return;
+    let auditorSelectPeople = wx.getStorageSync('auditor-selectPeople');
+    let staffSelectPeople = wx.getStorageSync('staff-selectPeople');
+    if (auditorSelectPeople && auditorSelectPeople.length > 0) {
+      this.setData({
+        "taskVo.auditorVo": {
+          userVo: {
+            id: auditorSelectPeople[0].id,
+            name: auditorSelectPeople[0].name,
+            openid: auditorSelectPeople[0].openid
+          }
+        }
+      });
+    } else {
+      this.setData({
+        "taskVo.auditorVo": {
+          userVo: {
+            id: "",
+            name: "",
+            openid: ""
+          }
+        }
+      });
     }
-    switch (selectPeople.roleType) {
-      case "auditor":
-        this.setData({
-          "taskVo.auditorVo" : {
-            userVo: {
-              id: selectPeople.peopleArr[0].id,
-              name: selectPeople.peopleArr[0].name,
-              openid: selectPeople.peopleArr[0].openid
-            }
+    if (staffSelectPeople) {
+      let staffVos = [];
+      staffSelectPeople.forEach((v, k) => {
+        staffVos.push({
+          userVo: {
+            id: v.id,
+            name: v.name,
+            openid: v.openid
           }
         });
-        break;
-      case "staff":
-        let staffVos = [];
-        selectPeople.peopleArr.forEach((v, k) => {
-          staffVos.push({
-            userVo:{
-              id: v.id,
-              name: v.name,
-              openid: v.openid
-            }
-          });
-        });
-        this.data.taskVo.staffVos = staffVos;
-        let taskVo = this.data.taskVo;
-        this.setData({
-          'taskVo.staffVos': staffVos
-        });
-        console.log(staffVos);
-        console.log(this.data.taskVo);
-        break;
+      });
+      this.data.taskVo.staffVos = staffVos;
+      let taskVo = this.data.taskVo;
+      this.setData({
+        'taskVo.staffVos': staffVos
+      });
     }
-    //清楚缓存
-    wx.removeStorageSync('selectPeople');
   },
 
   /**

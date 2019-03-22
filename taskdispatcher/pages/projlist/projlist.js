@@ -1,9 +1,9 @@
-// pages/peoplelist/peoplelist.js
+// pages/projlist/projlist.js
 /**
  \* Created with 微信开发者工具.
  \* @author: 龙威
- \* @time: 2019/3/13 10:14
- \* Description: 人员列表
+ \* @time: 2019/3/22 16:14
+ \* Description: 项目列表
  \*/
 Page({
 
@@ -12,53 +12,21 @@ Page({
    */
   data: {
     requestIp: '',
-    isMultiSelect: false, //是否是多选
-    roleType: '',
-    indexList: [], //索引选择器
-    people:[
-      {
-        id:"3325",
-        name:"彭博",
-        firstLetter: "P"
-      },
-      {
-        id: "3fds325",
-        name: "辉少",
-        firstLetter: "H",
-        isChecked: true
-      },
-      {
-        id: "332gds5",
-        name: "刘神",
-        firstLetter: "L"
-      }
-    ]
+    indexList: [] //索引选择器
   },
 
   /**
    * 处理checkbox事件
    */
-  handleCheckChange(e){
-    if (this.data.isMultiSelect) {
-      this.data.indexList.forEach((val, key) => {
-        val.list.forEach((v, k) => {
-          if (v.id == e.target.dataset.itemid) {
-            v.isChecked = !(v.isChecked ? true : false);
-            return;
-          }
-        });
+  handleCheckChange(e) {
+    this.data.indexList.forEach((val, key) => {
+      val.list.forEach((v, k) => {
+        if (v.id == e.target.dataset.itemid) {
+          v.isChecked = !(v.isChecked ? true : false);
+          return;
+        }
       });
-    } else {
-      this.data.indexList.forEach((val, key) => {
-        val.list.forEach((v, k) => {
-          if (v.id == e.target.dataset.itemid) {
-            v.isChecked = !(v.isChecked ? true : false);
-          } else {
-            v.isChecked = false;
-          }
-        });
-      });
-    }
+    });
     this.setData({
       indexList: this.data.indexList
     })
@@ -73,11 +41,6 @@ Page({
   onLoad: function (options) {
     let app = getApp();
     if (options) {
-      if ("auditor" == options.roleType) {
-        this.data.isMultiSelect = false;
-      } else if ("staff" == options.roleType) {
-        this.data.isMultiSelect = true;
-      }
       this.changeNavigationBarTitle(options.roleType);
       this.setData({
         roleType: options.roleType

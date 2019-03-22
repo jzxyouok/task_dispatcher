@@ -5,7 +5,7 @@
  \* Description: 模仿Vue监听属性
  \* Usage:
  \* 1、import WxValidate from '../../utils/WxValidate.js'
- \* 2、Page的属性声明初始化验证器
+ \* 2、Page的属性声明初始化验证器函数
  initValidate() {
     const rules = {
       telephone: {

@@ -20,7 +20,6 @@ App({
             success: res => {
               if (res.data) {
                 this.globalData.openid = res.data.openid;
-                ++this.globalData.loginRequestDone;
               } 
             }
           });
@@ -38,7 +37,6 @@ App({
             success: res => {
               // 可以将 res 发送给后台解码出 unionId
               this.globalData.userInfo = res.userInfo;
-              ++this.globalData.loginRequestDone;
 
               // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
               // 所以此处加入 callback 以防止这种情况
@@ -52,9 +50,8 @@ App({
     })
   },
   globalData: {
-    loginRequestSum: 2, //登陆请求调用总数，达到总数后显示首页
-    loginRequestDone: 0, //登陆请求调用计数
-    userInfo: null,
+    userInfo: null, //微信存储的用户信息
+    localUserInfo: null, //本地数据库存储的用户信息
     appid: 'wx07a87aa3fd0cc53a',
     secret: 'b96816b6e0d6e95d700443e88ba86396',
     openid: '',

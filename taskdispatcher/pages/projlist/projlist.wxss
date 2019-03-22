@@ -1,0 +1,9 @@
+/* pages/projlist/projlist.wxss */
+.i-index-demo,page{
+    width:100%;
+    height:100%;
+}
+.i-index-demo-item{
+    border-bottom:#ddd solid 1rpx;
+    font-size:14px;
+}

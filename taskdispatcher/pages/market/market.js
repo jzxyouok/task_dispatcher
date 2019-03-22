@@ -30,7 +30,7 @@ Page({
     userVo: {
       name: "",
       telephone: "",
-      openid: "",
+      weChat: "",
       validateCode: ""
     },
     modalActions: [{
@@ -71,6 +71,7 @@ Page({
       return;
     }
     this.data.validateCodeButton.isClick = true;
+    //发送验证码动画
     let time = 61;
     let interval = setInterval(() => {
       if (time-- > 1) {
@@ -94,6 +95,20 @@ Page({
         });
       }
     }, 1000);
+    //请求后台发送短信验证码
+    let app = getApp();
+    wx.request({
+      url: app.globalData.requestIp + '/base_task/msgCode?phone=' + this.data.userVo.telephone,
+      method: "GET",
+      success: res => {
+        if (res.data) {
+
+        }
+      },
+      fail: e => {
+
+      }
+    })
   },
   /**
    * 输入框事件
@@ -142,21 +157,58 @@ Page({
       modalActions: this.data.modalActions
     });
 
-    setTimeout(() => {
-      this.data.modal.isActivateClick = false;
-      this.data.validateCodeButton.isClick = false;
-      this.data.modalActions[0].loading = false;
-      wx.showTabBar();
-      $Toast({
-        content: '激活成功',
-        type: 'success'
-      });
-      this.setData({
-        'modal.isModalShow': false,
-        isMarketShow: true,
-        modalActions: this.data.modalActions
-      });
-    }, 2000);
+    //请求后台进行激活
+    let app = getApp();
+    this.data.userVo.weChat = app.globalData.openid;
+    wx.request({
+      url: app.globalData.requestIp + '/base_task/activate',
+      method: "POST",
+      data: this.data.userVo,
+      success: res => {
+        this.data.modal.isActivateClick = false;
+        this.data.validateCodeButton.isClick = false;
+        this.data.modalActions[0].loading = false;
+        if (!res.data) {
+          return;
+        }
+        if (res.data.errCode == 0) {
+          wx.showTabBar();
+          $Toast({
+            content: '激活成功',
+            type: 'success'
+          });
+          this.setData({
+            'modal.isModalShow': false,
+            isMarketShow: true,
+            modalActions: this.data.modalActions
+          });
+        } else {
+          $Toast({
+            content: res.data.messages,
+            type: 'warning'
+          });
+          this.setData({
+            'modal.isModalShow': true,
+            isMarketShow: false,
+            modalActions: this.data.modalActions
+          });
+        }
+      },
+      fail: e => {
+        this.data.modal.isActivateClick = false;
+        this.data.validateCodeButton.isClick = false;
+        this.data.modalActions[0].loading = false;
+        $Toast({
+          content: "激活服务异常",
+          type: 'error'
+        });
+        this.setData({
+          'modal.isModalShow': true,
+          isMarketShow: false,
+          modalActions: this.data.modalActions
+        });
+      }
+    });
   },
   /**
    * 生命周期函数--监听页面加载
@@ -263,21 +315,20 @@ Page({
     let app = getApp();
     //获取到openid与用户信息后，才能开始进行激活流程
     let interval = setInterval(() => {
-      if (app.globalData.loginRequestDone >= app.globalData.loginRequestSum) {
+      if (app.globalData.openid && app.globalData.userInfo) {
         clearInterval(interval);
         wx.request({
-          url: app.globalData.requestIp + '/base_task/isActivate',
-          method: "POST",
-          data: app.globalData.openid,
+          url: app.globalData.requestIp + '/base_task/login?openId=' + app.globalData.openid,
+          method: "GET",
           success: res => {
-            console.log(res);
-            if (!res.data.isActivate) {
+            if (!res.data || !res.data.data) {
               this.setData({
                 'modal.isModalShow': true,
                 isMarketShow: false
               });
               wx.hideTabBar();
             } else {
+              app.globalData.localUserInfo = JSON.parse(res.data.data);
               this.setData({
                 'modal.isModalShow': false,
                 isMarketShow: true
@@ -289,7 +340,6 @@ Page({
 
           }
         });
-        console.log("fininsh");
       }
     }, 1000);
   }
