@@ -1,6 +1,14 @@
 package com.hptpd.taskdispatcherserver.service.impl;
 
 
+import com.aliyuncs.CommonRequest;
+import com.aliyuncs.CommonResponse;
+import com.aliyuncs.DefaultAcsClient;
+import com.aliyuncs.IAcsClient;
+import com.aliyuncs.exceptions.ClientException;
+import com.aliyuncs.exceptions.ServerException;
+import com.aliyuncs.http.MethodType;
+import com.aliyuncs.profile.DefaultProfile;
 import com.google.common.collect.Lists;
 import com.hptpd.taskdispatcherserver.common.util.AbstractMyBeanUtils;
 import com.hptpd.taskdispatcherserver.component.Result;
@@ -14,9 +22,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Optional;
-
+import javax.servlet.http.HttpSession;
+import java.util.*;
 
 
 /**
@@ -168,6 +175,58 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         List<Task> tasks=taskRep.findByOrient(TaskVo.UN_ORIENT,sort);
 
         return TaskVo.convertTask(tasks);
+    }
+
+    /**
+     * 短信验证
+     *
+     * @param session
+     * @return
+     */
+    @Override
+    public Result getMsgCode(HttpSession session,String phone) {
+
+        session.removeAttribute(phone);
+        DefaultProfile profile = DefaultProfile.getProfile("default", Message.ACCESSKEYID, Message.SECRET);
+        IAcsClient client = new DefaultAcsClient(profile);
+
+
+        CommonRequest request = new CommonRequest();
+
+        request.setMethod(MethodType.POST);
+        request.setDomain(Message.DOMAIN);
+        request.setVersion("2017-05-25");
+        request.setAction(Message.ACTION);
+        request.putQueryParameter("PhoneNumbers", phone);
+        request.putQueryParameter("SignName", Message.SIGNNAME);
+        request.putQueryParameter("TemplateCode", Message.TEMP);
+
+        int random = (int) ((Math.random()*9+1)*100000);
+        request.putQueryParameter("TemplateParam", "{ \"code\":\"" + random + "\"}");
+
+        try {
+            CommonResponse response = client.getCommonResponse(request);
+            System.out.println(response.getData());
+            session.setAttribute(phone, random);
+
+            final Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    session.removeAttribute(phone);
+                    timer.cancel();
+                    System.out.println("===============" + session.getAttribute(phone));
+                }
+            }, 5 * 60 * 1000);
+
+        } catch (ServerException e) {
+            e.printStackTrace();
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+
+
+        return Result.setResult(Result.SUCCESS,"成功");
     }
 
 

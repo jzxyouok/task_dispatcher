@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -86,5 +87,12 @@ public class BaseTaskController {
     @RequestMapping(value = "/unOrient/tasks", method = RequestMethod.GET)
     public List<TaskVo> taskVos() {
         return baseTaskService.queryTaskByUnOrient();
+    }
+
+
+    @RequestMapping(value = "/msgCode", method = RequestMethod.GET)
+    public Result getMsgCode( HttpSession session){
+
+        return baseTaskService.getMsgCode(session,"18627082367");
     }
 }

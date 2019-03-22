@@ -9,6 +9,7 @@ import com.hptpd.taskdispatcherserver.domain.vo.ProjectVo;
 import com.hptpd.taskdispatcherserver.domain.vo.TaskVo;
 import com.hptpd.taskdispatcherserver.domain.vo.UserVo;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -61,6 +62,11 @@ public interface BaseTaskService {
      List<TaskVo> queryTaskByUnOrient();
 
 
+    /**
+     * 短信验证
+     * @return
+     */
+     Result getMsgCode(HttpSession session,String phone);
 
 
 }
