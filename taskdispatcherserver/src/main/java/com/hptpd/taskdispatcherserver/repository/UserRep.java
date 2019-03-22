@@ -18,9 +18,17 @@ import org.springframework.stereotype.Repository;
 public interface UserRep extends JpaRepository<User,String> {
 
     /**
+     * 通过电话查询
      * @param phone
      * @return
      */
     User findByTelephone(String phone);
+
+    /**
+     * 通过openId 查询
+     * @param weChat
+     * @return
+     */
+    User findByWeChat(String weChat);
 
 }

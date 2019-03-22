@@ -7,10 +7,7 @@ import com.hptpd.taskdispatcherserver.domain.vo.ProjectVo;
 import com.hptpd.taskdispatcherserver.domain.vo.TaskVo;
 import com.hptpd.taskdispatcherserver.domain.vo.UserVo;
 import com.hptpd.taskdispatcherserver.service.BaseTaskService;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -91,8 +88,13 @@ public class BaseTaskController {
 
 
     @RequestMapping(value = "/msgCode", method = RequestMethod.GET)
-    public Result getMsgCode( HttpSession session){
+    public Result getMsgCode(@RequestParam String phone, HttpSession session){
 
-        return baseTaskService.getMsgCode(session,"18627082367");
+        return baseTaskService.getMsgCode(session,phone);
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public Result login(@RequestParam String openId){
+      return baseTaskService.login(openId);
     }
 }

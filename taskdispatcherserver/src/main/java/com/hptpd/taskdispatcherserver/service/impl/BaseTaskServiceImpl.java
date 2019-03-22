@@ -215,7 +215,6 @@ public class BaseTaskServiceImpl implements BaseTaskService {
                 public void run() {
                     session.removeAttribute(phone);
                     timer.cancel();
-                    System.out.println("===============" + session.getAttribute(phone));
                 }
             }, 5 * 60 * 1000);
 
@@ -227,6 +226,23 @@ public class BaseTaskServiceImpl implements BaseTaskService {
 
 
         return Result.setResult(Result.SUCCESS,"成功");
+    }
+
+    /**
+     * 验证登录
+     *
+     * @param openId
+     * @return
+     */
+    @Override
+    public Result login(String openId) {
+        User user =userRep.findByWeChat(openId);
+        if (user!=null){
+            return Result.setResult(Result.SUCCESS,"该用户已激活");
+        }else {
+            return Result.setResult(Result.ERROR,"该用户不存在");
+        }
+
     }
 
 

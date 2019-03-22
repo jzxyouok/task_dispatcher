@@ -64,9 +64,19 @@ public interface BaseTaskService {
 
     /**
      * 短信验证
+     * @param phone
+     * @param session
      * @return
      */
      Result getMsgCode(HttpSession session,String phone);
+
+
+    /**
+     *  验证登录
+     * @param openId
+     * @return
+     */
+     Result login(String openId);
 
 
 }
