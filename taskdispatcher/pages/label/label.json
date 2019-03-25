@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "选择标签",
+  "usingComponents": {
+    "i-button": "../../../dist/button/index",
+    "i-panel": "../../../dist/panel/index",
+    "i-input": "../../../dist/input/index"
+  }
+}

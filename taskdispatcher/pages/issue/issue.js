@@ -10,6 +10,7 @@ Page({
    * 页面的初始数据
    */
   data: {
+    requestIp: '',
     staffNames: '',
     taskVo: {
       taskName: '',
@@ -18,11 +19,7 @@ Page({
       endTime: dateUtil.dateFormat(new Date(new Date().getTime() + 7*24*60*60*1000), "yyyy-MM-dd"),
       orient: true,
       workload: '',
-      project: {
-        id: '123456',
-        Name: '项目1',
-        department: '测试1'
-      },
+      project: {},
       proposerVo: {
         userVo: {
           id: '402880e76990a8b4016990a8c4c60000',
@@ -73,6 +70,11 @@ Page({
       url: '../peoplelist/peoplelist?roleType=' + e.target.dataset.roletype,
     })
   },
+  chooseProject() {
+    wx.navigateTo({
+      url: '../projlist/projlist'
+    })
+  },
   handleSave(){
     this.showToast("已保存到草稿", 'success');
     this.setData({
@@ -82,13 +84,15 @@ Page({
 
   handleIssue() {
     console.log(this.data.taskVo);
-    let requestIp = getApp().globalData.requestIp;
     // wx.request({
-    //   url: requestIp + '/base_task/dispatchTask',
+    //   url: this.data.requestIp + '/base_task/dispatchTask',
     //   method: "POST",
     //   data: this.data.taskVo,
     //   success: res => {
     //     console.log(res);
+    // wx.removeStorage({
+    //   key: 'selectProject'
+    // });
     // wx.removeStorage({
     //   key: 'auditor-selectPeople'
     // });
@@ -123,6 +127,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    this.data.requestIp = getApp().globalData.requestIp;
     watch.setWatcher(this); // 设置监听器，建议在onLoad下调用
   },
 
@@ -137,6 +142,16 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    let selectProject = wx.getStorageSync('selectProject');
+    console.log(selectProject);
+    if (selectProject) {
+      this.setData({
+        'taskVo.project': {
+          id: selectProject.id,
+          name: selectProject.name
+        }
+      });
+    }
     let auditorSelectPeople = wx.getStorageSync('auditor-selectPeople');
     let staffSelectPeople = wx.getStorageSync('staff-selectPeople');
     if (auditorSelectPeople && auditorSelectPeople.length > 0) {
@@ -190,7 +205,6 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-
   },
 
   /**

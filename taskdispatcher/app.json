@@ -9,7 +9,8 @@
     "pages/taskdetail/taskdetail",
     "pages/peoplelist/peoplelist",
     "pages/tasks/tasks",
-    "pages/projlist/projlist"
+    "pages/projlist/projlist",
+    "pages/label/label"
   ],
   "window": {
     "backgroundTextStyle": "dark",

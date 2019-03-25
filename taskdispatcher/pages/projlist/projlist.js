@@ -12,27 +12,21 @@ Page({
    */
   data: {
     requestIp: '',
-    indexList: [] //索引选择器
+    indexList: [], //索引选择器
+    projList: []
   },
 
   /**
-   * 处理checkbox事件
+   * 处理项目点击事件
    */
-  handleCheckChange(e) {
-    this.data.indexList.forEach((val, key) => {
-      val.list.forEach((v, k) => {
-        if (v.id == e.target.dataset.itemid) {
-          v.isChecked = !(v.isChecked ? true : false);
-          return;
-        }
-      });
-    });
-    this.setData({
-      indexList: this.data.indexList
-    })
+  handleProjClick(e) {
+    console.log(e);
+    wx.setStorageSync('selectProject', { id: e.target.dataset.itemid, 
+      name: e.target.dataset.itemname});
+    wx.navigateBack();
   },
   onIndexListChange(event) {
-    console.log(event.detail, 'click right menu callback data')
+    // console.log(event.detail, 'click right menu callback data')
   },
 
   /**
@@ -41,15 +35,11 @@ Page({
   onLoad: function (options) {
     let app = getApp();
     if (options) {
-      this.changeNavigationBarTitle(options.roleType);
-      this.setData({
-        roleType: options.roleType
-      });
+
     }
     this.data.requestIp = app.globalData.requestIp;
-    let hasSelectPeopleIds = wx.getStorageSync("hasSelectPeopleIds");
-    //访问后台获取选人列表
-    this.getPeople(hasSelectPeopleIds);
+    //访问后台获取项目列表
+    this.getProjList();
   },
 
   /**
@@ -75,8 +65,6 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-    //保存已选人到缓存
-    this.saveSelectPeople2Storage();
   },
 
   /**
@@ -112,20 +100,18 @@ Page({
         list: []
       }
     })
-    this.data.people.forEach((item) => {
+    this.data.projList.forEach((item) => {
       let index = words.indexOf(item.firstLetter);
       if (index > -1) {
         indexStore[index].list.push({
           name: item.name,
           key: item.firstLetter,
-          isChecked: item.isChecked,
           id: item.id
         });
       } else {
         indexStore[0].list.push({
           name: item.name,
           key: item.firstLetter,
-          isChecked: item.isChecked,
           id: item.id
         });
       }
@@ -142,39 +128,24 @@ Page({
   changeNavigationBarTitle(index) {
     const barTitle = [
       '加载中...',
-      '选择审核人',
-      '选择承接人'
+      '选择项目'
     ]
-    barTitle["staff"] = '选择承接人';
-    barTitle["auditor"] = '选择审核人';
     wx.setNavigationBarTitle({
       title: barTitle[index]
     })
   },
 
   /**
-   * 访问后台获得people列表
+   * 访问后台获得project列表
    */
-  getPeople(hasSelectPeopleIds) {
+  getProjList(hasSelectProj) {
     wx.request({
-      url: this.data.requestIp + '/base_task/users',
+      url: this.data.requestIp + '/base_task/projects',
       success: res => {
-        this.data.people = res.data;
-        //如果有已经点击的人员，则给获取到的people中添加isChecked属性
-        let hasSelectPeopleIdsArr = hasSelectPeopleIds.split(",");
-        if (hasSelectPeopleIdsArr && hasSelectPeopleIdsArr.length > 0) {
-          hasSelectPeopleIdsArr.forEach((val, key) => {
-            this.data.people.forEach((v, k) => {
-              if (val == v.id) {
-                v.isChecked = true;
-                return;
-              }
-            });
-          });
-          wx.removeStorage({
-            key: 'hasSelectPeopleIds'
-          });
+        if (!res.data) {
+          return;
         }
+        this.data.projList = res.data;
         //初始化索引列表
         this.initIndexList();
       },
@@ -182,20 +153,5 @@ Page({
         console.log(e);
       }
     })
-  },
-
-  /**
-   * 保存已选人到缓存
-   */
-  saveSelectPeople2Storage() {
-    let selectPeople = [];
-    this.data.indexList.forEach((val, key) => {
-      val.list.forEach((v, k) => {
-        if (v.isChecked) {
-          selectPeople.push(v);
-        }
-      });
-    });
-    wx.setStorageSync(this.data.roleType + '-selectPeople', selectPeople);
   }
 })

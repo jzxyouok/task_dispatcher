@@ -16,15 +16,18 @@
             wx:for-index="index" 
             wx:key="{{index}}" 
             wx:for-item="item" name="{{item.key}}">
-            <view 
-                class="i-index-demo-item" 
+            <i-cell
+                class="i-index-demo-item"
+                wx:if="{{!item.dontShow}}"
                 wx:for="{{item.list}}" 
                 wx:for-index="in" 
                 wx:key="{{in}}" 
-                wx:for-item="it">
-              <i-checkbox data-index="{{in}}" data-itemid="{{it.id}}" position="right"  value="{{it.name}}" checked="{{it.isChecked}}" catch:change="handleCheckChange">
-              </i-checkbox>
-            </view>
+                wx:for-item="it"
+                data-itemid="{{it.id}}
+                data-itemname="{{it.name}}
+                catch:click="handleProjClick"
+                title="{{it.name}}">
+            </i-cell>
         </i-index-item>
     </i-index>
 </view>
