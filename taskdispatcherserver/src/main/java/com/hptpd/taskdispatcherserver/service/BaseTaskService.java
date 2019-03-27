@@ -50,9 +50,10 @@ public interface BaseTaskService {
      *  用户激活
      *  判断User.telephone且User.name在数据库里是否有对应已录数据，有则存入User.weChat，无则激活失败		--激活过程
      * @param userVo
+     * @param session
      * @return
      */
-    Result activateUser(UserVo userVo);
+    Result activateUser(HttpSession session,UserVo userVo);
 
 
     /**
@@ -78,5 +79,38 @@ public interface BaseTaskService {
      */
      Result login(String openId);
 
+    /**
+     * 通过User.weChat查询用户下所有不同状态的任务数量的统计		--我的页面
+     *
+     * @param openId
+     * @param taskState ("已发布") （"已审核"）
+     * @return
+     */
+     List<TaskVo> getTaskByUserAndState(String openId,String taskState);
+
+
+    /**
+     * 根据User.weChat查询User资料信息
+     * @param openId
+     * @return
+     */
+    UserVo getUserInfo(String openId);
+
+
+    /**
+     * 传入Task.id与User.id进行承接人绑定		--任务认领
+     * @param taskId
+     * @param userId
+     * @return
+     */
+    Result bindingTask(String taskId,String userId);
+
+
+    /**
+     * 根据Task.id查询Task资料信息
+     * @param taskId
+     * @return
+     */
+    TaskVo getTaskInfo(String taskId);
 
 }

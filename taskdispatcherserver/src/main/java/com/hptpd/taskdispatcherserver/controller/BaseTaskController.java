@@ -71,9 +71,9 @@ public class BaseTaskController {
      * @return
      */
     @RequestMapping(value = "/activate", method = RequestMethod.POST)
-    public Result activateUser(@RequestBody UserVo userVo){
+    public Result activateUser(@RequestBody UserVo userVo,HttpSession session){
 
-        return  baseTaskService.activateUser(userVo);
+        return  baseTaskService.activateUser(session,userVo);
     }
 
     /**
@@ -96,5 +96,51 @@ public class BaseTaskController {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public Result login(@RequestParam String openId){
       return baseTaskService.login(openId);
+    }
+
+
+    /**
+     * 通过User.weChat查询用户下所有不同状态的任务数量的统计		--我的页面
+     *
+     * @param openId
+     * @param taskState ("已发布") （"已审核"）("承接人")
+     * @return
+     */
+    @RequestMapping(value = "/state/tasks", method = RequestMethod.GET)
+    public List<TaskVo> getTaskByUserAndState(@RequestParam String openId,String taskState){
+        return baseTaskService.getTaskByUserAndState(openId,taskState);
+    }
+
+    /**
+     * 根据User.weChat查询User资料信息
+     * @param openId
+     * @return
+     */
+    @RequestMapping(value = "/userInfo", method = RequestMethod.GET)
+    public UserVo getUserInfo(@RequestParam String openId){
+        return baseTaskService.getUserInfo(openId);
+
+    }
+
+    /**
+     * 传入Task.id与User.id进行承接人绑定		--任务认领
+     * @param taskId
+     * @param userId
+     * @return
+     */
+
+    @RequestMapping(value = "/binding/task", method = RequestMethod.GET)
+    public Result bindingTask(@RequestParam String taskId,String userId){
+        return baseTaskService.bindingTask(taskId,userId);
+    }
+
+    /**
+     * 根据Task.id查询Task资料信息
+     * @param taskId
+     * @return
+     */
+    @RequestMapping(value = "/taskInfo", method = RequestMethod.GET)
+    public TaskVo getTaskInfo(@RequestParam  String taskId){
+        return  baseTaskService.getTaskInfo(taskId);
     }
 }

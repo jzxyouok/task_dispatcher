@@ -20,6 +20,8 @@ import java.util.List;
  */
 @Data
 public class UserVo {
+    public static String PROPOSER ="已发布";
+    public static String AUDiTOR ="已审核";
 
     private String id;
 
@@ -38,6 +40,8 @@ public class UserVo {
     private String position;
 
     private String firstLetter;
+
+    private Integer msgCode;
 
 
     public static List<UserVo> userToVo(List<User> users){

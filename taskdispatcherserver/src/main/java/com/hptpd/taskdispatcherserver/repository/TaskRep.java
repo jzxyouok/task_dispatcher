@@ -1,5 +1,8 @@
 package com.hptpd.taskdispatcherserver.repository;
 
+import com.hptpd.taskdispatcherserver.domain.Auditor;
+import com.hptpd.taskdispatcherserver.domain.Proposer;
+import com.hptpd.taskdispatcherserver.domain.Staff;
 import com.hptpd.taskdispatcherserver.domain.Task;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,4 +31,29 @@ public interface TaskRep extends JpaRepository<Task,String> {
      * @return
      */
     List<Task> findByOrient(boolean orient, Sort sort);
+
+
+    /**
+     * 申请角色的任务
+     * @param proposer
+     * @return
+     */
+    Task findByProposer(Proposer proposer);
+
+
+    /**
+     * 审核者 角色的任务
+     * @param auditor
+     * @return
+     */
+    Task findByAuditor(Auditor auditor);
+
+    /**
+     * 处于成员角色的任务
+     * @param staff
+     * @return
+     */
+    Task findByStaffs(Staff staff);
+
+
  }

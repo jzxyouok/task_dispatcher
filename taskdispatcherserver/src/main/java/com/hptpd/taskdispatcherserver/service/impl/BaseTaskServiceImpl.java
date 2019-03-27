@@ -143,19 +143,25 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         return LabelVo.labelToVo(labels);
     }
 
+
     /**
      * 用户激活
+     * 判断 手机号与验证码是否对应
      * 判断User.telephone且User.name在数据库里是否有对应已录数据，有则存入User.weChat，无则激活失败		--激活过程
      *
      * @param userVo
      * @return
      */
     @Override
-    public Result activateUser(UserVo userVo) {
+    public Result activateUser(HttpSession session,UserVo userVo) {
 
         String telephone =userVo.getTelephone();
         User user =userRep.findByTelephone(telephone);
-        if (user != null){
+
+        Integer msgCode =userVo.getMsgCode();
+        Integer randomCode = (Integer) session.getAttribute(telephone);
+
+        if (user != null && msgCode.equals(randomCode)){
            user.setWeChat(userVo.getWeChat());
            userRep.save(user);
            return Result.setResult(Result.SUCCESS,"用户激活成功");
@@ -246,6 +252,107 @@ public class BaseTaskServiceImpl implements BaseTaskService {
             return Result.setResult(Result.ERROR,"该用户不存在");
         }
 
+    }
+
+    /**
+     * 通过User.weChat查询用户下所有不同状态的任务数量的统计		--我的页面
+     *
+     * @param openId
+     * @param taskState ("已发布") （"已审核"）
+     * @return
+     */
+    @Override
+    public List<TaskVo> getTaskByUserAndState(String openId, String taskState) {
+        User user =userRep.findByWeChat(openId);
+        List<TaskVo> taskVos =Lists.newArrayList();
+
+        List<Proposer> proposers =proposerRep.findByUser(user);
+        List<Auditor> auditors =auditorRep.findByUser(user);
+        List<Staff> staffList =staffRep.findByUser(user);
+        //查询该用户下处于申请角色下的任务
+        if (UserVo.PROPOSER.equals(taskState)){
+            if (proposers!=null && !proposers.isEmpty()){
+                for (Proposer proposer :proposers){
+                    Task task =taskRep.findByProposer(proposer);
+                    TaskVo taskVo =new TaskVo();
+                    AbstractMyBeanUtils.copyProperties(task,taskVo);
+                    taskVos.add(taskVo);
+                }
+            }else if (UserVo.AUDiTOR.equals(taskState)){
+                //查询该用户处于 审核角色下的任务
+                if (auditors!=null && !auditors.isEmpty()){
+                    for (Auditor auditor:auditors){
+                        Task task =taskRep.findByAuditor(auditor);
+                        TaskVo taskVo =new TaskVo();
+                        AbstractMyBeanUtils.copyProperties(task,taskVo);
+                        taskVos.add(taskVo);
+                    }
+                }
+            }else {
+                 // 查询该角色处于成员角色下的任务
+                if (staffList!=null && !staffList.isEmpty()){
+                    for (Staff staff:staffList){
+                        Task task =taskRep.findByStaffs(staff);
+                        TaskVo taskVo =new TaskVo();
+                        AbstractMyBeanUtils.copyProperties(task,taskVo);
+                        taskVos.add(taskVo);
+                    }
+                }
+            }
+        }
+
+
+
+        return taskVos;
+    }
+
+    /**
+     * 根据User.weChat查询User资料信息
+     *
+     * @param openId
+     * @return
+     */
+    @Override
+    public UserVo getUserInfo(String openId) {
+        User user =userRep.findByWeChat(openId);
+        UserVo userVo =new UserVo();
+        AbstractMyBeanUtils.copyProperties(user,userVo);
+        return userVo;
+    }
+
+    /**
+     * 传入Task.id与User.id进行承接人绑定		--任务认领
+     *
+     * @param taskId
+     * @param userId
+     * @return
+     */
+    @Override
+    public Result bindingTask(String taskId, String userId) {
+        Optional<Task> optionalTask =taskRep.findById(taskId);
+        Optional<User> optionalUser =userRep.findById(userId);
+
+        Staff staff =new Staff();
+        staff.setUser(optionalUser.get());
+        staff.setTask(optionalTask.get());
+        staffRep.save(staff);
+
+        return Result.setResult(Result.SUCCESS,"承接任务成功");
+    }
+
+    /**
+     * 根据Task.id查询Task资料信息
+     *
+     * @param taskId
+     * @return
+     */
+    @Override
+    public TaskVo getTaskInfo(String taskId) {
+        Optional<Task> optionalTask =taskRep.findById(taskId);
+        TaskVo taskVo =new TaskVo();
+        AbstractMyBeanUtils.copyProperties(optionalTask.get(),taskVo);
+
+        return taskVo;
     }
 
 

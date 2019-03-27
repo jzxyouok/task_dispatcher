@@ -27,9 +27,12 @@ import java.util.Set;
 @Data
 public class User {
 
+    /**
+     * 声明策略通用生成器system_uuid，策略为uuid
+     */
     @Id
-    @GenericGenerator(name = "uuid", strategy = "uuid")//声明策略通用生成器system_uuid，策略为uuid
-    @GeneratedValue(generator = "uuid")//用generator属性指定要用的策略生成器
+    @GenericGenerator(name = "uuid", strategy = "uuid")
+    @GeneratedValue(generator = "uuid")
     @Column(name = "user_id")
     private String id;
 
