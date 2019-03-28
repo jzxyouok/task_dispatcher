@@ -12,12 +12,12 @@
     <i-panel wx:if="{{index==selectIndex}}">
       <view style="padding:5px 20px 10px;">
         <i-cell-group>
-          <i-cell>项目名称：{{item.project.Name}}</i-cell>
+          <i-cell>项目名称：{{item.projectVo.Name}}</i-cell>
           <i-cell>任务描述：{{item.taskDescription}}</i-cell>
-          <i-cell>项目周期：{{item.department}}</i-cell>
+          <i-cell>项目周期：{{item.projectVo.department}}</i-cell>
           <i-cell>发布人：{{item.proposerVo.name}}</i-cell>
           <i-cell>工作量：{{item.workload}}人月</i-cell>
-          <i-cell>任务产值：{{item.outputValue}}元</i-cell>
+          <!-- <i-cell>任务产值：{{item.outputValue}}元</i-cell> -->
         </i-cell-group>
         <i-row>
           <i-col span="10" offset="14" i-class="col-class"><i-button bind:click="handleClick" type="success">任务认领</i-button></i-col>

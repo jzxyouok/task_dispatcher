@@ -4,6 +4,7 @@ const { $Toast } = require('../../dist/base/index');
 const watch = require('../../utils/watcher.js');
 const { bidirectionalBind } = require('../../utils/bidirectionalBind.js');
 import dateUtil from '../../utils/date_util';
+import WxValidate from '../../utils/WxValidate.js'
 Page({
 
   /**
@@ -19,16 +20,13 @@ Page({
       endTime: dateUtil.dateFormat(new Date(new Date().getTime() + 7*24*60*60*1000), "yyyy-MM-dd"),
       orient: true,
       workload: '',
-      project: {},
-      proposerVo: {
-        userVo: {
-          id: '402880e76990a8b4016990a8c4c60000',
-          weChat: 'lc',
-          name: '刘成',
-        }
-      },
+      projectVo: {},
+      proposerVo: {},
       auditorVo: {},
       staffVos: []
+    },
+    issueButton: {
+      isClick: false
     }
   },
   bindStartTimeChange(e){
@@ -83,28 +81,63 @@ Page({
   },
 
   handleIssue() {
-    console.log(this.data.taskVo);
-    // wx.request({
-    //   url: this.data.requestIp + '/base_task/dispatchTask',
-    //   method: "POST",
-    //   data: this.data.taskVo,
-    //   success: res => {
-    //     console.log(res);
-    // wx.removeStorage({
-    //   key: 'selectProject'
-    // });
-    // wx.removeStorage({
-    //   key: 'auditor-selectPeople'
-    // });
-    // wx.removeStorage({
-    //   key: 'staff-selectPeople'
-    // });
-    //     this.showToast("发布成功", 'success');
-    //   },
-    //   fail: e => {
-    //     console.log(e);
-    //   }
-    // });
+    if (this.data.issueButton.isClick) {
+      return;
+    }
+    let params = {
+      taskName: this.data.taskVo.taskName,
+      taskDescription: this.data.taskVo.taskDescription,
+      projectName: this.data.taskVo.projectVo.name,
+      auditoName: this.data.taskVo.auditorVo.userVo ? this.data.taskVo.auditorVo.userVo.name : "",
+      workload: this.data.taskVo.workload
+    }
+    //表单验证
+    if (!this.WxValidate.checkForm(params)) {
+      const error = this.WxValidate.errorList[0];
+      this.showToast(error.msg, 'warning');
+      return;
+    }
+    if (this.data.taskVo.orient && !this.data.staffNames) {
+      this.showToast("请选择承接人", 'warning');
+      return;
+    }
+    this.data.taskVo.proposerVo = {
+      userVo: {
+        id: getApp().globalData.localUserInfo.id,
+        name: getApp().globalData.localUserInfo.name,
+        openid: getApp().globalData.openid
+      }
+    };
+    this.data.issueButton.isClick = true;
+    wx.request({
+      url: this.data.requestIp + '/base_task/dispatchTask',
+      method: "POST",
+      data: this.data.taskVo,
+      success: res => {
+        console.log(res);
+        if (res.data.errCode != 0) {
+          this.showToast("发布失败", 'success');
+          this.data.issueButton.isClick = false;
+          return;
+        }
+        wx.removeStorage({
+          key: 'selectProject'
+        });
+        wx.removeStorage({
+          key: 'auditor-selectPeople'
+        });
+        wx.removeStorage({
+          key: 'staff-selectPeople'
+        });
+        this.showToast("发布成功", 'success');
+        this.data.issueButton.isClick = false;
+        this.resetTaskVo();
+      },
+      fail: e => {
+        this.data.issueButton.isClick = false;
+        console.log(e);
+      }
+    });
   },
   watch: {
     'taskVo.staffVos': {
@@ -127,7 +160,9 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    this.data.requestIp = getApp().globalData.requestIp;
+    this.initValidate()//验证规则函数
+    let app = getApp();
+    this.data.requestIp = app.globalData.requestIp;
     watch.setWatcher(this); // 设置监听器，建议在onLoad下调用
   },
 
@@ -143,10 +178,9 @@ Page({
    */
   onShow: function () {
     let selectProject = wx.getStorageSync('selectProject');
-    console.log(selectProject);
     if (selectProject) {
       this.setData({
-        'taskVo.project': {
+        'taskVo.projectVo': {
           id: selectProject.id,
           name: selectProject.name
         }
@@ -228,6 +262,71 @@ Page({
 
   },
 
+  /**
+     * 初始化验证器
+     */
+  initValidate() {
+    const rules = {
+      taskName: {
+        required: true
+      },
+      taskDescription: {
+        required: true
+      },
+      projectName: {
+        required: true
+      },
+      auditoName: {
+        required: true
+      },
+      workload: {
+        required: true
+      }
+    }
+    const messages = {
+      taskName: {
+        required: '请输入任务名称'
+      },
+      taskDescription: {
+        required: '请输入任务描述'
+      },
+      projectName: {
+        required: '请选择项目'
+      },
+      auditoName: {
+        required: '请选择审核人'
+      },
+      workload: {
+        required: '请输入工作量'
+      }
+    }
+    this.WxValidate = new WxValidate(rules, messages)
+  },
+
+  /**
+   * 重置taskVo
+   */
+  resetTaskVo() {
+    let orient = this.data.taskVo.orient;
+    this.setData({
+      taskVo: {
+        taskName: '',
+        taskDescription: '',
+        startTime: dateUtil.dateFormat(new Date(), "yyyy-MM-dd"),
+        endTime: dateUtil.dateFormat(new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000), "yyyy-MM-dd"),
+        orient,
+        workload: '',
+        projectVo: {},
+        proposerVo: {},
+        auditorVo: {},
+        staffVos: []
+      }
+    });
+    watch.setWatcher(this); // 原监视变量引用地址更改，需重监视
+    this.setData({
+      'taskVo.staffVos': []
+    });
+  },
   /**
    * 显示成功的气泡
    */

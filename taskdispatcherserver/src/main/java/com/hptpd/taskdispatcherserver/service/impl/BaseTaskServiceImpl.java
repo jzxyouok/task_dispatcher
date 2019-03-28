@@ -97,10 +97,17 @@ public class BaseTaskServiceImpl implements BaseTaskService {
 
 
         }
+
+        ProjectVo projVo = taskVo.getProjectVo();
+        Optional<Project> optionalProj = projectRep.findById(projVo.getId());
+        task.setProject(optionalProj.get());
+
+
         task.setStaffs(staffList);
 
         task.setProposer(proposer);
         task.setAuditor(auditor);
+        task.setCreatTime(new Date());
 
         taskRep.save(task);
         return Result.setResult(Result.SUCCESS,"任务发布成功");

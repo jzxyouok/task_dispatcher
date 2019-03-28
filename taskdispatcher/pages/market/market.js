@@ -298,6 +298,7 @@ Page({
       url: this.data.requestIp + '/base_task/unOrient/tasks',
       method: "GET",
       success: res => {
+        console.log(res.data);
         this.setData({
           tasks: res.data
         });

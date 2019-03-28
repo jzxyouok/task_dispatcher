@@ -5,10 +5,10 @@
 </i-tabs>
 <i-panel title="任务">
   <i-input  value="{{ taskVo.taskName }}" catch:change='handleInput' data-name="taskVo.taskName" title="任务名称" placeholder="输入任务名称"/>
-  <i-input  value="{{ taskVo.project.name }}" bind:tap="chooseProject" disabled title="项目名称" placeholder="选择项目"/>
+  <i-input  value="{{ taskVo.projectVo.name }}" bind:tap="chooseProject" disabled title="项目名称" placeholder="选择项目"/>
   <i-input  value="{{ taskVo.taskDescription }}" catch:change='handleInput' data-name="taskVo.taskDescription" title="任务描述" placeholder="输入任务描述" />
   <i-input  value="{{ taskVo.auditorVo.userVo.name }}" title="审核人"  placeholder="选择审核人" bind:tap="choosePeople" disabled data-roletype="auditor"/>
-  <i-input  value="{{ value4 }}" title="标签" placeholder="添加标签" />
+  <!-- <i-input  value="{{ value4 }}" title="标签" placeholder="添加标签" /> -->
   <picker
     mode="date"
     value="{{taskVo.startTime}}"
@@ -26,7 +26,8 @@
   <i-input  value="{{ taskVo.workload }}" catch:change='handleInput' data-name="taskVo.workload" type="number" title="工作量（人月）" placeholder="输入工作量" />
   <i-input data-roletype="staff" wx:if="{{taskVo.orient}}"  bind:tap="choosePeople" disabled value="{{ staffNames }}" title="承接人" placeholder="选择承接人" />
   <i-row>
-    <i-col span="8" offset="3" i-class="col-class"><i-button bind:click="handleSave" type="success">任务保存</i-button>
+    <i-col span="8" offset="3" i-class="col-class">
+    <i-button bind:click="handleSave" disabled type="ghost">任务保存</i-button>
     </i-col>
     <i-col span="8" offset="2" i-class="col-class"><i-button bind:click="handleIssue" type="success">任务发布</i-button>
     </i-col>

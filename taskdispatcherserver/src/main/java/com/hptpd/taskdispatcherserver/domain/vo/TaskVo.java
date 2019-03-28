@@ -40,6 +40,7 @@ public class TaskVo {
 
     private String  taskState;
 
+    private ProjectVo projectVo;
 
     private LabelVo labelVo;
 
