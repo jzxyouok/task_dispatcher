@@ -1,6 +1,7 @@
 package com.hptpd.taskdispatcherserver.repository;
 
 import com.hptpd.taskdispatcherserver.domain.Project;
+import com.hptpd.taskdispatcherserver.domain.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,4 +16,12 @@ import org.springframework.stereotype.Repository;
  */
 @Repository("projectRep")
 public interface ProjectRep extends JpaRepository<Project,String> {
+
+
+    /**
+     * 通过任务查询
+     * @param task
+     * @return
+     */
+    Project findByTasks(Task task);
 }

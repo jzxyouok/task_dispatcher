@@ -1,6 +1,7 @@
 package com.hptpd.taskdispatcherserver.repository;
 
 import com.hptpd.taskdispatcherserver.domain.Auditor;
+import com.hptpd.taskdispatcherserver.domain.Task;
 import com.hptpd.taskdispatcherserver.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -25,5 +26,13 @@ public interface AuditorRep extends JpaRepository<Auditor,String> {
      * @return
      */
     List<Auditor> findByUser(User user);
+
+
+    /**
+     * 通过 任务查找
+     * @param task
+     * @return
+     */
+    Auditor findByTask(Task task);
 
 }

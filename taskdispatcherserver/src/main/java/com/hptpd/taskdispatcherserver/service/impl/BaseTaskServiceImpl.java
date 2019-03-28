@@ -108,6 +108,7 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         task.setProposer(proposer);
         task.setAuditor(auditor);
         task.setCreatTime(new Date());
+        task.setTaskState(taskVo.getTaskState());
 
         taskRep.save(task);
         return Result.setResult(Result.SUCCESS,"任务发布成功");
@@ -356,8 +357,25 @@ public class BaseTaskServiceImpl implements BaseTaskService {
     @Override
     public TaskVo getTaskInfo(String taskId) {
         Optional<Task> optionalTask =taskRep.findById(taskId);
+        Proposer proposer =proposerRep.findByTask(optionalTask.get());
+        ProposerVo proposerVo =new ProposerVo();
+        AbstractMyBeanUtils.copyProperties(proposer,proposerVo);
+        Auditor auditor =auditorRep.findByTask(optionalTask.get());
+        AuditorVo auditorVo =new AuditorVo();
+        AbstractMyBeanUtils.copyProperties(auditor,auditorVo);
         TaskVo taskVo =new TaskVo();
+        Project project =projectRep.findByTasks(optionalTask.get());
+        ProjectVo projectVo =new ProjectVo();
+        AbstractMyBeanUtils.copyProperties(project,projectVo);
         AbstractMyBeanUtils.copyProperties(optionalTask.get(),taskVo);
+        List<Staff> staffList =staffRep.findByTask(optionalTask.get());
+        List<StaffVo> staffVos =StaffVo.staffToVo(staffList);
+
+        taskVo.setProposerVo(proposerVo);
+        taskVo.setAuditorVo(auditorVo);
+        taskVo.setProjectVo(projectVo);
+        taskVo.setStaffVos(staffVos);
+
 
         return taskVo;
     }
