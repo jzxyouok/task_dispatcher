@@ -2,6 +2,6 @@
 
 <i-cell-group>
   <view wx:for="{{tasks}}" wx:key="id">
-  <i-cell title="已完成任务{{index+1}}" is-link url="../taskdetail/taskdetail" data-index="{{index}}" value="详细信息" ></i-cell>
+  <i-cell title="{{item.taskName}}" is-link url="../taskdetail/taskdetail?taskId={{item.id}}" label="{{item.taskDescription}}" value="{{item.taskState}}" ></i-cell>
   </view>
 </i-cell-group>

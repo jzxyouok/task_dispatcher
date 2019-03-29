@@ -11,12 +11,24 @@ Page({
    * 页面的初始数据
    */
   data: {
+    requestIp: "",
+    ROLE: {
+      PROPOSER: "proposer",  //发布者
+      AUDITOR: "auditor",  //审批者
+      STAFF: "staff"  //承接者
+    },
+    count: {
+      proposer: 2,
+      auditor: 3,
+      staff: 4
+    },
     userVo:{
       weChat: '',
       name: '',
       telephone: '',
       position: ''
-    }
+    },
+    localUserInfo:{}
   },
 
   /**
@@ -24,10 +36,14 @@ Page({
    */
   onLoad: function (options) {
     let app = getApp();
-    console.log(app.globalData.userInfo);
+    this.data.requestIp = app.globalData.requestIp;
+    this.localUserInfo = app.globalData.localUserInfo;
     this.setData({
       userVo: app.globalData.userInfo
-    })
+    });
+    this.getTasksCount(this.data.ROLE.AUDITOR);
+    this.getTasksCount(this.data.ROLE.PROPOSER);
+    this.getTasksCount(this.data.ROLE.STAFF);
   },
 
   /**
@@ -76,5 +92,25 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+
+  /**
+   * 获取各种任务的总数
+   */
+  getTasksCount(role) {
+    let app = getApp();
+    wx.request({
+      url: this.data.requestIp + '/base_task/state/tasks?userId=' + app.globalData.localUserInfo.id + '&role=' + role,
+      method: "GET",
+      success: res => {
+        this.data.count[role] = res.data.length;
+        this.setData({
+          count: this.data.count 
+        });
+      },
+      fail: e => {
+
+      }
+    })
   }
 })

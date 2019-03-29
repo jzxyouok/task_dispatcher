@@ -20,8 +20,9 @@ import java.util.List;
  */
 @Data
 public class UserVo {
-    public static String PROPOSER ="已发布";
-    public static String AUDiTOR ="已审核";
+    public static String PROPOSER ="proposer";
+    public static String AUDITOR ="auditor";
+    public static String STAFF ="staff";
 
     private String id;
 

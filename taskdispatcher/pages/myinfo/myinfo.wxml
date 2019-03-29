@@ -15,10 +15,9 @@
   <i-panel class="cell-panel-demo">
     <view>
       <i-cell-group>
-        <i-cell title="已完成任务" is-link url="../tasks/tasks"></i-cell>
-        <i-cell title="未完成任务" is-link ></i-cell>
-        <i-cell title="我发布的任务" is-link></i-cell>
-        <i-cell title="待审核任务" is-link></i-cell>
+        <i-cell title="发布的任务" value="{{count.proposer}}" is-link url="../tasks/tasks?role={{ROLE.PROPOSER}}"></i-cell>
+        <i-cell title="审批的任务" value="{{count.auditor}}" is-link url="../tasks/tasks?role={{ROLE.AUDITOR}}"></i-cell>
+        <i-cell title="承接的任务" value="{{count.staff}}" is-link url="../tasks/tasks?role={{ROLE.STAFF}}"></i-cell>
       </i-cell-group>
     </view>
   </i-panel>

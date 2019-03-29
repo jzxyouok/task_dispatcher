@@ -5,87 +5,20 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    requestIp: "",
+    userid: "",
     selectIndex: 0,
-    tasks: [
-      {
-        id: 'asdda',
-        name: '任务1',
-        taskDesc: '历史上以少胜多、以弱胜强的著名战役之一',
-        projName: '项目1',
-        publisher: '诸葛亮',
-        auditor: '刘备',
-        label: '伏击',
-        recipients: '关羽',
-        starttime: 20190301 ,
-        endtime: 20190320,
-        workload: 30 ,
-        reason: '当年',
-        opinion:'通过',
-        state:'通过'
-      },
-      {
-        id: 'ada',
-        name: '任务1',
-        taskDesc: '历史上以少胜多、以弱胜强的著名战役之一',
-        projName: '项目1',
-        publisher: '诸葛亮',
-        auditor: '刘备',
-        label: '伏击',
-        recipients: '关羽',
-        starttime: 20190301,
-        endtime: 20190320,
-        workload: 30,
-        reason: '当年',
-        opinion: '通过',
-        state: '通过'
-      },
-      {
-        id: 'qdsa',
-        name: '任务1',
-        taskDesc: '历史上以少胜多、以弱胜强的著名战役之一',
-        projName: '项目1',
-        publisher: '诸葛亮',
-        auditor: '刘备',
-        label: '伏击',
-        recipients: '关羽',
-        starttime: 20190301,
-        endtime: 20190320,
-        workload: 30,
-        reason: '当年',
-        opinion: '通过',
-        state: '通过'
-      },
-      {
-        id: 'fsdfdass',
-        name: '任务1',
-        taskDesc: '历史上以少胜多、以弱胜强的著名战役之一',
-        projName: '项目1',
-        publisher: '诸葛亮',
-        auditor: '刘备',
-        label: '伏击',
-        recipients: '关羽',
-        starttime: 20190301,
-        endtime: 20190320,
-        workload: 30,
-        reason: '当年',
-        opinion: '通过',
-        state: '通过'
-      }
-    ]
-  },
-  expandTask(event) {
-    this.setData({
-      selectIndex: event.target.dataset.index
-    });
-
+    tasks: []
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    let app = getApp();
+    this.data.requestIp = app.globalData.requestIp;
+    this.data.userid = app.globalData.localUserInfo.id;
+    this.getTasks(options.role);
   },
 
   /**
@@ -135,5 +68,24 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+
+  /**
+   * 访问后台获取任务列表
+   */
+  getTasks(role) {
+    wx.request({
+      url: this.data.requestIp + '/base_task/state/tasks?userId=' + this.data.userid + '&role=' + role,
+      method: "GET",
+      success: res => {
+        console.log(res.data);
+        this.setData({
+          tasks: res.data
+        });
+      },
+      fail: e => {
+
+      }
+    });
   }
 })

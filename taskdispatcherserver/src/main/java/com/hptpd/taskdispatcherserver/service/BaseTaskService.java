@@ -82,11 +82,11 @@ public interface BaseTaskService {
     /**
      * 通过User.weChat查询用户下所有不同状态的任务数量的统计		--我的页面
      *
-     * @param openId
-     * @param taskState ("已发布") （"已审核"）
+     * @param userId
+     * @param role ("proposer") （"auditor"） （"staff"）
      * @return
      */
-     List<TaskVo> getTaskByUserAndState(String openId,String taskState);
+     List<TaskVo> getTaskByUserAndState(String userId,String role);
 
 
     /**

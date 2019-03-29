@@ -37,7 +37,7 @@ public class Auditor {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     private Task task;
 
 

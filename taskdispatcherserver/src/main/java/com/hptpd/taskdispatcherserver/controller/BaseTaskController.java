@@ -102,13 +102,13 @@ public class BaseTaskController {
     /**
      * 通过User.weChat查询用户下所有不同状态的任务数量的统计		--我的页面
      *
-     * @param openId
-     * @param taskState ("已发布") （"已审核"）("承接人")
+     * @param userId
+     * @param role ("已发布") （"已审核"）("承接人")
      * @return
      */
     @RequestMapping(value = "/state/tasks", method = RequestMethod.GET)
-    public List<TaskVo> getTaskByUserAndState(@RequestParam String openId,String taskState){
-        return baseTaskService.getTaskByUserAndState(openId,taskState);
+    public List<TaskVo> getTaskByUserAndState(@RequestParam String userId,String role){
+        return baseTaskService.getTaskByUserAndState(userId,role);
     }
 
     /**

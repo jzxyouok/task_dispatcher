@@ -19,6 +19,7 @@ Page({
       startTime: dateUtil.dateFormat(new Date(), "yyyy-MM-dd"),
       endTime: dateUtil.dateFormat(new Date(new Date().getTime() + 7*24*60*60*1000), "yyyy-MM-dd"),
       orient: true,
+      taskState: '待审核',
       workload: '',
       projectVo: {},
       proposerVo: {},

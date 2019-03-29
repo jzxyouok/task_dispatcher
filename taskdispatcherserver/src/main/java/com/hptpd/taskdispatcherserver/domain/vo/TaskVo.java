@@ -67,6 +67,15 @@ public class TaskVo {
         for (Task task:tasks){
             TaskVo taskVo =new TaskVo();
             AbstractMyBeanUtils.copyProperties(task,taskVo);
+            ProjectVo projVo = new ProjectVo();
+            AbstractMyBeanUtils.copyProperties(task.getProject(), projVo);
+            taskVo.setProjectVo(projVo);
+            ProposerVo proposerVo = new ProposerVo();
+            AbstractMyBeanUtils.copyProperties(task.getProposer(), proposerVo);
+            UserVo proposerUserVo = new UserVo();
+            AbstractMyBeanUtils.copyProperties(task.getProposer().getUser(), proposerUserVo);
+            proposerVo.setUserVo(proposerUserVo);
+            taskVo.setProposerVo(proposerVo);
             taskVos.add(taskVo);
         }
         return taskVos;

@@ -265,49 +265,54 @@ public class BaseTaskServiceImpl implements BaseTaskService {
     /**
      * 通过User.weChat查询用户下所有不同状态的任务数量的统计		--我的页面
      *
-     * @param openId
-     * @param taskState ("已发布") （"已审核"）
+     * @param userId
+     * @param role ("proposer") （"auditor"） （"staff"）
      * @return
      */
     @Override
-    public List<TaskVo> getTaskByUserAndState(String openId, String taskState) {
-        User user =userRep.findByWeChat(openId);
+    public List<TaskVo> getTaskByUserAndState(String userId, String role) {
+        User user = userRep.findById(userId).get();
         List<TaskVo> taskVos =Lists.newArrayList();
 
         List<Proposer> proposers =proposerRep.findByUser(user);
         List<Auditor> auditors =auditorRep.findByUser(user);
         List<Staff> staffList =staffRep.findByUser(user);
         //查询该用户下处于申请角色下的任务
-        if (UserVo.PROPOSER.equals(taskState)){
-            if (proposers!=null && !proposers.isEmpty()){
-                for (Proposer proposer :proposers){
-                    Task task =taskRep.findByProposer(proposer);
-                    TaskVo taskVo =new TaskVo();
-                    AbstractMyBeanUtils.copyProperties(task,taskVo);
+        if (UserVo.PROPOSER.equals(role)) {
+
+            if (proposers != null && !proposers.isEmpty()) {
+
+                for (Proposer proposer : proposers) {
+                    Task task = proposer.getTask();
+                    TaskVo taskVo = new TaskVo();
+                    AbstractMyBeanUtils.copyProperties(task, taskVo);
                     taskVos.add(taskVo);
                 }
-            }else if (UserVo.AUDiTOR.equals(taskState)){
+            }
+        }else if (UserVo.AUDITOR.equals(role)){
                 //查询该用户处于 审核角色下的任务
                 if (auditors!=null && !auditors.isEmpty()){
                     for (Auditor auditor:auditors){
-                        Task task =taskRep.findByAuditor(auditor);
+
+                        Task task =auditor.getTask();
                         TaskVo taskVo =new TaskVo();
                         AbstractMyBeanUtils.copyProperties(task,taskVo);
                         taskVos.add(taskVo);
+                        System.out.println(taskVo.toString());
                     }
                 }
             }else {
                  // 查询该角色处于成员角色下的任务
                 if (staffList!=null && !staffList.isEmpty()){
                     for (Staff staff:staffList){
-                        Task task =taskRep.findByStaffs(staff);
+                        Task task = staff.getTask();
                         TaskVo taskVo =new TaskVo();
                         AbstractMyBeanUtils.copyProperties(task,taskVo);
                         taskVos.add(taskVo);
                     }
                 }
             }
-        }
+
 
 
 
