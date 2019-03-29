@@ -85,7 +85,23 @@ public class Task {
     @Column(name="task_state")
     private String  taskState;
 
+    /**
+     * 点评
+     */
+    @Column(name="comment")
+    private String comment;
 
+    /**
+     * 评审意见
+     */
+    @Column(name="expertComment")
+    private String expertComment;
+
+    /**
+     * 提审原因
+     */
+    @Column(name="reviewReason")
+    private String reviewReason;
 
     @ManyToMany(mappedBy = "tasks", cascade ={CascadeType.ALL,CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private Set<Label> labels =Sets.newLinkedHashSet();

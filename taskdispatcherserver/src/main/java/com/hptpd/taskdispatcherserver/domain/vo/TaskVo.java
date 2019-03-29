@@ -40,6 +40,12 @@ public class TaskVo {
 
     private String  taskState;
 
+    private String comment;
+
+    private String expertComment;
+
+    private String reviewReason;
+
     private ProjectVo projectVo;
 
     private LabelVo labelVo;

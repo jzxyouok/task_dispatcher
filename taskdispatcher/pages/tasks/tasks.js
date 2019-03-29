@@ -8,7 +8,8 @@ Page({
     requestIp: "",
     userid: "",
     selectIndex: 0,
-    tasks: []
+    tasks: [],
+    role:""
   },
 
   /**
@@ -18,6 +19,9 @@ Page({
     let app = getApp();
     this.data.requestIp = app.globalData.requestIp;
     this.data.userid = app.globalData.localUserInfo.id;
+    this.setData({
+      role: options.role
+    });
     this.getTasks(options.role);
   },
 
@@ -78,7 +82,6 @@ Page({
       url: this.data.requestIp + '/base_task/state/tasks?userId=' + this.data.userid + '&role=' + role,
       method: "GET",
       success: res => {
-        console.log(res.data);
         this.setData({
           tasks: res.data
         });

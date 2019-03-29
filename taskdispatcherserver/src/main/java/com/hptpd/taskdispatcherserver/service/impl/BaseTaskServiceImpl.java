@@ -364,10 +364,16 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         Optional<Task> optionalTask =taskRep.findById(taskId);
         Proposer proposer =proposerRep.findByTask(optionalTask.get());
         ProposerVo proposerVo =new ProposerVo();
+        UserVo userVo = new UserVo();
         AbstractMyBeanUtils.copyProperties(proposer,proposerVo);
+        AbstractMyBeanUtils.copyProperties(proposer.getUser(),userVo);
+        proposerVo.setUserVo(userVo);
         Auditor auditor =auditorRep.findByTask(optionalTask.get());
         AuditorVo auditorVo =new AuditorVo();
+        userVo = new UserVo();
         AbstractMyBeanUtils.copyProperties(auditor,auditorVo);
+        AbstractMyBeanUtils.copyProperties(auditor.getUser(),userVo);
+        auditorVo.setUserVo(userVo);
         TaskVo taskVo =new TaskVo();
         Project project =projectRep.findByTasks(optionalTask.get());
         ProjectVo projectVo =new ProjectVo();

@@ -309,6 +309,7 @@ Page({
    */
   resetTaskVo() {
     let orient = this.data.taskVo.orient;
+    let taskState = this.data.taskVo.taskState;
     this.setData({
       taskVo: {
         taskName: '',
@@ -316,6 +317,7 @@ Page({
         startTime: dateUtil.dateFormat(new Date(), "yyyy-MM-dd"),
         endTime: dateUtil.dateFormat(new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000), "yyyy-MM-dd"),
         orient,
+        taskState,
         workload: '',
         projectVo: {},
         proposerVo: {},

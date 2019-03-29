@@ -18,9 +18,9 @@ Page({
       STAFF: "staff"  //承接者
     },
     count: {
-      proposer: 2,
-      auditor: 3,
-      staff: 4
+      proposer: 0,
+      auditor: 0,
+      staff: 0
     },
     userVo:{
       weChat: '',
@@ -41,9 +41,6 @@ Page({
     this.setData({
       userVo: app.globalData.userInfo
     });
-    this.getTasksCount(this.data.ROLE.AUDITOR);
-    this.getTasksCount(this.data.ROLE.PROPOSER);
-    this.getTasksCount(this.data.ROLE.STAFF);
   },
 
   /**
@@ -56,7 +53,9 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    this.getTasksCount(this.data.ROLE.AUDITOR);
+    this.getTasksCount(this.data.ROLE.PROPOSER);
+    this.getTasksCount(this.data.ROLE.STAFF);
   },
 
   /**

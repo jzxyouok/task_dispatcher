@@ -29,7 +29,10 @@ public class StaffVo {
         List<StaffVo> staffVos = Lists.newArrayList();
         for (Staff staff:staffs){
             StaffVo staffVo =new StaffVo();
+            UserVo userVo = new UserVo();
             AbstractMyBeanUtils.copyProperties(staff,staffVo);
+            AbstractMyBeanUtils.copyProperties(staff.getUser(),userVo);
+            staffVo.setUserVo(userVo);
             staffVos.add(staffVo);
         }
         return staffVos;
