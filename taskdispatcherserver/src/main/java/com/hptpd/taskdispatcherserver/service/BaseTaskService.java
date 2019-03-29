@@ -113,4 +113,9 @@ public interface BaseTaskService {
      */
     TaskVo getTaskInfo(String taskId);
 
+    /**
+     *  更新任务
+     * @return
+     */
+    Result updateTaskState(TaskVo taskVo);
 }

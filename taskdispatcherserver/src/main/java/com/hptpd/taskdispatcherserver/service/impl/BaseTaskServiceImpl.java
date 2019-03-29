@@ -221,7 +221,6 @@ public class BaseTaskServiceImpl implements BaseTaskService {
 
         try {
             CommonResponse response = client.getCommonResponse(request);
-            System.out.println(response.getData());
             session.setAttribute(phone, random);
 
             final Timer timer = new Timer();
@@ -298,7 +297,6 @@ public class BaseTaskServiceImpl implements BaseTaskService {
                         TaskVo taskVo =new TaskVo();
                         AbstractMyBeanUtils.copyProperties(task,taskVo);
                         taskVos.add(taskVo);
-                        System.out.println(taskVo.toString());
                     }
                 }
             }else {
@@ -391,5 +389,19 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         return taskVo;
     }
 
+    /**
+     *  更新任务状态
+     * @return
+     */
+    @Override
+    public Result updateTaskState(TaskVo taskVo) {
+        Task task = taskRep.findById(taskVo.getId()).get();
+        task.setComment(taskVo.getComment());
+        task.setExpertComment(taskVo.getExpertComment());
+        task.setReviewReason(taskVo.getReviewReason());
+        task.setTaskState(taskVo.getTaskState());
+        taskRep.save(task);
+        return Result.setResult(Result.SUCCESS,"更新任务成功");
+    }
 
 }

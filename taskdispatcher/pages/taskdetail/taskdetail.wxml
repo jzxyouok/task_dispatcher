@@ -28,7 +28,7 @@
         <!-- 审核人身份，任务状态为待审核 -->
         <block wx:if="{{ROLE.AUDITOR==role && TASK_STATUS.AUDITING==taskDetail.taskState}}">
           <i-cell title="点评：">
-            <i-input value="{{ taskDetail.comment }}" catch:change='handleInput' type="textarea" title="" placeholder="(最多200字)" maxlength="200" />
+            <i-input value="{{ taskDetail.comment }}" data-name="taskDetail.comment" catch:change='handleInput' type="textarea" title="" placeholder="(最多200字)" maxlength="200" />
           </i-cell>
           <i-row>
             <i-col span="8" i-class="col-class"><i-button bind:click="notPass" type="error">不通过</i-button></i-col>
@@ -45,7 +45,7 @@
         <block wx:if="{{ROLE.EXPERT==role && TASK_STATUS.EXPERT_AUDITING==taskDetail.taskState}}">
           <i-cell title="提审原因：">{{taskDetail.reviewReason}}</i-cell>
           <i-cell title="评审意见：">
-            <i-input value="{{ taskDetail.expertComment }}" catch:change='handleInput' type="textarea" title="" placeholder="(最多200字)" maxlength="200" />
+            <i-input value="{{ taskDetail.expertComment }}" data-name="taskDetail.expertComment" catch:change='handleInput' type="textarea" title="" placeholder="(最多200字)" maxlength="200" />
           </i-cell>
           <i-row>
             <i-col span="12" i-class="col-class"><i-button bind:click="notPass" type="error">不通过</i-button></i-col>

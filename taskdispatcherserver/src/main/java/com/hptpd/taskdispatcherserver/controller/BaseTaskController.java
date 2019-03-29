@@ -143,4 +143,16 @@ public class BaseTaskController {
     public TaskVo getTaskInfo(@RequestParam  String taskId){
         return  baseTaskService.getTaskInfo(taskId);
     }
+
+    /**
+     *  更新任务
+     * @return
+     */
+    @RequestMapping(value = "/updateTaskState", method = RequestMethod.POST)
+    public Result updateTaskState(@RequestBody TaskVo taskVo){
+
+        Result result =baseTaskService.updateTaskState(taskVo);
+        return result;
+
+    }
 }

@@ -15,7 +15,8 @@ Page({
     ROLE: {
       PROPOSER: "proposer",  //发布者
       AUDITOR: "auditor",  //审批者
-      STAFF: "staff"  //承接者
+      STAFF: "staff",  //承接者
+      EXPERT: "expert" //专家组
     },
     count: {
       proposer: 0,

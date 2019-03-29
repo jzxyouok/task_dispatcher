@@ -20,6 +20,11 @@ import java.util.List;
 
 @Data
 public class TaskVo {
+    public static String AUDITING = "待审核";
+    public static String EXPERT_AUDITING = "待专家组审核";
+    public static String PASSED = "已发布";
+    public static String REJECTED = "已驳回";
+
     public static boolean UN_ORIENT=false;
 
     private String id;
