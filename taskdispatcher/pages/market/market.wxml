@@ -20,13 +20,13 @@
           <!-- <i-cell>任务产值：{{item.outputValue}}元</i-cell> -->
         </i-cell-group>
         <i-row>
-          <i-col span="10" offset="14" i-class="col-class"><i-button bind:click="handleClick" type="success">任务认领</i-button></i-col>
+          <i-col span="12" offset="12" i-class="col-class"><i-button bind:click="handleTaskClaimClick" data-index="{{index}}" data-taskid="{{item.id}}" loading="{{taskClaimButtons[index].loading}}" type="success">任务认领</i-button></i-col>
         </i-row>
       </view>
     </i-panel>
   </view>
 </i-cell-group>
-<i-modal style="height:4000px;" title="账号未激活" visible="{{ modal.isModalShow }}" actions="{{ modalActions }}" catch:click="handleModalClick">
+<i-modal style="" title="账号未激活" visible="{{ modal.isModalShow }}" actions="{{ modalActions }}" catch:click="handleModalClick">
     <view>
       <i-row>
         <i-col span="24" i-class="col-class"><i-input type="number" catch:change='handleInput' value="{{userVo.telephone}}" data-name="userVo.telephone" title="手机号" placeholder='输入手机号'/></i-col>

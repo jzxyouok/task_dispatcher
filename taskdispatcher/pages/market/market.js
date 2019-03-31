@@ -27,6 +27,7 @@ Page({
       type: "success",
       isClick: false
     },
+    taskClaimButtons: [],
     userVo: {
       name: "",
       telephone: "",
@@ -52,6 +53,46 @@ Page({
     ]
   },
   /**
+   * 任务认领按钮
+   */
+  handleTaskClaimClick(event) {
+    if (this.data.taskClaimButtons[event.target.dataset.index].isClick) {
+      return;
+    }
+    this.data.taskClaimButtons[event.target.dataset.index].loading = true;
+    this.data.taskClaimButtons[event.target.dataset.index].isClick = true;
+    this.setData({
+      taskClaimButtons: this.data.taskClaimButtons
+    });
+    let app = getApp();
+    wx.request({
+      url: this.data.requestIp + '/base_task/binding/task?userId=' + app.globalData.localUserInfo.id + "&taskId=" + event.target.dataset.taskid,
+      method: "GET",
+      success: res => {
+        console.log(res);
+        if (res.data && res.data.errCode != 0) {
+          this.showToast("认领失败", "success");
+          this.data.taskClaimButtons[event.target.dataset.index].loading = false;
+          this.data.taskClaimButtons[event.target.dataset.index].isClick = false;
+          this.setData({
+            taskClaimButtons: this.data.taskClaimButtons
+          });
+          return;
+        }
+        this.showToast("认领成功", "success");
+        this.getUndirecTasks();
+      },
+      fail: e => {
+        this.showToast("认领失败", "success");
+        this.data.taskClaimButtons[event.target.dataset.index].loading = false;
+        this.data.taskClaimButtons[event.target.dataset.index].isClick = false;
+        this.setData({
+          taskClaimButtons: this.data.taskClaimButtons
+        });
+      }
+    });
+  },
+  /**
    * 发送验证码按钮
    */
   handleValidateCodeBtnClick() {
@@ -64,10 +105,7 @@ Page({
     //值验证
     if (!this.WxValidate.checkForm(params)) {
       const error = this.WxValidate.errorList[0];
-      $Toast({
-        content: error.msg,
-        type: 'warning'
-      });
+      this.showToast(error.msg, 'warning');
       return;
     }
     this.data.validateCodeButton.isClick = true;
@@ -96,9 +134,8 @@ Page({
       }
     }, 1000);
     //请求后台发送短信验证码
-    let app = getApp();
     wx.request({
-      url: app.globalData.requestIp + '/base_task/msgCode?phone=' + this.data.userVo.telephone,
+      url: this.data.requestIp + '/base_task/msgCode?phone=' + this.data.userVo.telephone,
       method: "GET",
       success: res => {
         if (res.data) {
@@ -137,17 +174,11 @@ Page({
     //值验证
     if (!this.WxValidate.checkForm(params)) {
       const error = this.WxValidate.errorList[0];
-      $Toast({
-        content: error.msg,
-        type: 'warning'
-      });
+      this.showToast(error.msg, 'warning');
       return;
     }
     if (!this.data.userVo.validateCode) {
-      $Toast({
-        content: "请输入验证码",
-        type: 'warning'
-      });
+      this.showToast("请输入验证码", 'warning');
       return;
     }
     this.data.modal.isActivateClick = true;
@@ -173,20 +204,14 @@ Page({
         }
         if (res.data.errCode == 0) {
           wx.showTabBar();
-          $Toast({
-            content: '激活成功',
-            type: 'success'
-          });
+          this.showToast('激活成功', 'success');
           this.setData({
             'modal.isModalShow': false,
             isMarketShow: true,
             modalActions: this.data.modalActions
           });
         } else {
-          $Toast({
-            content: res.data.messages,
-            type: 'warning'
-          });
+          this.showToast(res.data.messages, 'warning');
           this.setData({
             'modal.isModalShow': true,
             isMarketShow: false,
@@ -198,10 +223,7 @@ Page({
         this.data.modal.isActivateClick = false;
         this.data.validateCodeButton.isClick = false;
         this.data.modalActions[0].loading = false;
-        $Toast({
-          content: "激活服务异常",
-          type: 'error'
-        });
+        this.showToast("激活服务异常", 'error');
         this.setData({
           'modal.isModalShow': true,
           isMarketShow: false,
@@ -298,8 +320,15 @@ Page({
       url: this.data.requestIp + '/base_task/unOrient/tasks',
       method: "GET",
       success: res => {
+        res.data.forEach((v, k) => {
+          this.data.taskClaimButtons.push({
+            isClick: false,
+            loading: false
+          });
+        });
         this.setData({
-          tasks: res.data
+          tasks: res.data,
+          taskClaimButtons: this.data.taskClaimButtons
         });
       },
       fail: e => {
@@ -342,5 +371,14 @@ Page({
         });
       }
     }, 1000);
+  },
+  /**
+   * 显示气泡
+   */
+  showToast(content, type) {
+    $Toast({
+      content,
+      type
+    });
   }
 })
