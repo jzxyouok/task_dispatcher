@@ -331,7 +331,7 @@ Page({
     });
   },
   /**
-   * 显示成功的气泡
+   * 显示气泡
    */
   showToast(content, type) {
     $Toast({

@@ -31,15 +31,10 @@
             <i-input value="{{ taskDetail.comment }}" data-name="taskDetail.comment" catch:change='handleInput' type="textarea" title="" placeholder="(最多200字)" maxlength="200" />
           </i-cell>
           <i-row>
-            <i-col span="8" i-class="col-class"><i-button bind:click="notPass" type="error">不通过</i-button></i-col>
+            <i-col span="8" i-class="col-class"><i-button bind:click="notPass" type="error">驳回</i-button></i-col>
             <i-col span="8" i-class="col-class"><i-button bind:click="pass" type="success">通过</i-button></i-col>
             <i-col span="8" i-class="col-class"><i-button bind:click="commit2Expert" type="info">提交专家</i-button></i-col>
           </i-row>
-        </block>
-        <block wx:else>
-          <i-cell wx:if="{{taskDetail.comment}}" title="点评：">{{taskDetail.comment}}</i-cell>
-          <i-cell wx:if="{{taskDetail.reviewReason}}" title="提审原因">{{taskDetail.reviewReason}}</i-cell>
-          <i-cell wx:if="{{taskDetail.expertComment}}" title="评审意见：">{{taskDetail.expertComment}}</i-cell>
         </block>
         <!-- 专家组身份，任务状态为待专家组审核 -->
         <block wx:if="{{ROLE.EXPERT==role && TASK_STATUS.EXPERT_AUDITING==taskDetail.taskState}}">
@@ -52,7 +47,8 @@
             <i-col span="12" i-class="col-class"><i-button bind:click="pass" type="success">通过</i-button></i-col>
           </i-row>
         </block>
-        <block wx:else>
+        <!-- 非承接者身份 -->
+        <block wx:if="{{(ROLE.EXPERT==role && TASK_STATUS.EXPERT_AUDITING!=taskDetail.taskState) || (ROLE.AUDITOR==role && TASK_STATUS.AUDITING!=taskDetail.taskState)}}">
           <i-cell wx:if="{{taskDetail.comment}}" title="点评：">{{taskDetail.comment}}</i-cell>
           <i-cell wx:if="{{taskDetail.reviewReason}}" title="提审原因">{{taskDetail.reviewReason}}</i-cell>
           <i-cell wx:if="{{taskDetail.expertComment}}" title="评审意见：">{{taskDetail.expertComment}}</i-cell>
@@ -61,3 +57,11 @@
     </view>
   </i-panel>
 </i-row>
+<i-modal style="" title="填写提审原因" visible="{{ modal.isModalShow }}" actions="{{ modal.modalActions }}" catch:click="handleModalClick">
+    <view>
+      <i-row>
+        <i-col span="24" i-class="col-class"><i-input type="textarea" catch:change='handleInput' value="{{taskDetail.reviewReason}}" data-name="taskDetail.reviewReason" title="提审原因" placeholder='点击输入'/></i-col>
+      </i-row>
+    </view>
+</i-modal>
+<i-toast id="toast" />

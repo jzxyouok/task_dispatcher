@@ -8,7 +8,7 @@
 <i-row>
   <i-panel>
     <i-card title="{{userVo.nickName}}" full extra="" thumb="{{userVo.avatarUrl}}">
-        <view slot="content">内容不错</view>
+        <view slot="content"></view>
         <!-- <view slot="footer">尾部内容</view> -->
     </i-card>
   </i-panel>

@@ -19,6 +19,22 @@ Page({
     userId: "",
     staffNames: "",
     taskDetail: {},
+    isAnyButtonClick: false,
+    modal: {
+      isModalShow: false,
+      modalActions: [
+        {
+          name: "提交",
+          color: '#2d8cf0',
+          loading: false
+        }, 
+        {
+          name: "取消",
+          color: '#2d8cf0',
+          loading: false
+        }
+      ]
+    },
     ROLE: {
       PROPOSER: "proposer",  //发布者
       AUDITOR: "auditor",  //审批者
@@ -32,40 +48,116 @@ Page({
       REJECTED: "已驳回"
     }
   },
+  handleModalClick({ detail }) {
+    if (detail.index === 1) {
+      this.setData({
+        'modal.isModalShow': false
+      });
+      return;
+    }
+    if (!this.data.taskDetail.reviewReason) {
+      this.showToast("请填写提审原因", "warning");
+      return;
+    }
+    if (this.data.isAnyButtonClick) {
+      return;
+    }
+    this.data.isAnyButtonClick = true;
+    this.data.modal.modalActions[0].loading = true;
+    this.setData({
+      'modal.modalActions': this.data.modal.modalActions
+    });
+    this.data.taskDetail.taskState = TASK_STATUS.EXPERT_AUDITING;
+    wx.request({
+      url: this.data.requestIp + '/base_task/updateTaskState',
+      method: "POST",
+      data: taskDetail,
+      success: res => {
+        this.data.isAnyButtonClick = false;
+        this.data.modal.modalActions[0].loading = false;
+        this.setData({
+          'modal.modalActions': this.data.modal.modalActions
+        });
+        this.showToast("任务已驳回", "sucess");
+        wx.navigateBack();
+      },
+      fail: e => {
+        this.data.isAnyButtonClick = false;
+        this.data.modal.modalActions[0].loading = false;
+        this.setData({
+          'modal.modalActions': this.data.modal.modalActions
+        });
+      }
+    });
+  },
   handleInput(e) {
     bidirectionalBind(e, this);
   },
   noPass(){
-
+    if (!this.data.taskDetail.comment) {
+      this.showToast("请填写点评", "warning");
+      return;
+    }
+    if (!this.data.taskDetail.expertComment && this.data.role == this.data.ROLE.EXPERT) {
+      this.showToast("请填写评审意见", "warning");
+      return;
+    }
+    if (this.data.isAnyButtonClick) {
+      return;
+    }
+    this.data.isAnyButtonClick = true;
+    this.data.taskDetail.taskState = TASK_STATUS.REJECTED;
+    wx.request({
+      url: this.data.requestIp + '/base_task/updateTaskState',
+      method: "POST",
+      data: taskDetail,
+      success: res => {
+        this.data.isAnyButtonClick = false;
+        this.showToast("任务已驳回", "sucess");
+        wx.navigateBack();
+      },
+      fail: e => {
+        this.data.isAnyButtonClick = false;
+      }
+    });
   },
-  commitExpert(){
-
+  commit2Expert(){
+    this.setData({
+      'modal.isModalShow': true
+    });
   },
   pass(){
-    // wx.request({
-    //   url: 'http://localhost:8080/base_task/users',
-    //   success: (res) => {
-    //     console.log(res.data);
-    //   }
-    // });
-  },
-  /**
-   * 改变当前页面的标题
-   */
-  changeNavigationBarTitle(text) {
-    const barTitle = [
-      '加载中...'
-    ]
-    wx.setNavigationBarTitle({
-      title: text + "的任务"
+    if (!this.data.taskDetail.comment) {
+      this.showToast("请填写点评", "warning");
+      return;
+    }
+    if (!this.data.taskDetail.expertComment && this.data.role == this.data.ROLE.EXPERT) {
+      this.showToast("请填写评审意见", "warning");
+      return;
+    }
+    if (this.data.isAnyButtonClick) {
+      return;
+    }
+    this.data.isAnyButtonClick = true;
+    this.data.taskDetail.taskState = TASK_STATUS.PASSED;
+    wx.request({
+      url: this.data.requestIp + '/base_task/updateTaskState',
+      method: "POST",
+      data: taskDetail,
+      success: res => {
+        this.data.isAnyButtonClick = false;
+        this.showToast("任务已通过", "sucess");
+        wx.navigateBack();
+      },
+      fail: e => {
+        this.data.isAnyButtonClick = false;
+      }
     });
   },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    console.log(options);
-    console.log(this.data.ROLE.AUDITOR == options.role);
     let app = getApp();
     this.data.requestIp = app.globalData.requestIp;
     this.data.userId = app.globalData.localUserInfo.id;
@@ -146,6 +238,18 @@ Page({
   },
 
   /**
+   * 改变当前页面的标题
+   */
+  changeNavigationBarTitle(text) {
+    const barTitle = [
+      '加载中...'
+    ]
+    wx.setNavigationBarTitle({
+      title: text + "的任务"
+    });
+  },
+
+  /**
    * 处理任务数据
    */
   dealTaskData(taskVo) {
@@ -162,6 +266,15 @@ Page({
     }
     this.setData({
       staffNames
+    });
+  },
+  /**
+   * 显示气泡
+   */
+  showToast(content, type) {
+    $Toast({
+      content,
+      type
     });
   }
 })
