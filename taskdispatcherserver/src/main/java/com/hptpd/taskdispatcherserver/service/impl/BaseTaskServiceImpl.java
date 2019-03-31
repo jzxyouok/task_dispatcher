@@ -187,7 +187,8 @@ public class BaseTaskServiceImpl implements BaseTaskService {
     @Override
     public List<TaskVo> queryTaskByUnOrient() {
         Sort sort = new Sort(Sort.Direction.DESC, "creatTime");
-        List<Task> tasks=taskRep.findByOrient(TaskVo.UN_ORIENT,sort);
+        List<Staff> staffs = Lists.newArrayList();
+        List<Task> tasks=taskRep.findByOrientAndTaskStateAndStaffsOrderByCreatTimeDesc(TaskVo.UN_ORIENT, TaskVo.PASSED, staffs);
 
         return TaskVo.convertTask(tasks);
     }

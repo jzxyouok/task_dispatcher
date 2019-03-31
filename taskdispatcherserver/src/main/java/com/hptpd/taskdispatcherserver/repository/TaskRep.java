@@ -32,7 +32,7 @@ public interface TaskRep extends JpaRepository<Task,String> {
      */
     List<Task> findByOrient(boolean orient, Sort sort);
 
-
+    List<Task> findByOrientAndTaskStateAndStaffsOrderByCreatTimeDesc(boolean orient, String taskState, List<Staff> staffs);
     /**
      * 申请角色的任务
      * @param proposer
