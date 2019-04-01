@@ -10,6 +10,7 @@ import com.hptpd.taskdispatcherserver.service.BaseTaskService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -71,9 +72,9 @@ public class BaseTaskController {
      * @return
      */
     @RequestMapping(value = "/activate", method = RequestMethod.POST)
-    public Result activateUser(@RequestBody UserVo userVo,HttpSession session){
+    public Result activateUser(@RequestBody UserVo userVo, HttpServletRequest request){
 
-        return  baseTaskService.activateUser(session,userVo);
+        return  baseTaskService.activateUser(request,userVo);
     }
 
     /**
@@ -88,9 +89,9 @@ public class BaseTaskController {
 
 
     @RequestMapping(value = "/msgCode", method = RequestMethod.GET)
-    public Result getMsgCode(@RequestParam String phone, HttpSession session){
+    public Result getMsgCode(@RequestParam String phone, HttpServletRequest request){
 
-        return baseTaskService.getMsgCode(session,phone);
+        return baseTaskService.getMsgCode(request,phone);
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)

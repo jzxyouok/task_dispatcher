@@ -23,6 +23,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
@@ -161,10 +162,11 @@ public class BaseTaskServiceImpl implements BaseTaskService {
      * @return
      */
     @Override
-    public Result activateUser(HttpSession session,UserVo userVo) {
+    public Result activateUser(HttpServletRequest request, UserVo userVo) {
 
         String telephone =userVo.getTelephone();
         User user =userRep.findByTelephone(telephone);
+        HttpSession session =request.getSession();
 
         Integer msgCode =userVo.getMsgCode();
         Integer randomCode = (Integer) session.getAttribute(telephone);
@@ -200,7 +202,8 @@ public class BaseTaskServiceImpl implements BaseTaskService {
      * @return
      */
     @Override
-    public Result getMsgCode(HttpSession session,String phone) {
+    public Result getMsgCode(HttpServletRequest httpServletRequest,String phone) {
+        HttpSession session =httpServletRequest.getSession();
 
         session.removeAttribute(phone);
         DefaultProfile profile = DefaultProfile.getProfile("default", Message.ACCESSKEYID, Message.SECRET);
@@ -222,6 +225,7 @@ public class BaseTaskServiceImpl implements BaseTaskService {
 
         try {
             CommonResponse response = client.getCommonResponse(request);
+
             session.setAttribute(phone, random);
 
             final Timer timer = new Timer();

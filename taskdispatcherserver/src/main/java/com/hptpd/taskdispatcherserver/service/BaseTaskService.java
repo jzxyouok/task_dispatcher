@@ -9,6 +9,7 @@ import com.hptpd.taskdispatcherserver.domain.vo.ProjectVo;
 import com.hptpd.taskdispatcherserver.domain.vo.TaskVo;
 import com.hptpd.taskdispatcherserver.domain.vo.UserVo;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -53,7 +54,7 @@ public interface BaseTaskService {
      * @param session
      * @return
      */
-    Result activateUser(HttpSession session,UserVo userVo);
+    Result activateUser(HttpServletRequest request, UserVo userVo);
 
 
     /**
@@ -69,7 +70,7 @@ public interface BaseTaskService {
      * @param session
      * @return
      */
-     Result getMsgCode(HttpSession session,String phone);
+     Result getMsgCode(HttpServletRequest request,String phone);
 
 
     /**
