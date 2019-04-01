@@ -67,11 +67,11 @@ Page({
     this.setData({
       'modal.modalActions': this.data.modal.modalActions
     });
-    this.data.taskDetail.taskState = TASK_STATUS.EXPERT_AUDITING;
+    this.data.taskDetail.taskState = this.data.TASK_STATUS.EXPERT_AUDITING;
     wx.request({
       url: this.data.requestIp + '/base_task/updateTaskState',
       method: "POST",
-      data: taskDetail,
+      data: this.data.taskDetail,
       success: res => {
         this.data.isAnyButtonClick = false;
         this.data.modal.modalActions[0].loading = false;
@@ -106,11 +106,11 @@ Page({
       return;
     }
     this.data.isAnyButtonClick = true;
-    this.data.taskDetail.taskState = TASK_STATUS.REJECTED;
+    this.data.taskDetail.taskState = this.data.TASK_STATUS.REJECTED;
     wx.request({
       url: this.data.requestIp + '/base_task/updateTaskState',
       method: "POST",
-      data: taskDetail,
+      data: this.data.taskDetail,
       success: res => {
         this.data.isAnyButtonClick = false;
         this.showToast("任务已驳回", "sucess");
@@ -139,11 +139,11 @@ Page({
       return;
     }
     this.data.isAnyButtonClick = true;
-    this.data.taskDetail.taskState = TASK_STATUS.PASSED;
+    this.data.taskDetail.taskState = this.data.TASK_STATUS.PASSED;
     wx.request({
       url: this.data.requestIp + '/base_task/updateTaskState',
       method: "POST",
-      data: taskDetail,
+      data: this.data.taskDetail,
       success: res => {
         this.data.isAnyButtonClick = false;
         this.showToast("任务已通过", "sucess");

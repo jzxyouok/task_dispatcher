@@ -2,6 +2,7 @@
 
 <i-cell-group>
   <view wx:for="{{tasks}}" wx:key="id">
-  <i-cell title="{{item.taskName}}" is-link url="../taskdetail/taskdetail?taskId={{item.id}}&role={{role}}" label="{{item.taskDescription}}" value="{{item.taskState}}" ></i-cell>
-  </view>
+    <view wx:if="{{item.taskState==TASK_STATUS.AUDITING || item.taskState==TASK_STATUS.EXPERT_AUDITING}}" style="position:absolute;right:8%;margin-top:2%;"><i-badge dot i-class="BadgeClass"></i-badge></view>
+    <i-cell title="{{item.taskName}}" is-link url="../taskdetail/taskdetail?taskId={{item.id}}&role={{role}}" label="{{item.taskDescription}}" value="{{role==ROLE.STAFF?'':item.taskState}}" ></i-cell>
+  </view>msgCode
 </i-cell-group>

@@ -30,8 +30,8 @@
     <view>
       <i-row>
         <i-col span="24" i-class="col-class"><i-input type="number" catch:change='handleInput' value="{{userVo.telephone}}" data-name="userVo.telephone" title="手机号" placeholder='输入手机号'/></i-col>
-        <i-col span="14" i-class="col-class"><i-input style="display:block;margin-top:8px;" type="number" catch:change='handleInput' value="{{userVo.validateCode}}" data-name="userVo.validateCode" title="验证码" placeholder='验证码'/></i-col>
-        <i-col span="10" i-class="col-class"><i-button bind:click="handleValidateCodeBtnClick" disabled="{{validateCodeButton.disabled}}" type="{{validateCodeButton.type}}" size="small">{{validateCodeButton.text}}</i-button></i-col>
+        <i-col span="14" i-class="col-class"><i-input style="display:block;margin-top:8px;" type="number" catch:change='handleInput' value="{{userVo.msgCode}}" data-name="userVo.msgCode" title="验证码" placeholder='验证码'/></i-col>
+        <i-col span="10" i-class="col-class"><i-button bind:click="handleMsgCodeBtnClick" disabled="{{msgCodeButton.disabled}}" type="{{msgCodeButton.type}}" size="small">{{msgCodeButton.text}}</i-button></i-col>
       </i-row>
     </view>
 </i-modal>

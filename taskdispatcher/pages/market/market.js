@@ -21,7 +21,7 @@ Page({
       isActivateClick: false
     },
     isMarketShow: false,
-    validateCodeButton: {
+    msgCodeButton: {
       disabled: false,
       text: "发送验证码",
       type: "success",
@@ -32,7 +32,7 @@ Page({
       name: "",
       telephone: "",
       weChat: "",
-      validateCode: ""
+      msgCode: ""
     },
     modalActions: [{
       name: "激活",
@@ -95,8 +95,8 @@ Page({
   /**
    * 发送验证码按钮
    */
-  handleValidateCodeBtnClick() {
-    if (this.data.validateCodeButton.isClick) {
+  handleMsgCodeBtnClick() {
+    if (this.data.msgCodeButton.isClick) {
       return;
     }
     let params = {
@@ -108,13 +108,13 @@ Page({
       this.showToast(error.msg, 'warning');
       return;
     }
-    this.data.validateCodeButton.isClick = true;
+    this.data.msgCodeButton.isClick = true;
     //发送验证码动画
     let time = 61;
     let interval = setInterval(() => {
       if (time-- > 1) {
         this.setData({
-          validateCodeButton: {
+          msgCodeButton: {
             disabled: true,
             text: "等待（" + time + "s）",
             type: "ghost",
@@ -124,7 +124,7 @@ Page({
       } else {
         clearInterval(interval);
         this.setData({
-          validateCodeButton: {
+          msgCodeButton: {
             disabled: false,
             text: "发送验证码",
             type: "success",
@@ -177,7 +177,7 @@ Page({
       this.showToast(error.msg, 'warning');
       return;
     }
-    if (!this.data.userVo.validateCode) {
+    if (!this.data.userVo.msgCode) {
       this.showToast("请输入验证码", 'warning');
       return;
     }
@@ -197,7 +197,7 @@ Page({
       data: this.data.userVo,
       success: res => {
         this.data.modal.isActivateClick = false;
-        this.data.validateCodeButton.isClick = false;
+        this.data.msgCodeButton.isClick = false;
         this.data.modalActions[0].loading = false;
         if (!res.data) {
           return;
@@ -221,7 +221,7 @@ Page({
       },
       fail: e => {
         this.data.modal.isActivateClick = false;
-        this.data.validateCodeButton.isClick = false;
+        this.data.msgCodeButton.isClick = false;
         this.data.modalActions[0].loading = false;
         this.showToast("激活服务异常", 'error');
         this.setData({

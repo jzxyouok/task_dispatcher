@@ -1,1 +1,8 @@
 /* pages/completed/completed.wxss */
+.BadgeClass {
+  width:100%;
+}
+
+.BadgeAloneClass {
+  margin-right: 20%;
+}

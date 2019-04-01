@@ -187,7 +187,7 @@ public class BaseTaskServiceImpl implements BaseTaskService {
     @Override
     public List<TaskVo> queryTaskByUnOrient() {
         Sort sort = new Sort(Sort.Direction.DESC, "creatTime");
-        List<Staff> staffs = Lists.newArrayList();
+        List<Staff> staffs = null;
         List<Task> tasks=taskRep.findByOrientAndTaskStateAndStaffsOrderByCreatTimeDesc(TaskVo.UN_ORIENT, TaskVo.PASSED, staffs);
 
         return TaskVo.convertTask(tasks);
@@ -305,6 +305,9 @@ public class BaseTaskServiceImpl implements BaseTaskService {
                 if (staffList!=null && !staffList.isEmpty()){
                     for (Staff staff:staffList){
                         Task task = staff.getTask();
+                        if (!TaskVo.PASSED.equals(task.getTaskState())) {
+                            continue;
+                        }
                         TaskVo taskVo =new TaskVo();
                         AbstractMyBeanUtils.copyProperties(task,taskVo);
                         taskVos.add(taskVo);

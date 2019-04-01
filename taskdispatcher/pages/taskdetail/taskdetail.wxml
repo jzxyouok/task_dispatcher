@@ -31,7 +31,7 @@
             <i-input value="{{ taskDetail.comment }}" data-name="taskDetail.comment" catch:change='handleInput' type="textarea" title="" placeholder="(最多200字)" maxlength="200" />
           </i-cell>
           <i-row>
-            <i-col span="8" i-class="col-class"><i-button bind:click="notPass" type="error">驳回</i-button></i-col>
+            <i-col span="8" i-class="col-class"><i-button bind:click="noPass" type="error">驳回</i-button></i-col>
             <i-col span="8" i-class="col-class"><i-button bind:click="pass" type="success">通过</i-button></i-col>
             <i-col span="8" i-class="col-class"><i-button bind:click="commit2Expert" type="info">提交专家</i-button></i-col>
           </i-row>
@@ -43,7 +43,7 @@
             <i-input value="{{ taskDetail.expertComment }}" data-name="taskDetail.expertComment" catch:change='handleInput' type="textarea" title="" placeholder="(最多200字)" maxlength="200" />
           </i-cell>
           <i-row>
-            <i-col span="12" i-class="col-class"><i-button bind:click="notPass" type="error">不通过</i-button></i-col>
+            <i-col span="12" i-class="col-class"><i-button bind:click="noPass" type="error">不通过</i-button></i-col>
             <i-col span="12" i-class="col-class"><i-button bind:click="pass" type="success">通过</i-button></i-col>
           </i-row>
         </block>
@@ -57,7 +57,7 @@
     </view>
   </i-panel>
 </i-row>
-<i-modal style="" title="填写提审原因" visible="{{ modal.isModalShow }}" actions="{{ modal.modalActions }}" catch:click="handleModalClick">
+<i-modal wx:if="{{ modal.isModalShow }}" style="" title="填写提审原因" visible="{{ modal.isModalShow }}" actions="{{ modal.modalActions }}" catch:click="handleModalClick">
     <view>
       <i-row>
         <i-col span="24" i-class="col-class"><i-input type="textarea" catch:change='handleInput' value="{{taskDetail.reviewReason}}" data-name="taskDetail.reviewReason" title="提审原因" placeholder='点击输入'/></i-col>

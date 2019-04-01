@@ -9,7 +9,19 @@ Page({
     userid: "",
     selectIndex: 0,
     tasks: [],
-    role:""
+    role: "",
+    ROLE: {
+      PROPOSER: "proposer",  //发布者
+      AUDITOR: "auditor",  //审批者
+      STAFF: "staff",  //承接者
+      EXPERT: "expert" //专家组
+    },
+    TASK_STATUS: {
+      AUDITING: "待审核",
+      EXPERT_AUDITING: "待专家组审核",
+      PASSED: "已发布",
+      REJECTED: "已驳回"
+    }
   },
 
   /**
@@ -36,7 +48,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    this.getTasks(this.data.role);
   },
 
   /**
