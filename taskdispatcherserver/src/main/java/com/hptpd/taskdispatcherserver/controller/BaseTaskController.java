@@ -72,9 +72,9 @@ public class BaseTaskController {
      * @return
      */
     @RequestMapping(value = "/activate", method = RequestMethod.POST)
-    public Result activateUser(@RequestBody UserVo userVo, HttpServletRequest request){
+    public Result activateUser(@RequestBody UserVo userVo){
 
-        return  baseTaskService.activateUser(request,userVo);
+        return  baseTaskService.activateUser(userVo);
     }
 
     /**
@@ -89,9 +89,9 @@ public class BaseTaskController {
 
 
     @RequestMapping(value = "/msgCode", method = RequestMethod.GET)
-    public Result getMsgCode(@RequestParam String phone, HttpServletRequest request){
+    public Result getMsgCode(@RequestParam String phone){
 
-        return baseTaskService.getMsgCode(request,phone);
+        return baseTaskService.getMsgCode(phone);
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)

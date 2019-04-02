@@ -54,7 +54,7 @@ public interface BaseTaskService {
      * @param session
      * @return
      */
-    Result activateUser(HttpServletRequest request, UserVo userVo);
+    Result activateUser( UserVo userVo);
 
 
     /**
@@ -70,7 +70,7 @@ public interface BaseTaskService {
      * @param session
      * @return
      */
-     Result getMsgCode(HttpServletRequest request,String phone);
+     Result getMsgCode(String phone);
 
 
     /**

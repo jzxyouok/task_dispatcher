@@ -12,6 +12,7 @@ import com.aliyuncs.profile.DefaultProfile;
 import com.google.common.collect.Lists;
 import com.hptpd.taskdispatcherserver.common.util.AbstractMyBeanUtils;
 import com.hptpd.taskdispatcherserver.common.util.JsonUtil;
+import com.hptpd.taskdispatcherserver.component.RedisService;
 import com.hptpd.taskdispatcherserver.component.Result;
 import com.hptpd.taskdispatcherserver.domain.*;
 import com.hptpd.taskdispatcherserver.domain.vo.*;
@@ -19,6 +20,7 @@ import com.hptpd.taskdispatcherserver.repository.*;
 import com.hptpd.taskdispatcherserver.service.BaseTaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +43,9 @@ import java.util.*;
 public class BaseTaskServiceImpl implements BaseTaskService {
 
     private Logger logger = LoggerFactory.getLogger(BaseTaskServiceImpl.class);
+
+    @Autowired
+    private RedisService redisService;
 
     @Resource(name = "taskRep")
     private TaskRep taskRep;
@@ -162,14 +167,17 @@ public class BaseTaskServiceImpl implements BaseTaskService {
      * @return
      */
     @Override
-    public Result activateUser(HttpServletRequest request, UserVo userVo) {
+    public Result activateUser( UserVo userVo) {
 
         String telephone =userVo.getTelephone();
         User user =userRep.findByTelephone(telephone);
-        HttpSession session =request.getSession();
+
+
 
         Integer msgCode =userVo.getMsgCode();
-        Integer randomCode = (Integer) session.getAttribute(telephone);
+        Integer randomCode = (Integer) redisService.get(telephone);
+        logger.info(randomCode+"_"+msgCode+"-");
+
 
         if (user != null && msgCode.equals(randomCode)){
            user.setWeChat(userVo.getWeChat());
@@ -202,10 +210,9 @@ public class BaseTaskServiceImpl implements BaseTaskService {
      * @return
      */
     @Override
-    public Result getMsgCode(HttpServletRequest httpServletRequest,String phone) {
-        HttpSession session =httpServletRequest.getSession();
+    public Result getMsgCode(String phone) {
+        redisService.remove(phone);
 
-        session.removeAttribute(phone);
         DefaultProfile profile = DefaultProfile.getProfile("default", Message.ACCESSKEYID, Message.SECRET);
         IAcsClient client = new DefaultAcsClient(profile);
 
@@ -226,13 +233,14 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         try {
             CommonResponse response = client.getCommonResponse(request);
 
-            session.setAttribute(phone, random);
+
+            redisService.set(phone,random);
 
             final Timer timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    session.removeAttribute(phone);
+                    redisService.remove(phone);
                     timer.cancel();
                 }
             }, 5 * 60 * 1000);
