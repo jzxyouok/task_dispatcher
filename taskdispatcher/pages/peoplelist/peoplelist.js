@@ -5,6 +5,7 @@
  \* @time: 2019/3/13 10:14
  \* Description: 人员列表
  \*/
+const { bidirectionalBind } = require('../../utils/bidirectionalBind.js');
 Page({
 
   /**
@@ -12,27 +13,19 @@ Page({
    */
   data: {
     requestIp: '',
+    searchInput: {
+      searchName: ''
+    },
     isMultiSelect: false, //是否是多选
     roleType: '',
     indexList: [], //索引选择器
-    people:[
-      {
-        id:"3325",
-        name:"彭博",
-        firstLetter: "P"
-      },
-      {
-        id: "3fds325",
-        name: "辉少",
-        firstLetter: "H",
-        isChecked: true
-      },
-      {
-        id: "332gds5",
-        name: "刘神",
-        firstLetter: "L"
-      }
-    ]
+    people:[]
+  },
+
+  handleButtonTap() {
+    //保存已选人到缓存
+    this.saveSelectPeople2Storage();
+    wx.navigateBack();
   },
 
   /**
@@ -40,6 +33,12 @@ Page({
    */
   handleCheckChange(e){
     if (this.data.isMultiSelect) {
+      this.data.people.forEach((val, key) => {
+        if (val.id == e.target.dataset.itemid) {
+          val.isChecked = !(val.isChecked ? true : false);
+          return;
+        }
+      });
       this.data.indexList.forEach((val, key) => {
         val.list.forEach((v, k) => {
           if (v.id == e.target.dataset.itemid) {
@@ -49,6 +48,13 @@ Page({
         });
       });
     } else {
+      this.data.people.forEach((val, key) => {
+        if (val.id == e.target.dataset.itemid) {
+          val.isChecked = !(val.isChecked ? true : false);
+        } else {
+          val.isChecked = false;
+        }
+      });
       this.data.indexList.forEach((val, key) => {
         val.list.forEach((v, k) => {
           if (v.id == e.target.dataset.itemid) {
@@ -63,8 +69,42 @@ Page({
       indexList: this.data.indexList
     })
   },
+  handleInput(e) {
+    bidirectionalBind(e, this);
+    let indexStore = new Array(27);
+    const words = ["#", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+    words.forEach((item, index) => {
+      indexStore[index] = {
+        key: item,
+        list: []
+      }
+    });
+    this.data.people.forEach((item) => {
+      if (item.name.indexOf(e.detail.detail.value) > -1) {
+        let index = words.indexOf(item.firstLetter);
+        if (index > -1) {
+          indexStore[index].list.push({
+            name: item.name,
+            key: item.firstLetter,
+            isChecked: item.isChecked,
+            id: item.id
+          });
+        } else {
+          indexStore[0].list.push({
+            name: item.name,
+            key: item.firstLetter,
+            isChecked: item.isChecked,
+            id: item.id
+          });
+        }
+      }
+    });
+    this.data.indexList = indexStore;
+    this.setData({
+      indexList: this.data.indexList
+    });
+  },
   onIndexListChange(event) {
-    console.log(event.detail, 'click right menu callback data')
   },
 
   /**
@@ -112,8 +152,6 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-    //保存已选人到缓存
-    this.saveSelectPeople2Storage();
   },
 
   /**
@@ -226,12 +264,10 @@ Page({
    */
   saveSelectPeople2Storage() {
     let selectPeople = [];
-    this.data.indexList.forEach((val, key) => {
-      val.list.forEach((v, k) => {
-        if (v.isChecked) {
-          selectPeople.push(v);
-        }
-      });
+    this.data.people.forEach((val, key) => {
+      if (val.isChecked) {
+        selectPeople.push(val);
+      }
     });
     wx.setStorageSync(this.data.roleType + '-selectPeople', selectPeople);
   }

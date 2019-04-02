@@ -34,12 +34,6 @@
         "selectedIconPath": "images/tab/market.png"
       },
       {
-        "pagePath": "pages/page-list/index/index",
-        "text": "原型页面",
-        "iconPath": "images/tab/shebei.png",
-        "selectedIconPath": "images/tab/market.png"
-      },
-      {
         "pagePath": "pages/myinfo/myinfo",
         "text": "我的",
         "iconPath": "images/tab/shebei.png",

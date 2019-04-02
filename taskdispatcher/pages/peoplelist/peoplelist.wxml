@@ -6,7 +6,14 @@
  \* Description: 人员列表
  \*/ -->
 <i-panel title="">
-    <i-input value="{{ value1 }}" title="搜索" placeholder="名字" />
+  <i-row>
+    <i-col span="18">
+      <i-input style="display:block;margin-top:0.5em;" value="{{ searchInput.searchName }}" data-name="searchInput.searchName" catch:change="handleInput" title="搜索" placeholder="名字" />
+    </i-col>
+    <i-col span="6">
+      <i-button type="success" size="small" catch:tap="handleButtonTap">确定</i-button>
+    </i-col>
+  </i-row>
 </i-panel>
 <view class="i-index-demo">
     <i-index height="100%" catch:change="onIndexListChange">

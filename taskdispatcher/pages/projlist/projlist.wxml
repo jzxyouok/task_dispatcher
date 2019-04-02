@@ -6,7 +6,7 @@
  \* Description: 项目列表
  \*/ -->
 <i-panel title="">
-    <i-input value="{{ value1 }}" title="搜索" placeholder="名字" />
+    <i-input value="{{ searchInput.searchName }}" data-name="searchInput.searchName" catch:change="handleInput" title="搜索" placeholder="名字" />
 </i-panel>
 <view class="i-index-demo">
     <i-index height="100%" catch:change="onIndexListChange">

@@ -205,13 +205,14 @@ Page({
         if (res.data.errCode == 0) {
           wx.showTabBar();
           this.showToast('激活成功', 'success');
+          app.globalData.localUserInfo = JSON.parse(res.data.data);
           this.setData({
             'modal.isModalShow': false,
             isMarketShow: true,
             modalActions: this.data.modalActions
           });
         } else {
-          this.showToast(res.data.messages, 'warning');
+          this.showToast(res.data.msg, 'warning');
           this.setData({
             'modal.isModalShow': true,
             isMarketShow: false,

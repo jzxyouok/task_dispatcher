@@ -182,7 +182,9 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         if (user != null && msgCode.equals(randomCode)){
            user.setWeChat(userVo.getWeChat());
            userRep.save(user);
-           return Result.setResult(Result.SUCCESS,"用户激活成功");
+           UserVo uVo = new UserVo();
+           AbstractMyBeanUtils.copyProperties(user, uVo);
+           return Result.setResult(Result.SUCCESS,"用户激活成功", JsonUtil.objectToJson(uVo));
         }else {
             return Result.setResult(Result.ERROR,"用户激活失败");
         }
