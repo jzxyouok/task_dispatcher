@@ -40,5 +40,4 @@ public class Auditor {
     @OneToOne
     private Task task;
 
-
 }
