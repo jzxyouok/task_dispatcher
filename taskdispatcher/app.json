@@ -24,20 +24,20 @@
       {
         "pagePath": "pages/market/market",
         "text": "任务市场",
-        "iconPath": "images/tab/shebei.png",
-        "selectedIconPath": "images/tab/market.png"
+        "iconPath": "images/tab/market.png",
+        "selectedIconPath": "images/tab/market_on.png"
       },
       {
         "pagePath": "pages/issue/issue",
         "text": "任务发布",
-        "iconPath": "images/tab/shebei.png",
-        "selectedIconPath": "images/tab/market.png"
+        "iconPath": "images/tab/issue.png",
+        "selectedIconPath": "images/tab/issue_on.png"
       },
       {
         "pagePath": "pages/myinfo/myinfo",
         "text": "我的",
-        "iconPath": "images/tab/shebei.png",
-        "selectedIconPath": "images/tab/market.png"
+        "iconPath": "images/tab/myinfo.png",
+        "selectedIconPath": "images/tab/myinfo_on.png"
       }
     ],
     "position": "bottom"
