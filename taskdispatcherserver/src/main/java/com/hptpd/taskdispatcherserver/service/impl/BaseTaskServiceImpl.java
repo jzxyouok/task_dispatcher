@@ -100,8 +100,6 @@ public class BaseTaskServiceImpl implements BaseTaskService {
             staff.setUser(optionalUser2.get());
             staff.setTask(task);
             staffList.add(staff);
-
-
         }
 
         ProjectVo projVo = taskVo.getProjectVo();

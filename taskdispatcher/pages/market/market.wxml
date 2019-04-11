@@ -5,27 +5,43 @@
  \* @time: 2019/3/18 10:14
  \* Description: 首页-任务市场
  \*/ -->
-<i-cell-group wx:if="{{isMarketShow}}">
-  <view wx:for="{{tasks}}" wx:key="id" class="mb5">
-    <i-cell title="{{item.taskName}}" data-index="{{index}}" is-link bind:click="expandTask" value="详细信息">
-    </i-cell>
-    <i-panel wx:if="{{index==selectIndex}}">
-      <view style="padding:5px 20px 10px;">
-        <i-cell-group>
-          <i-cell>项目名称：{{item.projectVo.name}}</i-cell>
-          <i-cell>任务描述：{{item.taskDescription}}</i-cell>
-          <i-cell>项目周期：{{item.projectVo.department}}</i-cell>
-          <i-cell>发布人：{{item.proposerVo.userVo.name}}</i-cell>
-          <i-cell>工作量：{{item.workload}}人月</i-cell>
-          <!-- <i-cell>任务产值：{{item.outputValue}}元</i-cell> -->
-        </i-cell-group>
-        <i-row>
-          <i-col span="12" offset="12" i-class="col-class"><i-button bind:click="handleTaskClaimClick" data-index="{{index}}" data-taskid="{{item.id}}" loading="{{taskClaimButtons[index].loading}}" type="success">任务认领</i-button></i-col>
-        </i-row>
-      </view>
-    </i-panel>
-  </view>
-</i-cell-group>
+<view wx:if="{{!isMarketShow}}">
+<open-data type="userAvatarUrl"></open-data>
+<open-data type="userNickName"></open-data>
+<!-- 需要使用 button 来授权登录 -->
+<button
+  wx:if="{{canIUse}}"
+  open-type="getUserInfo"
+  bindgetuserinfo="bindGetUserInfo"
+>
+  授权登录
+</button>
+<view wx:else>请升级微信版本</view>
+</view>
+<view wx:if="{{isMarketShow && canIUse}}">
+  <i-panel title="可认领的任务：{{tasks?tasks.length:0}}"/>
+  <i-cell-group>
+    <view wx:for="{{tasks}}" wx:key="id" class="mb5">
+      <i-cell title="{{item.taskName}}" data-index="{{index}}" is-link bind:click="expandTask" value="详细信息">
+      </i-cell>
+      <i-panel wx:if="{{index==selectIndex}}">
+        <view style="padding:5px 20px 10px;">
+          <i-cell-group>
+            <i-cell>项目名称：{{item.projectVo.name}}</i-cell>
+            <i-cell>任务描述：{{item.taskDescription}}</i-cell>
+            <i-cell>项目周期：{{item.projectVo.department}}</i-cell>
+            <i-cell>发布人：{{item.proposerVo.userVo.name}}</i-cell>
+            <i-cell>工作量：{{item.workload}}人月</i-cell>
+            <!-- <i-cell>任务产值：{{item.outputValue}}元</i-cell> -->
+          </i-cell-group>
+          <i-row>
+            <i-col span="12" offset="12" i-class="col-class"><i-button bind:click="handleTaskClaimClick" data-index="{{index}}" data-taskid="{{item.id}}" loading="{{taskClaimButtons[index].loading}}" type="success">任务认领</i-button></i-col>
+          </i-row>
+        </view>
+      </i-panel>
+    </view>
+  </i-cell-group>
+</view>
 <i-modal style="" title="账号未激活" visible="{{ modal.isModalShow }}" actions="{{ modalActions }}" catch:click="handleModalClick">
     <view>
       <i-row>

@@ -28,7 +28,7 @@ App({
         }
       }
     });
-    // 获取用户信息
+    //获取用户信息
     wx.getSetting({
       success: res => {
         if (res.authSetting['scope.userInfo']) {
@@ -37,17 +37,11 @@ App({
             success: res => {
               // 可以将 res 发送给后台解码出 unionId
               this.globalData.userInfo = res.userInfo;
-
-              // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-              // 所以此处加入 callback 以防止这种情况
-              if (this.userInfoReadyCallback) {
-                this.userInfoReadyCallback(res)
-              }
             }
-          })
+          });
         }
       }
-    })
+    });
   },
   globalData: {
     userInfo: null, //微信存储的用户信息
@@ -55,6 +49,7 @@ App({
     appid: 'wx07a87aa3fd0cc53a',
     secret: 'b96816b6e0d6e95d700443e88ba86396',
     openid: '',
+    // requestIp: 'http://10.39.100.19:8080'
     requestIp: 'http://192.168.0.10:8080'
   }
 })

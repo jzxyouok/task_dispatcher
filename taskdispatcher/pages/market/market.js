@@ -14,6 +14,7 @@ Page({
    * 页面的初始数据
    */
   data: {
+    canIUse: wx.canIUse('button.open-type.getUserInfo'),
     requestIp: "",
     selectIndex: 0,
     modal: {
@@ -40,17 +41,21 @@ Page({
       loading: false
     }],
     tasks: [
-      {
-        id: 'fsdfs',
-        taskName: '任务1',
-        projName: '项目1',
-        taskDescription: '描述1',
-        projPeriod: '1年',
-        publisher: '辉神',
-        workload: 3,
-        outputValue: 500000000
-      }
+      // {
+      //   id: 'fsdfs',
+      //   taskName: '任务1',
+      //   projName: '项目1',
+      //   taskDescription: '描述1',
+      //   projPeriod: '1年',
+      //   publisher: '辉神',
+      //   workload: 3,
+      //   outputValue: 500000000
+      // }
     ]
+  },
+  bindGetUserInfo(e) {
+    let app = getApp();
+    app.globalData.userInfo = e.detail.userInfo;
   },
   /**
    * 任务认领按钮
@@ -69,7 +74,6 @@ Page({
       url: this.data.requestIp + '/base_task/binding/task?userId=' + app.globalData.localUserInfo.id + "&taskId=" + event.target.dataset.taskid,
       method: "GET",
       success: res => {
-        console.log(res);
         if (res.data && res.data.errCode != 0) {
           this.showToast("认领失败", "success");
           this.data.taskClaimButtons[event.target.dataset.index].loading = false;
@@ -139,7 +143,7 @@ Page({
       method: "GET",
       success: res => {
         if (res.data) {
-
+          
         }
       },
       fail: e => {
@@ -345,19 +349,25 @@ Page({
     let app = getApp();
     //获取到openid与用户信息后，才能开始进行激活流程
     let interval = setInterval(() => {
+      console.log("等待获取openid与用户信息");
       if (app.globalData.openid && app.globalData.userInfo) {
         clearInterval(interval);
+        console.log("获取成功开始访问自己后台");
         wx.request({
           url: app.globalData.requestIp + '/base_task/login?openId=' + app.globalData.openid,
           method: "GET",
           success: res => {
             if (!res.data || !res.data.data) {
+              console.log("没有激活");
+              console.log(res);
               this.setData({
                 'modal.isModalShow': true,
                 isMarketShow: false
               });
               wx.hideTabBar();
             } else {
+              console.log("已激活");
+              console.log(res);
               app.globalData.localUserInfo = JSON.parse(res.data.data);
               this.setData({
                 'modal.isModalShow': false,
@@ -367,6 +377,7 @@ Page({
             }
           },
           fail: e => {
+            console.log("激活服务异常");
 
           }
         });
