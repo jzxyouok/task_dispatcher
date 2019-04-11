@@ -161,9 +161,15 @@ Page({
    * 展开任务详情
    */
   expandTask(event) {
-    this.setData({
-      selectIndex: event.target.dataset.index
-    });
+    if (this.data.selectIndex === event.target.dataset.index) {
+      this.setData({
+        selectIndex: -1
+      });
+    } else {
+      this.setData({
+        selectIndex: event.target.dataset.index
+      });
+    }
   },
   /**
    * 模态框激活按钮
