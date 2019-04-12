@@ -1,8 +1,14 @@
 {
   "navigationBarTitleText": "选择标签",
   "usingComponents": {
+    "i-row": "../../../dist/row/index",
+    "i-col": "../../../dist/col/index",
     "i-button": "../../../dist/button/index",
     "i-panel": "../../../dist/panel/index",
-    "i-input": "../../../dist/input/index"
+    "i-input": "../../../dist/input/index",
+    "i-tag": "../../dist/tag/index",
+    "i-icon": "../../dist/icon/index",
+    "i-modal": "../../dist/modal/index",
+    "i-toast": "../../dist/toast/index"
   }
 }

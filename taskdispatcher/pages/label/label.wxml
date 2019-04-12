@@ -1,2 +1,51 @@
 <!--pages/label/label.wxml-->
-<text>pages/label/label.wxml</text>
+<!--/**
+ \* Created with 微信开发者工具.
+ \* @author: 龙威
+ \* @time: 2019/4/10 10:14
+ \* Description: 标签选择
+ \*/-->
+<i-row>
+  <i-col span="12">
+    <i-button bind:click="handleAddBtnClick" type="success" size="small">+添加标签</i-button>
+  </i-col>
+  <i-col span="12">
+    <i-button bind:click="handleOkBtnClick" type="success" size="small">确定</i-button>
+  </i-col>
+</i-row>
+<i-panel title="已选标签">
+  <i-tag 
+    wx:for="{{choosedLabels}}" 
+    wx:key="{{index}}"
+    data-itemid="{{item.id}}"
+    bindchange="handleChooseLabelChange" 
+    checkable="{{true}}" 
+    name="{{index}}" 
+    color="green" 
+    checked="{{true}}" 
+    type="border"
+    style="margin-right:5px;margin-bottom:5px;">
+    {{item.labelName}}
+  </i-tag>
+</i-panel>
+<i-panel title="可选标签">
+  <i-tag 
+    wx:for="{{labels}}" 
+    wx:key="{{index}}"
+    data-itemid="{{item.id}}"
+    bindchange="handleLabelChange" 
+    checkable="{{true}}" 
+    name="{{index}}" 
+    color="green" 
+    checked="{{item.checked?item.checked:false}}" 
+    type="border"
+    style="margin-right:5px;margin-bottom:5px;">
+    {{item.labelName}}
+  </i-tag>
+</i-panel>
+<i-modal style="" title="添加新标签" visible="{{ modal.isModalShow }}" actions="{{ modal.modalActions }}" catch:click="handleModalClick">
+    <view>
+      <i-input catch:change='handleInput' value="{{newLabel.labelName}}" data-name="newLabel.labelName" title="标签" placeholder='输入标签'/>
+    </view>
+</i-modal>
+<i-toast id="toast" />

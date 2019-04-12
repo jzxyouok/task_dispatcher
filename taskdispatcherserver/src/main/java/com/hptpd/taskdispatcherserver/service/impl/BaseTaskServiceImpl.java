@@ -10,6 +10,7 @@ import com.aliyuncs.exceptions.ServerException;
 import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.hptpd.taskdispatcherserver.common.util.AbstractMyBeanUtils;
 import com.hptpd.taskdispatcherserver.common.util.JsonUtil;
 import com.hptpd.taskdispatcherserver.component.RedisService;
@@ -89,6 +90,27 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         auditor.setUser(optionalUser1.get());
         auditor.setTask(task);
 
+        List<LabelVo> labelVos = taskVo.getLabelVos();
+        Set<Label> labelList = Sets.newLinkedHashSet();
+        for (LabelVo labelVo : labelVos) {
+            Label label = null;
+            if ((labelVo.getId().length() >= LabelVo.NEW_LABEL_TAG.length()) && (labelVo.getId().substring(0, LabelVo.NEW_LABEL_TAG.length()).equals(LabelVo.NEW_LABEL_TAG))) {
+                label = new Label();
+                AbstractMyBeanUtils.copyProperties(labelVo, label);
+                label.setId(null);
+                label.setCreatTime(new Date());
+                label.setCreatUser(proposerVo.getUserVo().getId());
+                label.setFrequency(1L);
+                Set<Task> taskList = Sets.newLinkedHashSet();
+                taskList.add(task);
+                label.setTasks(taskList);
+            } else {
+                label = labelRep.findById(labelVo.getId()).get();
+                label.setFrequency(label.getFrequency() + 1);
+                label.getTasks().add(task);
+            }
+            labelList.add(label);
+        }
 
         List<StaffVo> staffVos =taskVo.getStaffVos();
 
@@ -106,7 +128,7 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         Optional<Project> optionalProj = projectRep.findById(projVo.getId());
         task.setProject(optionalProj.get());
 
-
+        task.setLabels(labelList);
         task.setStaffs(staffList);
 
         task.setProposer(proposer);
@@ -151,7 +173,8 @@ public class BaseTaskServiceImpl implements BaseTaskService {
      */
     @Override
     public List<LabelVo> getAllLabels() {
-        List<Label> labels =labelRep.findAll();
+        Sort sort = new Sort(Sort.Direction.DESC, "frequency");
+        List<Label> labels =labelRep.findAll(sort);
         return LabelVo.labelToVo(labels);
     }
 
@@ -206,7 +229,7 @@ public class BaseTaskServiceImpl implements BaseTaskService {
     /**
      * 短信验证
      *
-     * @param session
+     * @param phone
      * @return
      */
     @Override

@@ -13,6 +13,7 @@ Page({
   data: {
     requestIp: '',
     staffNames: '',
+    labelNames: '',
     taskVo: {
       taskName: '',
       taskDescription: '',
@@ -21,6 +22,7 @@ Page({
       orient: true,
       taskState: '待审核',
       workload: '',
+      labelVos: [],
       projectVo: {},
       proposerVo: {},
       auditorVo: {},
@@ -72,6 +74,14 @@ Page({
   chooseProject() {
     wx.navigateTo({
       url: '../projlist/projlist'
+    });
+  },
+  chooseLabel() {
+    if (this.data.taskVo.labelVos && this.data.taskVo.labelVos.length > 0) {
+      wx.setStorageSync("hasSelectLabels", this.data.taskVo.labelVos);
+    }
+    wx.navigateTo({
+      url: '../label/label'
     })
   },
   handleSave(){
@@ -98,6 +108,10 @@ Page({
       this.showToast(error.msg, 'warning');
       return;
     }
+    if (!this.data.labelNames) {
+      this.showToast("请选择标签", 'warning');
+      return;
+    }
     if (this.data.taskVo.orient && !this.data.staffNames) {
       this.showToast("请选择承接人", 'warning');
       return;
@@ -121,15 +135,7 @@ Page({
           this.data.issueButton.isClick = false;
           return;
         }
-        wx.removeStorage({
-          key: 'selectProject'
-        });
-        wx.removeStorage({
-          key: 'auditor-selectPeople'
-        });
-        wx.removeStorage({
-          key: 'staff-selectPeople'
-        });
+        this.removeAllStorage();
         this.showToast("发布成功", 'success');
         this.data.issueButton.isClick = false;
         this.resetTaskVo();
@@ -149,9 +155,28 @@ Page({
         });
         if (staffNames.indexOf(",") > -1) {
           staffNames = staffNames.substring(0, staffNames.length - 1);
+        } else {
+          staffNames = "";
         }
         this.setData({
           staffNames
+        });
+      },
+      deep: true
+    },
+    'taskVo.labelVos': {
+      handler(newValue) {
+        let labelNames = "";
+        newValue.forEach((v, k) => {
+          labelNames += v.labelName + ",";
+        });
+        if (labelNames.indexOf(",") > -1) {
+          labelNames = labelNames.substring(0, labelNames.length - 1);
+        } else {
+          labelNames = "";
+        }
+        this.setData({
+          labelNames
         });
       },
       deep: true
@@ -178,6 +203,26 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    let selectLabel = wx.getStorageSync('selectLabel');
+    if (selectLabel && selectLabel.length > 0) {
+      let labelVos = [];
+      selectLabel.forEach((v, k) => {
+        labelVos.push({
+          id: v.id,
+          labelName: v.labelName
+        });
+      });
+      this.data.taskVo.labelVos = labelVos;
+      let taskVo = this.data.taskVo;
+      this.setData({
+        'taskVo.labelVos': labelVos
+      });
+    } else {
+      this.setData({
+        "taskVo.labelVos": []
+      });
+    }
+
     let selectProject = wx.getStorageSync('selectProject');
     if (selectProject) {
       this.setData({
@@ -187,6 +232,7 @@ Page({
         }
       });
     }
+
     let auditorSelectPeople = wx.getStorageSync('auditor-selectPeople');
     let staffSelectPeople = wx.getStorageSync('staff-selectPeople');
     if (auditorSelectPeople && auditorSelectPeople.length > 0) {
@@ -240,6 +286,7 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
+    this.removeAllStorage();
   },
 
   /**
@@ -322,12 +369,31 @@ Page({
         projectVo: {},
         proposerVo: {},
         auditorVo: {},
-        staffVos: []
+        staffVos: [],
+        labelVos: []
       }
     });
     watch.setWatcher(this); // 原监视变量引用地址更改，需重监视
     this.setData({
-      'taskVo.staffVos': []
+      'taskVo.staffVos': [],
+      'taskVo.labelVos': [],
+    });
+  },
+  /**
+   * 移除所有storage
+   */
+  removeAllStorage() {
+    wx.removeStorage({
+      key: 'selectLabel'
+    });
+    wx.removeStorage({
+      key: 'selectProject'
+    });
+    wx.removeStorage({
+      key: 'auditor-selectPeople'
+    });
+    wx.removeStorage({
+      key: 'staff-selectPeople'
     });
   },
   /**

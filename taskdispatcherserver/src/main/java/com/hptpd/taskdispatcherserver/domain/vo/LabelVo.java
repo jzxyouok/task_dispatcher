@@ -20,6 +20,7 @@ import java.util.List;
  */
 @Data
 public class LabelVo {
+    public static String NEW_LABEL_TAG = "@newLabel";
 
     private String id;
 

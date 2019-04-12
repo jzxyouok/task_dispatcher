@@ -2,6 +2,7 @@ package com.hptpd.taskdispatcherserver.domain.vo;
 
 import com.google.common.collect.Lists;
 import com.hptpd.taskdispatcherserver.common.util.AbstractMyBeanUtils;
+import com.hptpd.taskdispatcherserver.domain.Label;
 import com.hptpd.taskdispatcherserver.domain.Task;
 import lombok.Data;
 
@@ -53,7 +54,7 @@ public class TaskVo {
 
     private ProjectVo projectVo;
 
-    private LabelVo labelVo;
+    private List<LabelVo> labelVos;
 
     /**
      *  发布者
@@ -78,6 +79,13 @@ public class TaskVo {
         for (Task task:tasks){
             TaskVo taskVo =new TaskVo();
             AbstractMyBeanUtils.copyProperties(task,taskVo);
+            List<LabelVo> labelVos = Lists.newArrayList();
+            for (Label label : task.getLabels()) {
+                LabelVo labelVo = new LabelVo();
+                AbstractMyBeanUtils.copyProperties(label,labelVo);
+                labelVos.add(labelVo);
+            }
+            taskVo.setLabelVos(labelVos);
             ProjectVo projVo = new ProjectVo();
             AbstractMyBeanUtils.copyProperties(task.getProject(), projVo);
             taskVo.setProjectVo(projVo);

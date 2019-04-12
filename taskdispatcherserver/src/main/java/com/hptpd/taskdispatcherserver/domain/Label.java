@@ -40,6 +40,9 @@ public class Label {
      @Column(name = "creat_user")
      private String creatUser;
 
+     @Column(name = "frequency")
+     private Long frequency;
+
      @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
      private Set<Task> tasks = Sets.newLinkedHashSet();
 
@@ -49,6 +52,7 @@ public class Label {
           if (this == o) return true;
           if (o == null || getClass() != o.getClass()) return false;
           Label label = (Label) o;
+          if (id == null) return false;
           return id.equals(label.id);
      }
 

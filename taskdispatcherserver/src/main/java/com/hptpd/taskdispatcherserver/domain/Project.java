@@ -5,7 +5,7 @@ import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -36,4 +36,18 @@ public class Project {
 
     @OneToMany(mappedBy = "project", cascade ={CascadeType.PERSIST,CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private Set<Task> tasks = Sets.newLinkedHashSet();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Project)) return false;
+        Project project = (Project) o;
+        return Objects.equals(getId(), project.getId()) &&
+                Objects.equals(getTasks(), project.getTasks());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getTasks());
+    }
 }
