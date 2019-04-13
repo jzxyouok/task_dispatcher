@@ -18,6 +18,7 @@ Page({
     requestIp: "",
     userId: "",
     staffNames: "",
+    labelNames: "",
     taskDetail: {},
     isAnyButtonClick: false,
     modal: {
@@ -254,7 +255,7 @@ Page({
    */
   dealTaskData(taskVo) {
     this.changeNavigationBarTitle(taskVo.taskState);
-    let staffNames = "";
+    let staffNames = "", labelNames = "";
     taskVo.staffVos.forEach((v, k) => {
       if (v.userVo.id == this.data.userId) {
 
@@ -264,8 +265,15 @@ Page({
     if (staffNames.indexOf(",") > -1) {
       staffNames = staffNames.substring(0, staffNames.length - 1);
     }
+    taskVo.labelVos.forEach((v, k) => {
+      labelNames += v.labelName + ",";
+    });
+    if (labelNames.indexOf(",") > -1) {
+      labelNames = labelNames.substring(0, labelNames.length - 1);
+    }
     this.setData({
-      staffNames
+      staffNames,
+      labelNames
     });
   },
   /**

@@ -376,7 +376,7 @@ Page({
     watch.setWatcher(this); // 原监视变量引用地址更改，需重监视
     this.setData({
       'taskVo.staffVos': [],
-      'taskVo.labelVos': [],
+      'taskVo.labelVos': []
     });
   },
   /**

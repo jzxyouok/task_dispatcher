@@ -14,7 +14,7 @@
         <i-cell title="任务描述：">{{taskDetail.taskDescription}}</i-cell>
         <i-cell title="发布人：">{{taskDetail.proposerVo.userVo.name}}</i-cell>
         <i-cell title="审核人：">{{taskDetail.auditorVo.userVo.name}}</i-cell>
-        <!-- <i-cell title="标签：">{{taskDetail.labelVo}}</i-cell> -->
+        <i-cell title="标签：">{{labelNames}}</i-cell>
         <i-cell title="承接人：">{{staffNames}}</i-cell>
         <i-cell title="开始时间：">{{taskDetail.startTime}}</i-cell>
         <i-cell title="结束时间：">{{taskDetail.endTime}}</i-cell>

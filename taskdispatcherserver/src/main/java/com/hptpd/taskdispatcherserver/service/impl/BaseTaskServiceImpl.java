@@ -418,11 +418,14 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         AbstractMyBeanUtils.copyProperties(optionalTask.get(),taskVo);
         List<Staff> staffList =staffRep.findByTask(optionalTask.get());
         List<StaffVo> staffVos =StaffVo.staffToVo(staffList);
+        List<Label> labelList = labelRep.findByTasks(optionalTask.get());
+        List<LabelVo> labelVos = LabelVo.labelToVo(labelList);
 
         taskVo.setProposerVo(proposerVo);
         taskVo.setAuditorVo(auditorVo);
         taskVo.setProjectVo(projectVo);
         taskVo.setStaffVos(staffVos);
+        taskVo.setLabelVos(labelVos);
 
 
         return taskVo;
