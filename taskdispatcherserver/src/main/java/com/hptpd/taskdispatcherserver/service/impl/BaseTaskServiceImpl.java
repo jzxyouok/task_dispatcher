@@ -1,6 +1,7 @@
 package com.hptpd.taskdispatcherserver.service.impl;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.aliyuncs.CommonRequest;
 import com.aliyuncs.CommonResponse;
 import com.aliyuncs.DefaultAcsClient;
@@ -10,8 +11,10 @@ import com.aliyuncs.exceptions.ServerException;
 import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.hptpd.taskdispatcherserver.common.util.AbstractMyBeanUtils;
+import com.hptpd.taskdispatcherserver.common.util.HttpUtil;
 import com.hptpd.taskdispatcherserver.common.util.JsonUtil;
 import com.hptpd.taskdispatcherserver.component.RedisService;
 import com.hptpd.taskdispatcherserver.component.Result;
@@ -44,6 +47,8 @@ import java.util.*;
 public class BaseTaskServiceImpl implements BaseTaskService {
 
     private Logger logger = LoggerFactory.getLogger(BaseTaskServiceImpl.class);
+    private String secretCode = "d9a18d334e4e94c7cd57a29936e55f23";
+    private String appid = "wx3f3f1f1c1fcdaae3";
 
     @Autowired
     private RedisService redisService;
@@ -444,6 +449,20 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         task.setTaskState(taskVo.getTaskState());
         taskRep.save(task);
         return Result.setResult(Result.SUCCESS,"更新任务成功");
+    }
+
+    @Override
+    public Result getOpenidByWeixinApi(String code) {
+        if (null == code || code.isEmpty()) {
+            return Result.setResult(Result.ERROR,"code值无效");
+        }
+        Map<String, Object> paramMap = Maps.newHashMap();
+        paramMap.put("js_code", code);
+        paramMap.put("grant_type", "authorization_code");
+        paramMap.put("secret", secretCode);
+        paramMap.put("appid", appid);
+        JSONObject jsonObj = HttpUtil.doGet("https://api.weixin.qq.com/sns/jscode2session", paramMap);
+        return Result.setResult(Result.SUCCESS,"openid获取成功", jsonObj.toJSONString());
     }
 
 }

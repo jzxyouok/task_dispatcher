@@ -14,17 +14,8 @@ App({
     wx.login({
       success: (res) => {
         if (res.code) {
-          var url = 'https://api.weixin.qq.com/sns/jscode2session?appid=' + this.globalData.appid + '&secret=' + this.globalData.secret + '&js_code=' + res.code + '&grant_type=authorization_code';
-          wx.request({
-            url,
-            success: res => {
-              if (res.data) {
-                this.globalData.openid = res.data.openid;
-              } 
-            }
-          });
-        } else {
-          console.log('获取用户登录态失败！' + res.errMsg)
+          console.log("获取到session_code，开始访问自己后台获取openid");
+          this.getOpenidByWeixinApi(res.code);
         }
       }
     });
@@ -43,13 +34,37 @@ App({
       }
     });
   },
+
+  /**
+   * 访问后台获取openid
+   */
+  getOpenidByWeixinApi(code) {
+    wx.request({
+      url: this.globalData.requestIp + '/base_task/getOpenidByWeixinApi?code=' + code,
+      method: "GET",
+      success: res => {
+        if (res.data && res.data.errCode == 0) {
+          console.log("获取到openid");
+          this.globalData.openid = (JSON.parse(res.data.data)).openid;
+        } else {
+          console.log("未从自己后台获取到openid");
+        }
+      },
+      fail: e => {
+        console.log("访问自己后台获取openid服务异常");
+      }
+    })
+  },
+
   globalData: {
     userInfo: null, //微信存储的用户信息
     localUserInfo: null, //本地数据库存储的用户信息
-    appid: 'wx07a87aa3fd0cc53a',
-    secret: 'b96816b6e0d6e95d700443e88ba86396',
+    // appid: 'wx07a87aa3fd0cc53a',
+    appid: 'wx3f3f1f1c1fcdaae3',
+    // secret: 'b96816b6e0d6e95d700443e88ba86396',
+    secret: 'd9a18d334e4e94c7cd57a29936e55f23',
     openid: '',
-    // requestIp: 'http://10.39.100.19:8080'
-    requestIp: 'http://10.39.40.93:8080'
+    requestIp: 'https://hptpd.haokuaidian.cn:443'
+    // requestIp: 'http://10.39.40.53:8090'
   }
 })

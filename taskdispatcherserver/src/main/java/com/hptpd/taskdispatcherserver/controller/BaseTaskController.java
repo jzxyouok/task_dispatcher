@@ -156,4 +156,9 @@ public class BaseTaskController {
         return result;
 
     }
+
+    @RequestMapping(value = "/getOpenidByWeixinApi", method = RequestMethod.GET)
+    public Result getOpenidByWeixinApi(@RequestParam String code) {
+        return baseTaskService.getOpenidByWeixinApi(code);
+    }
 }

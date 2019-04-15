@@ -119,4 +119,6 @@ public interface BaseTaskService {
      * @return
      */
     Result updateTaskState(TaskVo taskVo);
+
+    Result getOpenidByWeixinApi(String code);
 }
