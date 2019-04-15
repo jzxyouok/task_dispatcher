@@ -14,7 +14,7 @@
 	"compileType": "miniprogram",
 	"libVersion": "2.6.1",
 	"appid": "wx07a87aa3fd0cc53a",
-	"projectname": "taskPublish",
+	"projectname": "taskdispatcher",
 	"debugOptions": {
 		"hidedInDevtools": []
 	},

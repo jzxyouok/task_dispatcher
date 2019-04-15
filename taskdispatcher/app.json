@@ -29,6 +29,7 @@
       },
       {
         "pagePath": "pages/issue/issue",
+        
         "text": "任务发布",
         "iconPath": "images/tab/issue.png",
         "selectedIconPath": "images/tab/issue_on.png"

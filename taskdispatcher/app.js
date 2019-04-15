@@ -50,6 +50,6 @@ App({
     secret: 'b96816b6e0d6e95d700443e88ba86396',
     openid: '',
     // requestIp: 'http://10.39.100.19:8080'
-    requestIp: 'http://192.168.0.10:8080'
+    requestIp: 'http://10.39.40.93:8080'
   }
 })
