@@ -47,9 +47,9 @@ public class TaskDispatcherServerApplication {
         connector.setScheme("http");
         //Connector监听的http的端口号
         connector.setPort(8090);
-        connector.setSecure(false);
+//        connector.setSecure(false);
         // 监听到http的端口号后转向到的https的端口号
-        connector.setRedirectPort(443);
+//        connector.setRedirectPort(443);
         return connector;
     }
 }
