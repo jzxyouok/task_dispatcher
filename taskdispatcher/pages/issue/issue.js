@@ -131,12 +131,12 @@ Page({
       success: res => {
         console.log(res);
         if (res.data.errCode != 0) {
-          this.showToast("发布失败", 'success');
+          this.showToast("提交发布审核失败", 'success');
           this.data.issueButton.isClick = false;
           return;
         }
         this.removeAllStorage();
-        this.showToast("发布成功", 'success');
+        this.showToast("提交发布审核成功", 'success');
         this.data.issueButton.isClick = false;
         this.resetTaskVo();
       },

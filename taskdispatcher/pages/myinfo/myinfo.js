@@ -5,6 +5,7 @@
  \* @time: 2019/3/13 10:14
  \* Description: 我的信息
  \*/
+import constants from "../../static/constants.js";
 Page({
 
   /**
@@ -12,16 +13,17 @@ Page({
    */
   data: {
     requestIp: "",
-    ROLE: {
-      PROPOSER: "proposer",  //发布者
-      AUDITOR: "auditor",  //审批者
-      STAFF: "staff",  //承接者
-      EXPERT: "expert" //专家组
-    },
+    ROLE: {},
+    TASK_STATUS: {},
     count: {
       proposer: 0,
       auditor: 0,
       staff: 0
+    },
+    badgeShow: {
+      auditor: false,
+      staff: false,
+      proposer: false
     },
     userVo:{
       weChat: '',
@@ -38,9 +40,11 @@ Page({
   onLoad: function (options) {
     let app = getApp();
     this.data.requestIp = app.globalData.requestIp;
-    this.localUserInfo = app.globalData.localUserInfo;
     this.setData({
-      userVo: app.globalData.userInfo
+      ROLE: constants.ROLE,
+      TASK_STATUS: constants.TASK_STATUS,
+      userVo: app.globalData.userInfo,
+      localUserInfo: app.globalData.localUserInfo
     });
   },
 
@@ -104,6 +108,7 @@ Page({
       method: "GET",
       success: res => {
         this.data.count[role] = res.data.length;
+        this.dealResData(res.data, role);
         this.setData({
           count: this.data.count 
         });
@@ -112,5 +117,56 @@ Page({
 
       }
     })
+  },
+
+  /**
+   * 处理请求返回的数据
+   */
+  dealResData(arr, role) {
+    if (!arr || arr.length == 0) {
+      return;
+    }
+    switch(role) {
+      case this.data.ROLE.STAFF:
+        arr.forEach(v => {
+          if (v.taskState == this.data.TASK_STATUS.TASK_DOING || v.taskState == this.data.TASK_STATUS.COMMIT_REJECTED) {
+            this.setData({
+              'badgeShow.staff': true
+            });
+            return;
+          }
+        });
+        break;
+      case this.data.ROLE.AUDITOR:
+        arr.forEach(v => {
+          if (v.taskState == this.data.TASK_STATUS.AUDITING || v.taskState == this.data.TASK_STATUS.EVALUATING) {
+            this.setData({
+              'badgeShow.auditor': true
+            });
+            return;
+          }
+        });
+        break;
+      case this.data.ROLE.EXPERT:
+        arr.forEach(v => {
+          if (v.taskState == this.data.TASK_STATUS.EXPERT_EVALUATING) {
+            this.setData({
+              'badgeShow.auditor': true
+            });
+            return;
+          }
+        });
+        break;
+      case this.data.ROLE.PROPOSER:
+        arr.forEach(v => {
+          if (v.taskState == this.data.TASK_STATUS.ISSUE_REJECTED) {
+            this.setData({
+              'badgeShow.proposer': true
+            });
+            return;
+          }
+        });
+        break;
+    }
   }
 })

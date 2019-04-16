@@ -7,6 +7,7 @@
     "i-button": "../../dist/button/index",
     "i-panel": "../../dist/panel/index",
     "i-input": "../../dist/input/index",
-    "i-card": "../../dist/card/index"
+    "i-card": "../../dist/card/index",
+    "i-badge": "../../dist/badge/index"
   }
 }

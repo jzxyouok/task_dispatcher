@@ -226,7 +226,7 @@ public class BaseTaskServiceImpl implements BaseTaskService {
     public List<TaskVo> queryTaskByUnOrient() {
         Sort sort = new Sort(Sort.Direction.DESC, "creatTime");
         List<Staff> staffs = null;
-        List<Task> tasks=taskRep.findByOrientAndTaskStateAndStaffsOrderByCreatTimeDesc(TaskVo.UN_ORIENT, TaskVo.PASSED, staffs);
+        List<Task> tasks=taskRep.findByOrientAndTaskStateAndStaffsOrderByCreatTimeDesc(TaskVo.UN_ORIENT, TaskVo.WAIT_CLAIM, staffs);
 
         return TaskVo.convertTask(tasks);
     }
@@ -311,7 +311,11 @@ public class BaseTaskServiceImpl implements BaseTaskService {
      */
     @Override
     public List<TaskVo> getTaskByUserAndState(String userId, String role) {
-        User user = userRep.findById(userId).get();
+        Optional<User> userOpt= userRep.findById(userId);
+        if (!userOpt.isPresent()) {
+            return Lists.newArrayList();
+        }
+        User user = userOpt.get();
         List<TaskVo> taskVos =Lists.newArrayList();
 
         List<Proposer> proposers =proposerRep.findByUser(user);
@@ -319,9 +323,7 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         List<Staff> staffList =staffRep.findByUser(user);
         //查询该用户下处于申请角色下的任务
         if (UserVo.PROPOSER.equals(role)) {
-
             if (proposers != null && !proposers.isEmpty()) {
-
                 for (Proposer proposer : proposers) {
                     Task task = proposer.getTask();
                     TaskVo taskVo = new TaskVo();
@@ -333,7 +335,6 @@ public class BaseTaskServiceImpl implements BaseTaskService {
                 //查询该用户处于 审核角色下的任务
                 if (auditors!=null && !auditors.isEmpty()){
                     for (Auditor auditor:auditors){
-
                         Task task =auditor.getTask();
                         TaskVo taskVo =new TaskVo();
                         AbstractMyBeanUtils.copyProperties(task,taskVo);
@@ -345,7 +346,11 @@ public class BaseTaskServiceImpl implements BaseTaskService {
                 if (staffList!=null && !staffList.isEmpty()){
                     for (Staff staff:staffList){
                         Task task = staff.getTask();
-                        if (!TaskVo.PASSED.equals(task.getTaskState())) {
+                        if (!TaskVo.TASK_DOING.equals(task.getTaskState())
+                                && !TaskVo.COMMIT_REJECTED.equals(task.getTaskState())
+                                && !TaskVo.EVALUATING.equals(task.getTaskState())
+                                && !TaskVo.EXPERT_EVALUATING.equals(task.getTaskState())
+                                && !TaskVo.DONE.equals(task.getTaskState())) {
                             continue;
                         }
                         TaskVo taskVo =new TaskVo();
@@ -354,10 +359,6 @@ public class BaseTaskServiceImpl implements BaseTaskService {
                     }
                 }
             }
-
-
-
-
         return taskVos;
     }
 
@@ -387,10 +388,21 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         Optional<Task> optionalTask =taskRep.findById(taskId);
         Optional<User> optionalUser =userRep.findById(userId);
 
+        if (!optionalTask.isPresent()) {
+            return Result.setResult(Result.ERROR,"任务不存在");
+        }
+        if (!optionalUser.isPresent()) {
+            return Result.setResult(Result.ERROR,"用户不存在");
+        }
+        Task task = optionalTask.get();
+        task.setTaskState(TaskVo.TASK_DOING);
         Staff staff =new Staff();
         staff.setUser(optionalUser.get());
-        staff.setTask(optionalTask.get());
-        staffRep.save(staff);
+        staff.setTask(task);
+        List<Staff> staffList = Lists.newArrayList();
+        staffList.add(staff);
+        task.setStaffs(staffList);
+        taskRep.save(task);
 
         return Result.setResult(Result.SUCCESS,"承接任务成功");
     }

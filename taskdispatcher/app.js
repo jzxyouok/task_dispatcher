@@ -26,10 +26,23 @@ App({
           // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
           wx.getUserInfo({
             success: res => {
+              console.log(res);
               // 可以将 res 发送给后台解码出 unionId
               this.globalData.userInfo = res.userInfo;
+              this.globalData.isAuth = true;
+              if (!res.userInfo) {
+                this.globalData.isAuth = false;
+              }
+              this.globalData.isFirstGetUserInfoDone = true;
+            },
+            fail: e => {
+              this.globalData.isAuth = false;
+              this.globalData.isFirstGetUserInfoDone = true;
             }
           });
+        } else {
+          this.globalData.isAuth = false;
+          this.globalData.isFirstGetUserInfoDone = true;
         }
       }
     });
@@ -57,6 +70,8 @@ App({
   },
 
   globalData: {
+    isFirstGetUserInfoDone: false,
+    isAuth: true, //是否授权
     userInfo: null, //微信存储的用户信息
     localUserInfo: null, //本地数据库存储的用户信息
     // appid: 'wx07a87aa3fd0cc53a',
@@ -65,6 +80,6 @@ App({
     secret: 'd9a18d334e4e94c7cd57a29936e55f23',
     openid: '',
     requestIp: 'https://hptpd.haokuaidian.cn:443'
-    // requestIp: 'http://10.39.40.53:8090'
+    // requestIp: 'http://10.39.40.52:8090'
   }
 })

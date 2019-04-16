@@ -5,7 +5,7 @@
  \* @time: 2019/3/18 10:14
  \* Description: 首页-任务市场
  \*/ -->
-<view wx:if="{{!isMarketShow}}">
+<view wx:if="{{!isMarketShow && !isAuth}}">
 <open-data type="userAvatarUrl"></open-data>
 <open-data type="userNickName"></open-data>
 <!-- 需要使用 button 来授权登录 -->
@@ -18,7 +18,7 @@
 </button>
 <view wx:else>请升级微信版本</view>
 </view>
-<view wx:if="{{isMarketShow && canIUse}}">
+<view wx:if="{{isMarketShow && isAuth}}">
   <i-panel title="可认领的任务：{{tasks?tasks.length:0}}"/>
   <i-cell-group>
     <view wx:for="{{tasks}}" wx:key="id" class="mb5">

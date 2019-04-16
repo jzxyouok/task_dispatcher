@@ -2,7 +2,9 @@
 
 <i-cell-group>
   <view wx:for="{{tasks}}" wx:key="id">
-    <view wx:if="{{(role==ROLE.AUDITOR && item.taskState==TASK_STATUS.AUDITING) || (item.taskState==TASK_STATUS.EXPERT_AUDITING && role==ROLE.EXPERT)}}" style="position:absolute;right:8%;margin-top:2%;"><i-badge dot i-class="BadgeClass"></i-badge></view>
-    <i-cell title="{{item.taskName}}" is-link url="../taskdetail/taskdetail?taskId={{item.id}}&role={{role}}" label="{{item.taskDescription}}" value="{{role==ROLE.STAFF?'':item.taskState}}" ></i-cell>
+    <view wx:if="{{(role==ROLE.AUDITOR && item.taskState==TASK_STATUS.AUDITING) || (item.taskState==TASK_STATUS.EXPERT_EVALUATING && role==ROLE.EXPERT) || (role==ROLE.STAFF && item.taskState==TASK_STATUS.TASK_DOING) || (role==ROLE.AUDITOR && item.taskState==TASK_STATUS.EVALUATING) || (role==ROLE.STAFF && item.taskState==TASK_STATUS.COMMIT_REJECTED) || (role==ROLE.PROPOSER && item.taskState==TASK_STATUS.ISSUE_REJECTED)}}" style="position:absolute;right:8%;margin-top:2%;">
+      <i-badge dot i-class="BadgeClass"></i-badge>
+    </view>
+    <i-cell title="{{item.taskName}}" is-link url="../taskdetail/taskdetail?taskId={{item.id}}&role={{role}}" label="{{item.taskDescription}}" value="{{item.taskState}}" ></i-cell>
   </view>
 </i-cell-group>

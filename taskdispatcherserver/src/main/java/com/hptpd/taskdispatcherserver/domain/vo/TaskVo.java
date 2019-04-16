@@ -21,10 +21,14 @@ import java.util.List;
 
 @Data
 public class TaskVo {
-    public static String AUDITING = "待审核";
-    public static String EXPERT_AUDITING = "待专家组审核";
-    public static String PASSED = "已发布";
-    public static String REJECTED = "已驳回";
+    public final static String AUDITING = "待审核";
+    public final static String WAIT_CLAIM = "任务待认领";
+    public final static String TASK_DOING = "任务执行中";
+    public final static String ISSUE_REJECTED = "发布被驳回";
+    public final static String EVALUATING = "完成待评估";
+    public final static String EXPERT_EVALUATING = "待专家组评估";
+    public final static String COMMIT_REJECTED = "完成被驳回";
+    public final static String DONE = "已完成";
 
     public static boolean UN_ORIENT=false;
 

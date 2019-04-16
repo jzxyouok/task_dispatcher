@@ -120,6 +120,9 @@ public class Task {
     @OneToMany(mappedBy = "task", cascade = {CascadeType.PERSIST,CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private List<Staff> staffs =Lists.newArrayList();
 
+    @OneToMany(mappedBy = "task", cascade = {CascadeType.PERSIST,CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    private List<Expert> experts =Lists.newArrayList();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

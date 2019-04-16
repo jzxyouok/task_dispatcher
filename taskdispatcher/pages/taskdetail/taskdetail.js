@@ -8,6 +8,7 @@
 const { $Toast } = require('../../dist/base/index');
 import dateUtil from '../../utils/date_util';
 const { bidirectionalBind } = require('../../utils/bidirectionalBind.js');
+import constants from "../../static/constants.js";
 Page({
 
   /**
@@ -36,18 +37,8 @@ Page({
         }
       ]
     },
-    ROLE: {
-      PROPOSER: "proposer",  //发布者
-      AUDITOR: "auditor",  //审批者
-      STAFF: "staff",  //承接者
-      EXPERT: "expert" //专家组
-    },
-    TASK_STATUS: {
-      AUDITING: "待审核",
-      EXPERT_AUDITING: "待专家组审核",
-      PASSED: "已发布",
-      REJECTED: "已驳回"
-    }
+    ROLE: {},
+    TASK_STATUS: {}
   },
   handleModalClick({ detail }) {
     if (detail.index === 1) {
@@ -68,33 +59,26 @@ Page({
     this.setData({
       'modal.modalActions': this.data.modal.modalActions
     });
-    this.data.taskDetail.taskState = this.data.TASK_STATUS.EXPERT_AUDITING;
-    wx.request({
-      url: this.data.requestIp + '/base_task/updateTaskState',
-      method: "POST",
-      data: this.data.taskDetail,
-      success: res => {
-        this.data.isAnyButtonClick = false;
-        this.data.modal.modalActions[0].loading = false;
-        this.setData({
-          'modal.modalActions': this.data.modal.modalActions
-        });
-        this.showToast("任务已驳回", "sucess");
-        wx.navigateBack();
-      },
-      fail: e => {
-        this.data.isAnyButtonClick = false;
-        this.data.modal.modalActions[0].loading = false;
-        this.setData({
-          'modal.modalActions': this.data.modal.modalActions
-        });
-      }
+    this.data.taskDetail.taskState = this.data.TASK_STATUS.EXPERT_EVALUATING;
+    this.updateTaskByAjax("已提交专家组", "sucess", () => {
+      this.data.modal.modalActions[0].loading = false;
+      this.setData({
+        'modal.modalActions': this.data.modal.modalActions
+      });
+    }, () => {
+      this.data.modal.modalActions[0].loading = false;
+      this.setData({
+        'modal.modalActions': this.data.modal.modalActions
+      });
     });
   },
   handleInput(e) {
     bidirectionalBind(e, this);
   },
-  noPass(){
+  /**
+   * 任务发布驳回
+   */
+  issueNoPass(){
     if (!this.data.taskDetail.comment) {
       this.showToast("请填写点评", "warning");
       return;
@@ -106,28 +90,39 @@ Page({
     if (this.data.isAnyButtonClick) {
       return;
     }
-    this.data.isAnyButtonClick = true;
-    this.data.taskDetail.taskState = this.data.TASK_STATUS.REJECTED;
-    wx.request({
-      url: this.data.requestIp + '/base_task/updateTaskState',
-      method: "POST",
-      data: this.data.taskDetail,
-      success: res => {
-        this.data.isAnyButtonClick = false;
-        this.showToast("任务已驳回", "sucess");
-        wx.navigateBack();
-      },
-      fail: e => {
-        this.data.isAnyButtonClick = false;
-      }
-    });
+    this.data.taskDetail.taskState = this.data.TASK_STATUS.ISSUE_REJECTED;
+    this.updateTaskByAjax("任务发布已驳回", "sucess");
   },
+  /**
+   * 任务完成提交未通过
+   */
+  commitNoPass() {
+    if (!this.data.taskDetail.comment) {
+      this.showToast("请填写点评", "warning");
+      return;
+    }
+    if (!this.data.taskDetail.expertComment && this.data.role == this.data.ROLE.EXPERT) {
+      this.showToast("请填写评审意见", "warning");
+      return;
+    }
+    if (this.data.isAnyButtonClick) {
+      return;
+    }
+    this.data.taskDetail.taskState = this.data.TASK_STATUS.COMMIT_REJECTED;
+    this.updateTaskByAjax("任务提交完成已驳回", "sucess");
+  },
+  /**
+   * 提交专家组
+   */
   commit2Expert(){
     this.setData({
       'modal.isModalShow': true
     });
   },
-  pass(){
+  /**
+   * 任务发布通过
+   */
+  issuePass(){
     if (!this.data.taskDetail.comment) {
       this.showToast("请填写点评", "warning");
       return;
@@ -139,21 +134,40 @@ Page({
     if (this.data.isAnyButtonClick) {
       return;
     }
-    this.data.isAnyButtonClick = true;
-    this.data.taskDetail.taskState = this.data.TASK_STATUS.PASSED;
-    wx.request({
-      url: this.data.requestIp + '/base_task/updateTaskState',
-      method: "POST",
-      data: this.data.taskDetail,
-      success: res => {
-        this.data.isAnyButtonClick = false;
-        this.showToast("任务已通过", "sucess");
-        wx.navigateBack();
-      },
-      fail: e => {
-        this.data.isAnyButtonClick = false;
-      }
-    });
+    if (this.data.taskDetail.orient == 1) {
+      this.data.taskDetail.taskState = this.data.TASK_STATUS.TASK_DOING;
+    } else {
+      this.data.taskDetail.taskState = this.data.TASK_STATUS.WAIT_CLAIM;
+    }
+    this.updateTaskByAjax("任务发布已通过", "sucess");
+  },
+  /**
+   * 提交完成任务
+   */
+  commitDoneTask() {
+    if (this.data.isAnyButtonClick) {
+      return;
+    }
+    this.data.taskDetail.taskState = this.data.TASK_STATUS.EVALUATING;
+    this.updateTaskByAjax("已提交任务完成申请", "sucess");
+  },
+  /**
+   * 任务完成提交通过
+   */
+  commitPass() {
+    if (!this.data.taskDetail.comment) {
+      this.showToast("请填写点评", "warning");
+      return;
+    }
+    if (!this.data.taskDetail.expertComment && this.data.role == this.data.ROLE.EXPERT) {
+      this.showToast("请填写评审意见", "warning");
+      return;
+    }
+    if (this.data.isAnyButtonClick) {
+      return;
+    }
+    this.data.taskDetail.taskState = this.data.TASK_STATUS.DONE;
+    this.updateTaskByAjax("任务完成已通过", "sucess");
   },
   /**
    * 生命周期函数--监听页面加载
@@ -163,8 +177,10 @@ Page({
     this.data.requestIp = app.globalData.requestIp;
     this.data.userId = app.globalData.localUserInfo.id;
     this.setData({
+      ROLE: constants.ROLE,
+      TASK_STATUS: constants.TASK_STATUS,
       role: options.role
-    })
+    });
     this.getTaskInfo(options.taskId);
   },
 
@@ -216,6 +232,34 @@ Page({
 
   },
 
+  /**
+   * 请求后台更新任务
+   */
+  updateTaskByAjax(toastMessg, toastType, successFunc, failFunc) {
+    this.data.isAnyButtonClick = true;
+    wx.request({
+      url: this.data.requestIp + '/base_task/updateTaskState',
+      method: "POST",
+      data: this.data.taskDetail,
+      success: res => {
+        this.data.isAnyButtonClick = false;
+        this.showToast(toastMessg, toastType);
+        if (successFunc) {
+          successFunc(res);
+        }
+        setTimeout(() => {
+          wx.navigateBack();
+        }, 500);
+      },
+      fail: e => {
+        this.showToast("后台服务异常，请重新登陆", "error");
+        if (failFunc) {
+          failFunc(e);
+        }
+        this.data.isAnyButtonClick = false;
+      }
+    });
+  },
   /**
    * 访问后台获取任务详情
    */

@@ -14,6 +14,7 @@ Page({
    * 页面的初始数据
    */
   data: {
+    isAuth: true,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
     requestIp: "",
     selectIndex: 0,
@@ -56,6 +57,9 @@ Page({
   bindGetUserInfo(e) {
     let app = getApp();
     app.globalData.userInfo = e.detail.userInfo;
+    this.setData({
+      isAuth: true
+    });
   },
   /**
    * 任务认领按钮
@@ -250,6 +254,16 @@ Page({
     this.initValidate()//验证规则函数
     let app = getApp();
     this.data.requestIp = app.globalData.requestIp;
+    //判断是否授权了用户信息，不判断则显示授权界面
+    let interval = setInterval(() => {
+      console.log("判断是否授权用户信息");
+      if (app.globalData.isFirstGetUserInfoDone) {
+        this.setData({
+          isAuth: app.globalData.isAuth
+        });
+        clearInterval(interval);
+      }
+    }, 300);
     //初始化验证激活
     this.initActivate();
   },
@@ -331,6 +345,7 @@ Page({
       url: this.data.requestIp + '/base_task/unOrient/tasks',
       method: "GET",
       success: res => {
+        this.data.taskClaimButtons = [];
         res.data.forEach((v, k) => {
           this.data.taskClaimButtons.push({
             isClick: false,
