@@ -56,6 +56,10 @@ Page({
       return;
     }
     //值验证，不允许重复标签
+    if (!newLabel.labelName) {
+      this.showToast("标签名不能为空", "warning");
+      return;
+    }
     let isNeedReturn = false;
     console.log(this.data.newLabel.labelName);
     this.data.labels.forEach((v, k) => {
