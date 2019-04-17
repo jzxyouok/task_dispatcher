@@ -58,6 +58,13 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    this.setData({
+      badgeShow: {
+        auditor: false,
+        staff: false,
+        proposer: false
+      }
+    });
     this.getTasksCount(this.data.ROLE.AUDITOR);
     this.getTasksCount(this.data.ROLE.PROPOSER);
     this.getTasksCount(this.data.ROLE.STAFF);
