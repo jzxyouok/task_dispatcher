@@ -386,10 +386,10 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         Optional<Task> optionalTask =taskRep.findById(taskId);
         Optional<User> optionalUser =userRep.findById(userId);
 
-        if (!optionalTask.isPresent()) {
+        if (null == taskId || taskId.isEmpty() || !optionalTask.isPresent()) {
             return Result.setResult(Result.ERROR,"任务不存在");
         }
-        if (!optionalUser.isPresent()) {
+        if (null == userId || userId.isEmpty() || !optionalUser.isPresent()) {
             return Result.setResult(Result.ERROR,"用户不存在");
         }
         Task task = optionalTask.get();
@@ -397,9 +397,8 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         Staff staff =new Staff();
         staff.setUser(optionalUser.get());
         staff.setTask(task);
-        List<Staff> staffList = Lists.newArrayList();
-        staffList.add(staff);
-        task.setStaffs(staffList);
+        task.getStaffs().add(staff);
+        staffRep.save(staff);
         taskRep.save(task);
 
         return Result.setResult(Result.SUCCESS,"承接任务成功");
