@@ -34,11 +34,11 @@ module.exports = {
 
       }
 
-      nameMap[nameList[0]][nameList[1]] = e.detail.value || e.detail.detail.value
+      nameMap[nameList[0]][nameList[1]] = e.detail.value || (e.detail.detail ? e.detail.detail.value : "")
 
     } else {
 
-      nameMap[name] = e.detail.value || e.detail.detail.value
+      nameMap[name] = e.detail.value || (e.detail.detail ? e.detail.detail.value : "")
 
     }
 

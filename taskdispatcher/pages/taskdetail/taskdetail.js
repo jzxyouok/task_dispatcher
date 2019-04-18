@@ -268,9 +268,12 @@ Page({
       url: this.data.requestIp + '/base_task/taskInfo?taskId=' + taskId,
       method: "GET",
       success: res => {
-        console.log(res.data);
-        res.data.startTime = dateUtil.dateFormat(new Date(res.data.startTime), "yyyy-MM-dd");
-        res.data.endTime = dateUtil.dateFormat(new Date(res.data.endTime), "yyyy-MM-dd");
+        // ios会因为该方法而显示NaN
+        // res.data.startTime = dateUtil.dateFormat(new Date(res.data.startTime), "yyyy-MM-dd");
+        // res.data.endTime = dateUtil.dateFormat(new Date(res.data.endTime), "yyyy-MM-dd");
+        res.data.startTime = res.data.startTime.substring(0, 10);
+        res.data.endTime = res.data.endTime.substring(0, 10);
+        
         this.setData({
           taskDetail: res.data
         });

@@ -18,7 +18,7 @@
         <i-cell title="承接人：">{{staffNames}}</i-cell>
         <i-cell title="开始时间：">{{taskDetail.startTime}}</i-cell>
         <i-cell title="结束时间：">{{taskDetail.endTime}}</i-cell>
-        <i-cell title="工作量：">{{taskDetail.workload}}人月</i-cell>
+        <i-cell title="工作量：">{{taskDetail.workload}}人天</i-cell>
         <i-cell wx:if="{{ROLE.STAFF!=role}}" title="状态：">{{taskDetail.taskState}}</i-cell>
         <!-- 发布人身份，可随时查看任务状态 -->
         <block wx:if="{{ROLE.PROPOSER==role}}">

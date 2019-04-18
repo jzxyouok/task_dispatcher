@@ -24,15 +24,15 @@
   <i-panel class="cell-panel-demo">
     <view>
       <i-cell-group>
-        <view wx:if="{{badgeShow.proposer}}" style="position:absolute;right:7%;margin-top:1%;">
+        <view wx:if="{{badgeShow.proposer}}" style="position:absolute;right:6%;margin-top:1%;">
           <i-badge dot i-class="BadgeClass"></i-badge>
         </view>
         <i-cell title="发布的任务" value="{{count.proposer}}" is-link url="../tasks/tasks?role={{ROLE.PROPOSER}}"></i-cell>
-        <view wx:if="{{badgeShow.auditor}}" style="position:absolute;right:7%;margin-top:1%;">
+        <view wx:if="{{badgeShow.auditor}}" style="position:absolute;right:6%;margin-top:1%;">
           <i-badge dot i-class="BadgeClass"></i-badge>
         </view>
         <i-cell title="审批的任务" value="{{count.auditor}}" is-link url="../tasks/tasks?role={{ROLE.AUDITOR}}"></i-cell>
-        <view wx:if="{{badgeShow.staff}}" style="position:absolute;right:7%;margin-top:1%;">
+        <view wx:if="{{badgeShow.staff}}" style="position:absolute;right:6%;margin-top:1%;">
           <i-badge dot i-class="BadgeClass"></i-badge>
         </view>
         <i-cell title="承接的任务" value="{{count.staff}}" is-link url="../tasks/tasks?role={{ROLE.STAFF}}"></i-cell>

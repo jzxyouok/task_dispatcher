@@ -50,6 +50,17 @@ Page({
   handleInput(e) {
     bidirectionalBind(e, this);
   },
+  handleWorkloadInput(e) {
+    if (!e.detail) {
+      return;
+    }
+    if (e.detail.keyCode === 46 && e.detail.value) {
+      if (e.detail.value.indexOf(".") != e.detail.value.lastIndexOf(".")) {
+        e.detail.value = e.detail.value.substring(0, (e.detail.cursor - 1)) + e.detail.value.substring(e.detail.cursor, e.detail.value.length);
+      }
+    }
+    bidirectionalBind(e, this);
+  },
   choosePeople(e){
     switch (e.target.dataset.roletype) {
       case "staff":
@@ -116,6 +127,12 @@ Page({
       this.showToast("请选择承接人", 'warning');
       return;
     }
+    var patrn = /^\d+(\.\d+)?$/;
+    if (!patrn.exec(this.data.taskVo.workload)) {
+      this.showToast("工作量请输入正确数字", 'warning');
+      return;
+    }
+
     this.data.taskVo.proposerVo = {
       userVo: {
         id: getApp().globalData.localUserInfo.id,
