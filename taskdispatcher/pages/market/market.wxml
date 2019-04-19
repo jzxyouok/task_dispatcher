@@ -6,18 +6,26 @@
  \* Description: 首页-任务市场
  \*/ -->
 <view wx:if="{{!isMarketShow && !isAuth}}">
-<open-data type="userAvatarUrl"></open-data>
-<open-data type="userNickName"></open-data>
-<!-- 需要使用 button 来授权登录 -->
-<button
-  wx:if="{{canIUse}}"
-  open-type="getUserInfo"
-  bindgetuserinfo="bindGetUserInfo"
->
-  授权登录
-</button>
-<view wx:else>请升级微信版本</view>
+  <open-data type="userAvatarUrl"></open-data>
+  <open-data type="userNickName"></open-data>
+  <!-- 需要使用 button 来授权登录 -->
+  <button
+    wx:if="{{canIUse}}"
+    open-type="getUserInfo"
+    bindgetuserinfo="bindGetUserInfo"
+  >
+    授权登录
+  </button>
+  <view wx:else>请升级微信版本</view>
 </view>
+
+<view class="spinContainer" wx:if="{{!(!isMarketShow && !isAuth) && !(isMarketShow && isAuth)}}">
+  <i-spin custom>
+    <i-icon type="refresh" size="20" i-class="icon-load"></i-icon>
+    <view>Loading</view>
+  </i-spin>
+</view>
+
 <view wx:if="{{isMarketShow && isAuth}}">
   <i-panel title="可认领的任务：{{tasks?tasks.length:0}}"/>
   <i-cell-group>

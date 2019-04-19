@@ -3,3 +3,18 @@
   display: block;
   margin-bottom: 5px;
 }
+
+@keyframes ani-demo-spin {
+    from { transform: rotate(0deg);}
+    50%  { transform: rotate(180deg);}
+    to   { transform: rotate(360deg);}
+}
+.icon-load{
+    animation: ani-demo-spin 1s linear infinite;
+}
+
+.spinContainer{
+    display: block;
+    margin: 48% auto;
+    position: relative;
+}
