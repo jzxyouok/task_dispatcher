@@ -18,6 +18,7 @@ import com.hptpd.taskdispatcherserver.common.util.HttpUtil;
 import com.hptpd.taskdispatcherserver.common.util.JsonUtil;
 import com.hptpd.taskdispatcherserver.component.RedisService;
 import com.hptpd.taskdispatcherserver.component.Result;
+import com.hptpd.taskdispatcherserver.component.ServerConfig;
 import com.hptpd.taskdispatcherserver.domain.*;
 import com.hptpd.taskdispatcherserver.domain.vo.*;
 import com.hptpd.taskdispatcherserver.repository.*;
@@ -475,5 +476,4 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         JSONObject jsonObj = HttpUtil.doGet("https://api.weixin.qq.com/sns/jscode2session", paramMap);
         return Result.setResult(Result.SUCCESS,"openid获取成功", jsonObj.toJSONString());
     }
-
 }

@@ -1,7 +1,9 @@
 package com.hptpd.taskdispatcherserver.controller;
 
+import com.google.common.collect.Maps;
+import com.hptpd.taskdispatcherserver.common.util.IpUtil;
+import com.hptpd.taskdispatcherserver.common.util.JsonUtil;
 import com.hptpd.taskdispatcherserver.component.Result;
-import com.hptpd.taskdispatcherserver.domain.User;
 import com.hptpd.taskdispatcherserver.domain.vo.LabelVo;
 import com.hptpd.taskdispatcherserver.domain.vo.ProjectVo;
 import com.hptpd.taskdispatcherserver.domain.vo.TaskVo;
@@ -11,8 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 /**
  * \* Created with IntelliJ IDEA.
@@ -160,5 +163,20 @@ public class BaseTaskController {
     @RequestMapping(value = "/getOpenidByWeixinApi", method = RequestMethod.GET)
     public Result getOpenidByWeixinApi(@RequestParam String code) {
         return baseTaskService.getOpenidByWeixinApi(code);
+    }
+
+
+    /**
+     *
+     * @param request HttpServletRequest
+     * @return Result
+     */
+    @RequestMapping(value = "/getWeiXinRequestIp", method = RequestMethod.GET)
+    public Result getWeiXinRequestIp(HttpServletRequest request) {
+        Map<String, Object> destMap = Maps.newLinkedHashMap();
+        String referer = request.getHeader("Referer");
+        destMap.put("referer", referer);
+        destMap.put("requestIp", IpUtil.getRequestIpAddr(request));
+        return Result.setResult(Result.SUCCESS, "调用成功", JsonUtil.objectToJson(destMap));
     }
 }

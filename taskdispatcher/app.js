@@ -79,7 +79,10 @@ App({
     // secret: 'b96816b6e0d6e95d700443e88ba86396',
     secret: 'd9a18d334e4e94c7cd57a29936e55f23',
     openid: '',
-    requestIp: 'https://hptpd.haokuaidian.cn:443'
-    // requestIp: 'http://10.39.40.52:8090'
+    requestIp: 'https://hptpd.haokuaidian.cn:443',
+    serverIp: 'https://hptpd.haokuaidian.cn:443',
+    
+    //开发人员需对此做修改，改为自己本地的开发服务IP
+    localIp: 'http://10.39.40.52:8090'
   }
 })

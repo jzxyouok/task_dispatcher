@@ -256,11 +256,12 @@ Page({
     this.data.requestIp = app.globalData.requestIp;
     //判断是否授权了用户信息，不判断则显示授权界面
     let interval = setInterval(() => {
-      console.log("判断是否授权用户信息");
+      console.log("等待判断是否授权用户信息");
       if (app.globalData.isFirstGetUserInfoDone) {
         this.setData({
           isAuth: app.globalData.isAuth
         });
+        console.log("判断授权成功");
         clearInterval(interval);
       }
     }, 300);
@@ -373,35 +374,9 @@ Page({
       console.log("等待获取openid与用户信息");
       if (app.globalData.openid && app.globalData.userInfo) {
         clearInterval(interval);
-        console.log("获取成功开始访问自己后台");
-        wx.request({
-          url: app.globalData.requestIp + '/base_task/login?openId=' + app.globalData.openid,
-          method: "GET",
-          success: res => {
-            if (!res.data || !res.data.data) {
-              console.log("没有激活");
-              console.log(res);
-              this.setData({
-                'modal.isModalShow': true,
-                isMarketShow: false
-              });
-              wx.hideTabBar();
-            } else {
-              console.log("已激活");
-              console.log(res);
-              app.globalData.localUserInfo = JSON.parse(res.data.data);
-              this.setData({
-                'modal.isModalShow': false,
-                isMarketShow: true
-              });
-              wx.showTabBar();
-            }
-          },
-          fail: e => {
-            console.log("激活服务异常");
-
-          }
-        });
+        console.log("获取成功开始获取版本对应服务器IP");
+        this.getDevOrServerRequestIp();
+        
       }
     }, 1000);
   },
@@ -412,6 +387,76 @@ Page({
     $Toast({
       content,
       type
+    });
+  },
+
+  /**
+   * 判断当前是小程序开发还是微信 登陆小程序，获取对应的服务器IP
+   */
+  getDevOrServerRequestIp() {
+    let app = getApp();
+    wx.request({
+      url: app.globalData.localIp + '/base_task/getWeiXinRequestIp',
+      method: "GET",
+      success: res => {
+        if (!res || !res.data || !res.data.data) {
+
+        } else {
+          let resp = JSON.parse(res.data.data);
+          let referer = resp.referer;
+          let requestIp = resp.requestIp;
+          let refererArr = referer.split("/");
+          let version = refererArr[4];
+          if (!version || "0" == version) {
+            //非正式环境（开发者环境，开发版、体验版）,保存测试服务器地址到缓存，并设置为测试服务器，然后重调本接口
+            console.log("测试环境");
+            app.globalData.requestIp = app.globalData.localIp;
+          } else if ("devtools" == version) {
+            console.log("开发环境");
+            app.globalData.requestIp = "http://" + requestIp + ":8090";
+          } else {
+            console.log("生产环境");
+            app.globalData.requestIp = app.globalData.serverIp;
+          }
+        }
+        console.log("开始访问后台判断是否激活");
+        this.judgeUserActive();
+      },
+      fail: e => {
+        console.log("获取对应的服务器IP服务异常")
+      }
+    });
+  },
+
+  /**
+   * 判断用户是否已激活
+   */
+  judgeUserActive() {
+    let app = getApp();
+    wx.request({
+      url: app.globalData.requestIp + '/base_task/login?openId=' + app.globalData.openid,
+      method: "GET",
+      success: res => {
+        if (!res.data || !res.data.data) {
+          console.log("没有激活");
+          this.setData({
+            'modal.isModalShow': true,
+            isMarketShow: false
+          });
+          wx.hideTabBar();
+        } else {
+          console.log("已激活");
+          app.globalData.localUserInfo = JSON.parse(res.data.data);
+          this.setData({
+            'modal.isModalShow': false,
+            isMarketShow: true
+          });
+          wx.showTabBar();
+        }
+      },
+      fail: e => {
+        console.log("激活服务异常");
+      }
     });
   }
 })
