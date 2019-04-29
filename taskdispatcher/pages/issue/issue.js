@@ -22,6 +22,7 @@ Page({
       orient: true,
       taskState: '待审核',
       workload: '',
+      realWorkload: '',
       labelVos: [],
       projectVo: {},
       proposerVo: {},
@@ -127,7 +128,7 @@ Page({
       this.showToast("请选择承接人", 'warning');
       return;
     }
-    var patrn = /^\d+(\.\d+)?$/;
+    let patrn = /^\d+(\.\d+)?$/;
     if (!patrn.exec(this.data.taskVo.workload)) {
       this.showToast("工作量请输入正确数字", 'warning');
       return;
@@ -141,6 +142,7 @@ Page({
       }
     };
     this.data.issueButton.isClick = true;
+    this.data.taskVo.realWorkload = this.data.taskVo.workload;
     wx.request({
       url: this.data.requestIp + '/base_task/dispatchTask',
       method: "POST",

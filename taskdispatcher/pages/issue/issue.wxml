@@ -25,7 +25,7 @@
   </picker>
   <!-- <i-input  value="{{ taskVo.workload }}" catch:change='handleInput' data-name="taskVo.workload" type="number" title="工作量（人天）" placeholder="输入工作量" /> -->
   <view style="padding:7px 15px;color:#495060;display:flex;position:relative;background:#fff;align-items:center;line-height:1.4;font-size:14px;overflow:hidden;margin-bottom:5px;height:auto;">
-	  <view style="margin:0;color:#495060;min-width:65px;padding-right:10px;">工作量（人天）</view>
+	  <view style="margin:0;color:#495060;min-width:65px;padding-right:10px;">预估工作量（人天）</view>
 	  <input style="flex:1;line-height:1.6;padding:4px 0;min-height:22px;height:auto;font-size:14px;text-overflow:clip;overflow:hidden;white-space:nowrap;font-family:UICTFontTextStyleBody;" value="{{ taskVo.workload }}" type="digit" bindinput='handleWorkloadInput' data-name="taskVo.workload" title="工作量（人天）" placeholder="输入工作量" />
   </view>
   <i-input data-roletype="staff" wx:if="{{taskVo.orient}}"  bind:tap="choosePeople" disabled value="{{ staffNames }}" title="承接人" placeholder="选择承接人" />

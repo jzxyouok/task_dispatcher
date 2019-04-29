@@ -348,6 +348,7 @@ public class BaseTaskServiceImpl implements BaseTaskService {
                         if (!TaskVo.TASK_DOING.equals(task.getTaskState())
                                 && !TaskVo.COMMIT_REJECTED.equals(task.getTaskState())
                                 && !TaskVo.EVALUATING.equals(task.getTaskState())
+                                && !TaskVo.WAIT_ACCEPT.equals(task.getTaskState())
                                 && !TaskVo.EXPERT_EVALUATING.equals(task.getTaskState())
                                 && !TaskVo.DONE.equals(task.getTaskState())) {
                             continue;
@@ -452,11 +453,19 @@ public class BaseTaskServiceImpl implements BaseTaskService {
      */
     @Override
     public Result updateTaskState(TaskVo taskVo) {
-        Task task = taskRep.findById(taskVo.getId()).get();
+        if (null == taskVo || null == taskVo.getId()) {
+            return Result.setResult(Result.ERROR,"任务参数异常");
+        }
+        Optional<Task> optTask = taskRep.findById(taskVo.getId());
+        if (!optTask.isPresent()) {
+            return Result.setResult(Result.ERROR,"任务不存在");
+        }
+        Task task = optTask.get();
         task.setComment(taskVo.getComment());
         task.setExpertComment(taskVo.getExpertComment());
         task.setReviewReason(taskVo.getReviewReason());
         task.setTaskState(taskVo.getTaskState());
+        task.setRealWorkload(taskVo.getRealWorkload());
         taskRep.save(task);
         return Result.setResult(Result.SUCCESS,"更新任务成功");
     }

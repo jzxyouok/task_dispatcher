@@ -22,6 +22,8 @@ Page({
     labelNames: "",
     taskDetail: {},
     isAnyButtonClick: false,
+    //初始化存储最初的实际工作量，用来优化交互的操作
+    orginRealWorkload: 0,
     modal: {
       isModalShow: false,
       modalActions: [
@@ -75,18 +77,21 @@ Page({
   handleInput(e) {
     bidirectionalBind(e, this);
   },
+  handleRealWorkloadInput(e) {
+    if (!e.detail) {
+      return;
+    }
+    if (e.detail.keyCode === 46 && e.detail.value) {
+      if (e.detail.value.indexOf(".") != e.detail.value.lastIndexOf(".")) {
+        e.detail.value = e.detail.value.substring(0, (e.detail.cursor - 1)) + e.detail.value.substring(e.detail.cursor, e.detail.value.length);
+      }
+    }
+    bidirectionalBind(e, this);
+  },
   /**
    * 任务发布驳回
    */
   issueNoPass(){
-    if (!this.data.taskDetail.comment) {
-      this.showToast("请填写点评", "warning");
-      return;
-    }
-    if (!this.data.taskDetail.expertComment && this.data.role == this.data.ROLE.EXPERT) {
-      this.showToast("请填写评审意见", "warning");
-      return;
-    }
     if (this.data.isAnyButtonClick) {
       return;
     }
@@ -97,14 +102,6 @@ Page({
    * 任务完成提交未通过
    */
   commitNoPass() {
-    if (!this.data.taskDetail.comment) {
-      this.showToast("请填写点评", "warning");
-      return;
-    }
-    if (!this.data.taskDetail.expertComment && this.data.role == this.data.ROLE.EXPERT) {
-      this.showToast("请填写评审意见", "warning");
-      return;
-    }
     if (this.data.isAnyButtonClick) {
       return;
     }
@@ -123,14 +120,6 @@ Page({
    * 任务发布通过
    */
   issuePass(){
-    if (!this.data.taskDetail.comment) {
-      this.showToast("请填写点评", "warning");
-      return;
-    }
-    if (!this.data.taskDetail.expertComment && this.data.role == this.data.ROLE.EXPERT) {
-      this.showToast("请填写评审意见", "warning");
-      return;
-    }
     if (this.data.isAnyButtonClick) {
       return;
     }
@@ -142,13 +131,55 @@ Page({
     this.updateTaskByAjax("任务发布已通过", "sucess");
   },
   /**
+   * 提交给发布者决定任务是否完成
+   */
+  commit2Proposer() {
+    if (this.data.isAnyButtonClick) {
+      return;
+    }
+    //值验证
+    if (!this.data.taskDetail.realWorkload) {
+      this.showToast("请输入实际工作量", 'warning');
+      return;
+    }
+    let patrn = /^\d+(\.\d+)?$/;
+    if (!patrn.exec(this.data.taskDetail.realWorkload)) {
+      this.showToast("实际工作量请输入正确数字", 'warning');
+      return;
+    }
+    //如果修改过实际工作量，则需要写点评
+    if (this.data.orginRealWorkload*1 != this.data.taskDetail.realWorkload*1) {
+      if (!this.data.taskDetail.comment) {
+        this.showToast("修改过实际工作量，请填写点评", "warning");
+        return;
+      }
+    }
+    this.data.taskDetail.taskState = this.data.TASK_STATUS.WAIT_ACCEPT;
+    this.updateTaskByAjax("已提交给发布者", "sucess");
+  },
+  /**
    * 提交完成任务
    */
   commitDoneTask() {
     if (this.data.isAnyButtonClick) {
       return;
     }
-    this.data.taskDetail.taskState = this.data.TASK_STATUS.EVALUATING;
+    //值验证
+    if (!this.data.taskDetail.realWorkload) {
+      this.showToast("请输入实际工作量", 'warning');
+      return;
+    }
+    let patrn = /^\d+(\.\d+)?$/;
+    if (!patrn.exec(this.data.taskDetail.realWorkload)) {
+      this.showToast("实际工作量请输入正确数字", 'warning');
+      return;
+    }
+    //如果预估工作量大于等于实际工作量，则表示无异议，由发布人选择是否已完成，反之，则表示有异议，需让审核人进行任务的工作量二次评估
+    if (this.data.taskDetail.workload * 1 >= this.data.taskDetail.realWorkload * 1) {
+      this.data.taskDetail.taskState = this.data.TASK_STATUS.WAIT_ACCEPT;
+    } else {
+      this.data.taskDetail.taskState = this.data.TASK_STATUS.EVALUATING;
+    }
     this.updateTaskByAjax("已提交任务完成申请", "sucess");
   },
   /**
@@ -300,10 +331,11 @@ Page({
   /**
    * 处理任务数据
    */
-  dealTaskData(taskVo) {
-    this.changeNavigationBarTitle(taskVo.taskState);
+  dealTaskData(taskDetail) {
+    this.data.orginRealWorkload = taskDetail.realWorkload;
+    this.changeNavigationBarTitle(taskDetail.taskState);
     let staffNames = "", labelNames = "";
-    taskVo.staffVos.forEach((v, k) => {
+    taskDetail.staffVos.forEach((v, k) => {
       if (v.userVo.id == this.data.userId) {
 
       }
@@ -312,7 +344,7 @@ Page({
     if (staffNames.indexOf(",") > -1) {
       staffNames = staffNames.substring(0, staffNames.length - 1);
     }
-    taskVo.labelVos.forEach((v, k) => {
+    taskDetail.labelVos.forEach((v, k) => {
       labelNames += v.labelName + ",";
     });
     if (labelNames.indexOf(",") > -1) {

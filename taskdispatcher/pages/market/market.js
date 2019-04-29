@@ -375,7 +375,8 @@ Page({
       if (app.globalData.openid && app.globalData.userInfo) {
         clearInterval(interval);
         console.log("获取成功开始获取版本对应服务器IP");
-        this.getDevOrServerRequestIp();
+        //this.getDevOrServerRequestIp();  该方法无法判断真机调试与测试版的区别
+        this.judgeUserActive();
         
       }
     }, 1000);
@@ -396,11 +397,11 @@ Page({
   getDevOrServerRequestIp() {
     let app = getApp();
     wx.request({
-      url: app.globalData.localIp + '/base_task/getWeiXinRequestIp',
+      url: app.globalData.requestIp + '/base_task/getWeiXinRequestIp',
       method: "GET",
       success: res => {
         if (!res || !res.data || !res.data.data) {
-
+          console.log(res);
         } else {
           let resp = JSON.parse(res.data.data);
           let referer = resp.referer;
@@ -413,7 +414,7 @@ Page({
             app.globalData.requestIp = app.globalData.localIp;
           } else if ("devtools" == version) {
             console.log("开发环境");
-            app.globalData.requestIp = "http://" + requestIp + ":8090";
+            app.globalData.requestIp = app.globalData.localIp;
           } else {
             console.log("生产环境");
             app.globalData.requestIp = app.globalData.serverIp;

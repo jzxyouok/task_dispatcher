@@ -12,67 +12,85 @@
         <i-cell title="项目名称：">{{taskDetail.projectVo.name}}</i-cell>
         <i-cell title="任务类型：">{{taskDetail.orient == true? "定向" : "非定向"}}</i-cell>
         <i-cell title="任务描述：">{{taskDetail.taskDescription}}</i-cell>
+        <i-cell title="标签：">{{labelNames}}</i-cell>
         <i-cell title="发布人：">{{taskDetail.proposerVo.userVo.name}}</i-cell>
         <i-cell title="审核人：">{{taskDetail.auditorVo.userVo.name}}</i-cell>
-        <i-cell title="标签：">{{labelNames}}</i-cell>
         <i-cell title="承接人：">{{staffNames}}</i-cell>
         <i-cell title="开始时间：">{{taskDetail.startTime}}</i-cell>
         <i-cell title="结束时间：">{{taskDetail.endTime}}</i-cell>
-        <i-cell title="工作量：">{{taskDetail.workload}}人天</i-cell>
-        <i-cell wx:if="{{ROLE.STAFF!=role}}" title="状态：">{{taskDetail.taskState}}</i-cell>
+        <i-cell title="预估工作量：">{{taskDetail.workload}}（人天）</i-cell>
+        <!-- 任务执行中以前的状态是没有实际工作量这个字段显示的 -->
+        <block wx:if="{{(ROLE.PROPOSER==role || ROLE.AUDITOR==role) && (TASK_STATUS.TASK_DOING==taskDetail.taskState || TASK_STATUS.ISSUE_REJECTED==taskDetail.taskState || TASK_STATUS.WAIT_CLAIM==taskDetail.taskState || TASK_STATUS.AUDITING==taskDetail.taskState)}}">
+        </block>
+        <block wx:elif="{{ROLE.PROPOSER==role || (ROLE.STAFF==role && TASK_STATUS.TASK_DOING!=taskDetail.taskState && TASK_STATUS.COMMIT_REJECTED!=taskDetail.taskState)}}">
+          <i-cell title="实际工作量：">{{taskDetail.realWorkload}}（人天）</i-cell>
+        </block>
+        <block wx:else>
+          <view style="padding:7px 15px;color:#495060;display:block;position:relative;background:#fff;align-items:center;line-height:1.4;font-size:14px;overflow:hidden;margin-bottom:5px;height:auto;">
+	          <view style="margin:0;color:#495060;min-width:65px;padding-right:10px;">实际工作量（可修改）：</view>
+	          <input style="flex:1;line-height:1.6;padding:4px 0;min-height:22px;height:auto;font-size:14px;text-overflow:clip;overflow:hidden;white-space:nowrap;font-family:UICTFontTextStyleBody;" value="{{ taskDetail.realWorkload }}" type="digit" bindinput='handleRealWorkloadInput' data-name="taskDetail.realWorkload" title="实际工作量" placeholder="输入实际工作量" />
+          </view>
+        </block>
+        <i-cell title="状态：">{{taskDetail.taskState}}</i-cell>
         <!-- 发布人身份，可随时查看任务状态 -->
         <block wx:if="{{ROLE.PROPOSER==role}}">
           <i-cell wx:if="{{taskDetail.comment}}" title="点评：">{{taskDetail.comment}}</i-cell>
           <i-cell wx:if="{{taskDetail.expertComment}}" title="评审意见：">{{taskDetail.expertComment}}</i-cell>
+          <i-row wx:if="TASK_STATUS.WAIT_ACCEPT==taskDetail.taskState">
+            <i-col span="12" i-class="col-class"><i-button bind:click="commitNoPass" type="error">未完成</i-button></i-col>
+            <i-col span="12" i-class="col-class"><i-button bind:click="commitPass" type="success">完成</i-button></i-col>
+          </i-row>
         </block>
         <!-- 审核人身份，任务状态为待审核 -->
         <block wx:if="{{ROLE.AUDITOR==role && TASK_STATUS.AUDITING==taskDetail.taskState}}">
-          <i-cell title="点评：">
-            <i-input value="{{ taskDetail.comment }}" data-name="taskDetail.comment" catch:change='handleInput' type="textarea" title="" placeholder="(最多200字)" maxlength="200" />
-          </i-cell>
+          <!--<i-cell title="点评：">
+            <i-input value="{{ taskDetail.comment }}" data-name="taskDetail.comment" catch:change='handleInput' type="textarea" title="" placeholder="（通过可不填）" maxlength="200" />
+          </i-cell>-->
           <i-row>
             <i-col span="12" i-class="col-class"><i-button bind:click="issueNoPass" type="error">驳回</i-button></i-col>
             <i-col span="12" i-class="col-class"><i-button bind:click="issuePass" type="success">通过</i-button></i-col>
           </i-row>
         </block>
-        <!-- 审核人身份，任务状态为完成待评估 -->
+        <!-- 审核人身份，任务状态为工作量二次评估 -->
         <block wx:if="{{ROLE.AUDITOR==role && TASK_STATUS.EVALUATING==taskDetail.taskState}}">
           <i-cell title="点评：">
-            <i-input value="{{ taskDetail.comment }}" data-name="taskDetail.comment" catch:change='handleInput' type="textarea" title="" placeholder="(最多200字)" maxlength="200" />
+            <i-input value="{{ taskDetail.comment }}" data-name="taskDetail.comment" catch:change='handleInput' type="textarea" title="" placeholder="(选填)" maxlength="200" />
           </i-cell>
           <i-row>
-            <i-col span="8" i-class="col-class"><i-button bind:click="commitNoPass" type="error">驳回</i-button></i-col>
-            <i-col span="8" i-class="col-class"><i-button bind:click="commitPass" type="success">通过</i-button></i-col>
-            <i-col span="8" i-class="col-class"><i-button bind:click="commit2Expert" type="ghost" disabled='true'>提交专家</i-button></i-col>
+            <i-col span="12" i-class="col-class"><i-button bind:click="commit2Expert" type="ghost" disabled='true'>提交专家</i-button></i-col>
+            <i-col span="12" i-class="col-class"><i-button bind:click="commit2Proposer" type="success">提交修改</i-button></i-col>
           </i-row>
         </block>
         <!-- 专家组身份，任务状态为待专家组审核 -->
         <block wx:if="{{ROLE.EXPERT==role && TASK_STATUS.EXPERT_EVALUATING==taskDetail.taskState}}">
           <i-cell title="提审原因：">{{taskDetail.reviewReason}}</i-cell>
           <i-cell title="评审意见：">
-            <i-input value="{{ taskDetail.expertComment }}" data-name="taskDetail.expertComment" catch:change='handleInput' type="textarea" title="" placeholder="(最多200字)" maxlength="200" />
+            <i-input value="{{ taskDetail.expertComment }}" data-name="taskDetail.expertComment" catch:change='handleInput' type="textarea" title="" placeholder="(选填)" maxlength="200" />
           </i-cell>
           <i-row>
-            <i-col span="8" offset="2" i-class="col-class"><i-button bind:click="noPass" type="error">不通过</i-button></i-col>
-            <i-col span="8" offset="4" i-class="col-class"><i-button bind:click="pass" type="success">通过</i-button></i-col>
+            <i-col span="12" offset="12" i-class="col-class"><i-button bind:click="pass" type="success">提交修改</i-button></i-col>
           </i-row>
         </block>
-        <!-- 非承接者身份 -->
+        <!-- 审批者、专家身份可以看到提审原因，承接者可以看到点评与评审 -->
         <block wx:if="{{(ROLE.EXPERT==role && TASK_STATUS.EXPERT_EVALUATING!=taskDetail.taskState) || (ROLE.AUDITOR==role && (TASK_STATUS.AUDITING!=taskDetail.taskState && TASK_STATUS.EVALUATING!=taskDetail.taskState))}}">
           <i-cell wx:if="{{taskDetail.comment}}" title="点评：">{{taskDetail.comment}}</i-cell>
           <i-cell wx:if="{{taskDetail.reviewReason}}" title="提审原因">{{taskDetail.reviewReason}}</i-cell>
           <i-cell wx:if="{{taskDetail.expertComment}}" title="评审意见：">{{taskDetail.expertComment}}</i-cell>
         </block>
+        <block wx:elif="{{ROLE.STAFF==role}}">
+          <i-cell wx:if="{{taskDetail.comment}}" title="点评：">{{taskDetail.comment}}</i-cell>
+          <i-cell wx:if="{{taskDetail.expertComment}}" title="评审意见：">{{taskDetail.expertComment}}</i-cell>
+        </block>
         <!-- 承接者身份，任务执行中的任务，提交完成任务-->
         <block wx:if="{{(ROLE.STAFF==role) && (TASK_STATUS.TASK_DOING==taskDetail.taskState)}}">
           <i-row>
-            <i-col span="8" offset="16" i-class="col-class"><i-button bind:click="commitDoneTask" type="success">完成任务</i-button></i-col>
+            <i-col span="12" offset="12" i-class="col-class"><i-button bind:click="commitDoneTask" type="success">完成任务</i-button></i-col>
           </i-row>
         </block>
         <!-- 承接者身份，任务提交完成驳回的任务，再次提交提交完成任务-->
         <block wx:if="{{(ROLE.STAFF==role) && (TASK_STATUS.COMMIT_REJECTED==taskDetail.taskState)}}">
           <i-row>
-            <i-col span="8" offset="16" i-class="col-class"><i-button bind:click="commitDoneTask" type="success">再次完成</i-button></i-col>
+            <i-col span="12" offset="12" i-class="col-class"><i-button bind:click="commitDoneTask" type="success">再次完成</i-button></i-col>
           </i-row>
         </block>
       </i-cell-group>

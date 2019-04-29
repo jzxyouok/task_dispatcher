@@ -16,9 +16,9 @@ Page({
     ROLE: {},
     TASK_STATUS: {},
     count: {
-      proposer: 0,
-      auditor: 0,
-      staff: 0
+      proposer: "0/0",
+      auditor: "0/0",
+      staff: "0/0"
     },
     badgeShow: {
       auditor: false,
@@ -114,11 +114,8 @@ Page({
       url: this.data.requestIp + '/base_task/state/tasks?userId=' + app.globalData.localUserInfo.id + '&role=' + role,
       method: "GET",
       success: res => {
-        this.data.count[role] = res.data.length;
         this.dealResData(res.data, role);
-        this.setData({
-          count: this.data.count 
-        });
+        
       },
       fail: e => {
 
@@ -133,6 +130,7 @@ Page({
     if (!arr || arr.length == 0) {
       return;
     }
+    let sum = 0;
     switch(role) {
       case this.data.ROLE.STAFF:
         arr.forEach(v => {
@@ -140,7 +138,7 @@ Page({
             this.setData({
               'badgeShow.staff': true
             });
-            return;
+            ++sum;
           }
         });
         break;
@@ -150,7 +148,7 @@ Page({
             this.setData({
               'badgeShow.auditor': true
             });
-            return;
+            ++sum;
           }
         });
         break;
@@ -160,20 +158,24 @@ Page({
             this.setData({
               'badgeShow.auditor': true
             });
-            return;
+            ++sum;
           }
         });
         break;
       case this.data.ROLE.PROPOSER:
         arr.forEach(v => {
-          if (v.taskState == this.data.TASK_STATUS.ISSUE_REJECTED) {
+          if (v.taskState == this.data.TASK_STATUS.ISSUE_REJECTED || v.taskState == this.data.TASK_STATUS.WAIT_ACCEPT) {
             this.setData({
               'badgeShow.proposer': true
             });
-            return;
+            ++sum;
           }
         });
         break;
     }
+    this.data.count[role] = sum + "/" + arr.length;
+    this.setData({
+      count: this.data.count
+    });
   }
 })

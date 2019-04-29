@@ -72,12 +72,18 @@ public class Task {
     private boolean orient;
 
     /**
-     *  工作量
+     *  预估工作量
      * （人天数）
      */
     @Column(name = "workload")
     private String workload;
 
+    /**
+     *  实际工作量
+     * （人天数）
+     */
+    @Column(name = "real_workload")
+    private String realWorkload;
 
     /**
      * 任务状态
@@ -94,13 +100,13 @@ public class Task {
     /**
      * 评审意见
      */
-    @Column(name="expertComment")
+    @Column(name="expert_comment")
     private String expertComment;
 
     /**
      * 提审原因
      */
-    @Column(name="reviewReason")
+    @Column(name="review_reason")
     private String reviewReason;
 
     @ManyToMany(mappedBy = "tasks", cascade ={CascadeType.ALL,CascadeType.REMOVE}, fetch = FetchType.LAZY)

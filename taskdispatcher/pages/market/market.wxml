@@ -5,6 +5,7 @@
  \* @time: 2019/3/18 10:14
  \* Description: 首页-任务市场
  \*/ -->
+<view>{{enviro}}</view>
 <view wx:if="{{!isMarketShow && !isAuth}}">
   <open-data type="userAvatarUrl"></open-data>
   <open-data type="userNickName"></open-data>

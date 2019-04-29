@@ -25,7 +25,8 @@ public class TaskVo {
     public final static String WAIT_CLAIM = "任务待认领";
     public final static String TASK_DOING = "任务执行中";
     public final static String ISSUE_REJECTED = "发布被驳回";
-    public final static String EVALUATING = "完成待评估";
+    public final static String EVALUATING = "工作量二次评估";
+    public final static String WAIT_ACCEPT = "任务验收中";
     public final static String EXPERT_EVALUATING = "待专家组评估";
     public final static String COMMIT_REJECTED = "完成被驳回";
     public final static String DONE = "已完成";
@@ -46,6 +47,8 @@ public class TaskVo {
     private boolean orient;
 
     private String workload;
+
+    private String realWorkload;
 
 
     private String  taskState;
