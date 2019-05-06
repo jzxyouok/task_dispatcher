@@ -14,8 +14,8 @@ import com.hptpd.taskdispatcherserver.component.Result;
 public interface IMonthReportService {
     /**
      * 获取月报
-     * @param time
-     * @return
+     * @param time 2019-01
+     * @return Result
      */
     Result getMonthReport(String time);
 }

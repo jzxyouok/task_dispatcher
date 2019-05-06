@@ -24,6 +24,11 @@ public class MonthReportController {
     @Resource(name = "iMonthReportService")
     private IMonthReportService iMonthReportService;
 
+    /**
+     * 获得月报
+     * @param time 2018-02
+     * @return Result
+     */
     @RequestMapping(value = "/getMonthReport", method = RequestMethod.GET)
     public Result getMonthReport(@RequestParam String time) {
         return iMonthReportService.getMonthReport(time);
