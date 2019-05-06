@@ -56,5 +56,13 @@ public class UserVo {
         return userVos;
     }
 
+    public static UserVo userToVo(User user){
+        if (null == user) {
+            return null;
+        }
+        UserVo userVo = new UserVo();
+            AbstractMyBeanUtils.copyProperties(user,userVo);
+        return userVo;
+    }
 
 }

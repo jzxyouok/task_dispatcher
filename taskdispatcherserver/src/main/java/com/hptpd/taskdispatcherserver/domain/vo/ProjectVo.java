@@ -37,4 +37,13 @@ public class ProjectVo {
         }
         return projVos;
     }
+
+    public static ProjectVo projectToVo(Project proj){
+        if (null == proj) {
+            return null;
+        }
+        ProjectVo projVo = new ProjectVo();
+        AbstractMyBeanUtils.copyProperties(proj,projVo);
+        return projVo;
+    }
 }
