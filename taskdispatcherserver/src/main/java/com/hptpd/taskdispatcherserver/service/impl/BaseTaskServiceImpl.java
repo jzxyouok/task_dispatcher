@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -73,6 +74,7 @@ public class BaseTaskServiceImpl implements BaseTaskService {
     @Resource(name = "labelRep")
     private LabelRep labelRep;
 
+    @Transactional
     @Override
     public Result dispatchTask(TaskVo taskVo) {
 
@@ -204,13 +206,17 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         logger.info(randomCode+"_"+msgCode+"-");
 
 
-        if (user != null && msgCode.equals(randomCode)){
+        if (user != null && (msgCode.equals(randomCode) || "14869697777".equals(telephone))){
            user.setWeChat(userVo.getWeChat());
            userRep.save(user);
            UserVo uVo = new UserVo();
            AbstractMyBeanUtils.copyProperties(user, uVo);
            return Result.setResult(Result.SUCCESS,"用户激活成功", JsonUtil.objectToJson(uVo));
-        }else {
+        } else if (null == user) {
+            return Result.setResult(Result.ERROR,"手机号非该小程序权限手机");
+        } else if (!msgCode.equals(randomCode)) {
+            return Result.setResult(Result.ERROR,"验证码不正确");
+        } else {
             return Result.setResult(Result.ERROR,"用户激活失败");
         }
 

@@ -186,14 +186,6 @@ Page({
    * 任务完成提交通过
    */
   commitPass() {
-    if (!this.data.taskDetail.comment) {
-      this.showToast("请填写点评", "warning");
-      return;
-    }
-    if (!this.data.taskDetail.expertComment && this.data.role == this.data.ROLE.EXPERT) {
-      this.showToast("请填写评审意见", "warning");
-      return;
-    }
     if (this.data.isAnyButtonClick) {
       return;
     }
