@@ -18,4 +18,10 @@ public interface IMonthReportService {
      * @return Result
      */
     Result getMonthReport(String time);
+
+    /**
+     * 生成月报
+     * @return Result
+     */
+    Result generateMonthReport();
 }

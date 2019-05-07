@@ -7,6 +7,10 @@ import org.springframework.stereotype.Component;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+/**
+ * 获取服务地址的方法
+ * @author walter_long
+ */
 @Component
 public class ServerConfig  implements ApplicationListener<WebServerInitializedEvent> {
     private int serverPort;
