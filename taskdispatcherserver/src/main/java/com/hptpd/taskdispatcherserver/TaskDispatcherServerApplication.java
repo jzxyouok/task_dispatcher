@@ -8,15 +8,30 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import static org.springframework.web.cors.CorsConfiguration.ALL;
 
 /**
  * @author ymhui
  */
 @SpringBootApplication
-public class TaskDispatcherServerApplication {
+public class TaskDispatcherServerApplication implements WebMvcConfigurer {
 
     public static void main(String[] args) {
         SpringApplication.run(TaskDispatcherServerApplication.class, args);
+    }
+
+
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins(ALL)
+                .allowedMethods(ALL)
+                .allowedHeaders(ALL)
+                .allowCredentials(true);
     }
 
     /**
