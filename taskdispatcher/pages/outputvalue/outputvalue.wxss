@@ -1,0 +1,4 @@
+/* pages/outputvalue/outputvalue.wxss */
+.mb05em{
+  margin-bottom:0.5em;
+}
