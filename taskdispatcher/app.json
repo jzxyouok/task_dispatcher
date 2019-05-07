@@ -43,5 +43,6 @@
     ],
     "position": "bottom"
   },
-  "debug": true
+  "debug": true,
+  "sitemapLocation": "sitemap.json"
 }

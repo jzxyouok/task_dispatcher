@@ -38,4 +38,9 @@ public class MonthReportServiceImpl implements IMonthReportService {
         List<MonthReportProjectStatisticsVo> monthReportProjectStatisticsVos = MonthReportProjectStatisticsVo.convert2Vo(monthReportProjectStatisticsRep.findByTimeAndValidityDaysGreaterThan(time, 0F));
         return Result.setResult(Result.SUCCESS, "获取成功", JsonUtil.objectToJson(monthReportProjectStatisticsVos));
     }
+
+    @Override
+    public Result generateMonthReport() {
+        return Result.setResult(Result.ERROR, "执行异常");
+    }
 }

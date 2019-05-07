@@ -6,8 +6,6 @@ import com.hptpd.taskdispatcherserver.domain.MonthReportProjectStatistics;
 import com.hptpd.taskdispatcherserver.domain.MonthReportStaffWorkload;
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.ManyToOne;
 import java.util.List;
 
 /**
