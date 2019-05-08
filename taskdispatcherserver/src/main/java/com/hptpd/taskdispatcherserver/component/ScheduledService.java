@@ -32,7 +32,7 @@ public class ScheduledService {
     public void generateMonthReport() {
         logger.info("生成月报开始 : " + new Date().toLocaleString());
         Result result = iMonthReportService.generateMonthReport();
-        logger.info("生成月报结束 : " + new Date().toLocaleString() + "   " + result.getMsg());
+        logger.info("生成月报结束 : " + new Date().toLocaleString() + "  msg:" + result.getMsg());
     }
 
     @Async

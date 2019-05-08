@@ -1,9 +1,6 @@
 package com.hptpd.taskdispatcherserver.repository;
 
-import com.hptpd.taskdispatcherserver.domain.Auditor;
-import com.hptpd.taskdispatcherserver.domain.Proposer;
-import com.hptpd.taskdispatcherserver.domain.Staff;
-import com.hptpd.taskdispatcherserver.domain.Task;
+import com.hptpd.taskdispatcherserver.domain.*;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -68,9 +65,18 @@ public interface TaskRep extends JpaRepository<Task,String> {
     List<Task> findByStaffsInAndTaskStateIn(List<Staff> staffs, List<String> taskStates);
 
     /**
-     * fdsfad
+     * 统计某个月的产值排行榜
      * @return List<Map<String, Object>>
      */
     @Query(nativeQuery = true, value = "select sum(t1.real_workload) as workloadSum, t1.user_user_id as userId  from (select t1.*,t2.* from task t1 left join staff t2 on t1.task_id = t2.task_task_id where t1.task_state = :taskState and t1.done_time >= :minTime and t1.done_time <= :maxTime) t1 group by user_user_id order by workloadsum desc")
     List<Map<String, Object>> countAllUserWorkloadByMonth(@Param("taskState") String taskState, @Param("minTime") Date minTime, @Param("maxTime") Date maxTime);
+
+    /**
+     * @param project Project
+     * @param taskState String
+     * @param minTime Date
+     * @param maxTime Date
+     * @return List<Task>
+     */
+    List<Task> findByProjectAndTaskStateAndDoneTimeIsBetween(Project project, String taskState, Date minTime, Date maxTime);
  }
