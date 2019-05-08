@@ -14,6 +14,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.hptpd.taskdispatcherserver.common.util.AbstractMyBeanUtils;
+import com.hptpd.taskdispatcherserver.common.util.DateUtil;
 import com.hptpd.taskdispatcherserver.common.util.HttpUtil;
 import com.hptpd.taskdispatcherserver.common.util.JsonUtil;
 import com.hptpd.taskdispatcherserver.component.RedisService;
@@ -33,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -472,6 +474,9 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         task.setReviewReason(taskVo.getReviewReason());
         task.setTaskState(taskVo.getTaskState());
         task.setRealWorkload(taskVo.getRealWorkload());
+        if (TaskVo.DONE.equals(taskVo.getTaskState())) {
+            task.setDoneTime(new Date());
+        }
         taskRep.save(task);
         return Result.setResult(Result.SUCCESS,"更新任务成功");
     }
@@ -490,5 +495,64 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         paramMap.put("appid", appid);
         JSONObject jsonObj = HttpUtil.doGet("https://api.weixin.qq.com/sns/jscode2session", paramMap);
         return Result.setResult(Result.SUCCESS,"openid获取成功", jsonObj.toJSONString());
+    }
+
+    @Override
+    public Result getUserOutputValue(String userId, String date) {
+        if (null == userId || userId.isEmpty()) {
+            return Result.setResult(Result.ERROR, "用户参数异常");
+        }
+        if (!userRep.findById(userId).isPresent()) {
+            return Result.setResult(Result.ERROR, "不存在该用户");
+        }
+        Map<String, Object> dest = Maps.newHashMap();
+
+        List<Staff> staffs = staffRep.findByUserId(userId);
+        List<String> taskStates = Lists.newArrayList();
+        taskStates.add(TaskVo.TASK_DOING);
+        taskStates.add(TaskVo.WAIT_ACCEPT);
+        taskStates.add(TaskVo.EVALUATING);
+        taskStates.add(TaskVo.COMMIT_REJECTED);
+        taskStates.add(TaskVo.EXPERT_EVALUATING);
+        List<Task> tasks = taskRep.findByStaffsInAndTaskStateIn(staffs, taskStates);
+        float doingWorkload = 0F;
+        for (Task task : tasks) {
+            doingWorkload += Float.parseFloat(task.getRealWorkload());
+        }
+
+        SimpleDateFormat simpDateFormat = new SimpleDateFormat("yyyy-MM");
+        Date currentDate = null;
+        try {
+            currentDate = simpDateFormat.parse(date);
+        } catch (Exception e) {
+            return Result.setResult(Result.ERROR, "时间参数异常");
+        }
+        int index = 1;
+        Double lastOneWorkload = 0D, myWorkload = 0D;
+        boolean isHasRank = false;
+        for (Map<String, Object> map : taskRep.countAllUserWorkloadByMonth(TaskVo.DONE, DateUtil.getMonthBegin(currentDate), DateUtil.getMonthEnd(currentDate))) {
+            if (userId.equals(map.get("userId"))) {
+                myWorkload = (Double)map.get("workloadSum");
+                isHasRank = true;
+                break;
+            }
+            lastOneWorkload = (Double)map.get("workloadSum");
+            ++index;
+        }
+
+        dest.put("doingWorkload", doingWorkload);
+        if (!isHasRank) {
+            dest.put("rank", "没有已完成工作");
+        } else if (index > 8) {
+            dest.put("rank", "第8以后");
+        } else {
+            dest.put("rank", "第" + index + "名");
+        }
+        if (index == 1) {
+            dest.put("workloadAwayFromLastOne", "0");
+        } else {
+            dest.put("workloadAwayFromLastOne", lastOneWorkload - myWorkload);
+        }
+        return Result.setResult(Result.SUCCESS, "获取成功", JsonUtil.objectToJson(dest));
     }
 }

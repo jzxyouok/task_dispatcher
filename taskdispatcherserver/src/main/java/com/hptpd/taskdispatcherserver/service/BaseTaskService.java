@@ -116,9 +116,18 @@ public interface BaseTaskService {
 
     /**
      *  更新任务
-     * @return
+     * @param taskVo TaskVo
+     * @return Result
      */
     Result updateTaskState(TaskVo taskVo);
 
     Result getOpenidByWeixinApi(String code);
+
+    /**
+     * 获取用户的产值信息
+     * @param userId String
+     * @param date String
+     * @return Result
+     */
+    Result getUserOutputValue(String userId, String date);
 }

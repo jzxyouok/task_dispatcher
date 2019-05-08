@@ -15,8 +15,12 @@ Page({
     requestIp: "",
     userId: "",
     ROLE: {},
-    TASK_STATUS: {}
-
+    TASK_STATUS: {},
+    outputValue: {
+      workloadSum: "",
+      rank: "",
+      workloadAwayFromLastOne: ""
+    }
   },
 
   /**
@@ -30,7 +34,7 @@ Page({
       ROLE: constants.ROLE,
       TASK_STATUS: constants.TASK_STATUS,
     });
-
+    this.getUserOutputValue(this.data.userId);
   },
 
   /**
@@ -80,5 +84,27 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+
+  /**
+   * 获取用户产值
+   */
+  getUserOutputValue(userId) {
+    wx.request({
+      url: this.data.requestIp + '/base_task/getUserOutputValue?userId=' + userId,
+      method: "GET",
+      success: res => {
+        console.log(res);
+        if (!res || !res.data|| res.data.errCode!=0) {
+          return;
+        }
+        this.setData({
+          outputValue: JSON.parse(res.data.data)
+        });
+      },
+      fail: e => {
+        console.log("getUserOutputValue服务异常");
+      }
+    });
   }
 })

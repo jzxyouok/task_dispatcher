@@ -1,9 +1,7 @@
 package com.hptpd.taskdispatcherserver.service.impl;
 
-import com.google.common.collect.Lists;
 import com.hptpd.taskdispatcherserver.common.util.JsonUtil;
 import com.hptpd.taskdispatcherserver.component.Result;
-import com.hptpd.taskdispatcherserver.domain.MonthReportProjectStatistics;
 import com.hptpd.taskdispatcherserver.domain.vo.MonthReportProjectStatisticsVo;
 import com.hptpd.taskdispatcherserver.repository.MonthReportProjectStatisticsRep;
 import com.hptpd.taskdispatcherserver.service.IMonthReportService;
@@ -41,6 +39,7 @@ public class MonthReportServiceImpl implements IMonthReportService {
 
     @Override
     public Result generateMonthReport() {
+        //TODO
         return Result.setResult(Result.ERROR, "执行异常");
     }
 }
