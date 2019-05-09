@@ -5,6 +5,7 @@ App({
   },
   onLaunch: function () {
     wx.hideTabBar();
+    this.removeAllStorage();
     // 展示本地存储能力
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
@@ -68,7 +69,23 @@ App({
       }
     });
   },
-
+  /**
+     * 移除所有storage
+     */
+  removeAllStorage() {
+    wx.removeStorage({
+      key: 'selectLabel'
+    });
+    wx.removeStorage({
+      key: 'selectProject'
+    });
+    wx.removeStorage({
+      key: 'auditor-selectPeople'
+    });
+    wx.removeStorage({
+      key: 'staff-selectPeople'
+    });
+  },
   globalData: {
     isFirstGetUserInfoDone: false,
     isAuth: true, //是否授权

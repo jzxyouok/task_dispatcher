@@ -1,8 +1,10 @@
 package com.hptpd.taskdispatcherserver;
 
+import com.hptpd.taskdispatcherserver.component.Result;
 import com.hptpd.taskdispatcherserver.domain.vo.*;
 import com.hptpd.taskdispatcherserver.service.BaseTaskService;
 import org.assertj.core.util.Lists;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,18 +31,19 @@ public class TaskTest {
     private BaseTaskService baseTaskService;
 
     @Test
+    @Ignore
     public void usersAdd(){
         List<UserVo> userVos = Lists.newArrayList();
 
         UserVo userVo =new UserVo();
-        userVo.setId("402809e4699a42c801699a42d3050000");
+        userVo.setId("402880e76990a8b4016990a8c4c60000");
         userVo.setName("lc");
         userVo.setPosition("开发");
         userVo.setTelephone("176");
         userVos.add(userVo);
 
         UserVo userVo1 =new UserVo();
-        userVo1.setId("402809e4699a42c801699a42d31a0001");
+        userVo1.setId("402880e76990a8b4016990a8c4f20001");
         userVo1.setName("lw");
         userVo1.setPosition("开发");
         userVo1.setTelephone("175");
@@ -72,5 +75,16 @@ public class TaskTest {
         taskVo.setStaffVos(staffVos);
 
         baseTaskService.dispatchTask(taskVo);
+    }
+    @Test
+    @Ignore
+    public void test(){
+        baseTaskService.getTaskByUserAndState("doctor彭",UserVo.AUDITOR);
+    }
+
+    @Test
+    public void getUserOutputValue() {
+        Result result = baseTaskService.getUserOutputValue("14", "2019-04");
+        System.out.println(result.getData());
     }
 }

@@ -10,15 +10,15 @@
     <i-col span="12">
       <view style="padding:0.5em;border-right:0.1em dashed #000;text-align:center;">
         <view class="mb05em">本月工作量排名</view>
-        <view class="mb05em">5</view>
+        <view class="mb05em">{{outputValue.rank}}</view>
         <view class="mb05em">距离上一名相差</view>
-        <view class="mb05em">5人月</view>
+        <view class="mb05em">{{outputValue.workloadAwayFromLastOne}}人月</view>
       </view>
     </i-col>
     <i-col span="12">
       <view style="padding:0.5em;text-align:center;">
         <view class="mb05em">执行中的工作量</view>
-        <view class="mb05em">5人月</view>
+        <view class="mb05em">{{outputValue.doingWorkload}}人月</view>
       </view>
     </i-col>
   </i-row>

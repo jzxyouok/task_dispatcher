@@ -34,4 +34,11 @@ public interface StaffRep extends JpaRepository<Staff, String> {
      * @return
      */
     List<Staff> findByUser(User user);
+
+    /**
+     * 通过用户查询
+     * @param userId
+     * @return List<Staff>
+     */
+    List<Staff> findByUserId(String userId);
 }

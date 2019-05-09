@@ -165,6 +165,10 @@ public class BaseTaskController {
         return baseTaskService.getOpenidByWeixinApi(code);
     }
 
+    @RequestMapping(value = "/getUserOutputValue", method = RequestMethod.GET)
+    public Result getUserOutputValue(@RequestParam String userId) {
+        return baseTaskService.getUserOutputValue(userId, "2019-05");
+    }
 
     /**
      *

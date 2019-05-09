@@ -5,6 +5,8 @@ import com.hptpd.taskdispatcherserver.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * \* Created with IntelliJ IDEA.
  * \* Date: 2019-03-18 11:50
@@ -31,4 +33,9 @@ public interface UserRep extends JpaRepository<User,String> {
      */
     User findByWeChat(String weChat);
 
+    /**
+     * @param id String
+     * @return List<User>
+     */
+    List<User> findByIdNot(String id);
 }
