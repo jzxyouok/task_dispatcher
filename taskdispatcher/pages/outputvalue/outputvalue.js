@@ -6,6 +6,88 @@
  \* Description: 我的产值
  \*/
 import constants from "../../static/constants.js";
+import * as echarts from '../../ec-canvas/echarts';
+
+let chart = null;
+
+function initChart(canvas, width, height) {
+  chart = echarts.init(canvas, null, {
+    width: width,
+    height: height
+  });
+  canvas.setChart(chart);
+
+  var option = {
+    tooltip: {
+      trigger: 'item'
+    },
+    xAxis: {
+      type: 'value',
+      show: false,
+      max: 1
+    },
+    yAxis: {
+      type: 'category',
+      show: false
+    },
+    grid: {
+      right: 40,
+      containLabel: true
+    },
+    series: [
+      {
+        name: '已完成的工作量',
+        type: 'bar',
+        stack: 'xxx',
+        label: {
+          normal: {
+            show: true,
+            position: 'inside'
+          }
+        },
+        itemStyle: {
+          color: '#19be6b'
+        },
+        data: []
+      },
+      {
+        name: '执行中的工作量',
+        type: 'bar',
+        stack: 'xxx',
+        label: {
+          normal: {
+            show: true,
+            position: 'inside'
+          }
+        },
+        itemStyle: {
+          color: '#2db7f5'
+        },
+        data: []
+      },
+      {
+        name: '合计',
+        type: 'bar',
+        stack: 'xxx',
+        label: {
+          normal: {
+            show: true,
+            position: 'right',
+            textStyle: {
+              color: '#000'
+            }
+          }
+        },
+        //思路一：给series集合末尾多加一栏用于展示合计，但是值都是0；缺点：必须根据xAxis的data生成一组为空的数据，且tooltip不能加trigger: 'axis',这个条件，不然会展示合计：0
+        data: []
+      }
+    ]
+  };
+
+  chart.setOption(option);
+  return chart;
+}
+
 Page({
 
   /**
@@ -19,7 +101,11 @@ Page({
     outputValue: {
       workloadSum: "",
       rank: "",
-      workloadAwayFromLastOne: ""
+      workloadAwayFromLastOne: "",
+      doneWorkload: ""
+    },
+    ec: {
+      onInit: initChart
     }
   },
 
@@ -98,13 +184,57 @@ Page({
         if (!res || !res.data|| res.data.errCode!=0) {
           return;
         }
+        let resData = JSON.parse(res.data.data);
+        resData.doneWorkload = resData.doneWorkload.toFixed(1);
+        resData.doingWorkload = resData.doingWorkload.toFixed(1);
+        resData.workloadAwayFromLastOne = resData.workloadAwayFromLastOne.toFixed(1);
         this.setData({
-          outputValue: JSON.parse(res.data.data)
+          outputValue: resData
         });
+        if (resData.doneWorkload || resData.doingWorkload) {
+          this.changeChartData(resData.doneWorkload, resData.doingWorkload, resData.doneWorkload*1 + resData.doingWorkload*1);
+        } 
       },
       fail: e => {
         console.log("getUserOutputValue服务异常");
       }
     });
+  },
+
+  /**
+   * 改变图表的数据
+   */
+  changeChartData(doneWorkload, doingWorkload, sum) {
+    let option = {
+      xAxis: {
+        max: sum
+      },
+      series: [
+        {
+          data: [doneWorkload]
+        },
+        {
+          data: [doingWorkload]
+        },
+        {
+          data: [0],
+          label: {
+            normal: {
+              formatter: () => {
+                return sum;
+              }
+            }
+          }
+        }
+      ]
+    };
+    let interval = setInterval(() => {
+      console.log("等待echarts渲染");
+      if (chart && chart.setOption) {
+        console.log("echarts渲染成功");
+        chart.setOption(option);
+        clearInterval(interval);
+      }
+    }, 300);
   }
 })

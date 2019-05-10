@@ -65,6 +65,15 @@ public interface TaskRep extends JpaRepository<Task,String> {
     List<Task> findByStaffsInAndTaskStateIn(List<Staff> staffs, List<String> taskStates);
 
     /**
+     * 获取任务，通过承接者与任务状态与完成时间
+     * @param staffs List<Staff>
+     * @param taskStates List<String>
+     * @param minTime Date
+     * @return List<Task>
+     */
+    List<Task> findByStaffsInAndTaskStateInAndDoneTimeIsAfter(List<Staff> staffs, List<String> taskStates, Date minTime);
+
+    /**
      * 统计某个月的产值排行榜
      * @return List<Map<String, Object>>
      */

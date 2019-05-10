@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -167,7 +169,8 @@ public class BaseTaskController {
 
     @RequestMapping(value = "/getUserOutputValue", method = RequestMethod.GET)
     public Result getUserOutputValue(@RequestParam String userId) {
-        return baseTaskService.getUserOutputValue(userId, "2019-05");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM");
+        return baseTaskService.getUserOutputValue(userId, simpleDateFormat.format(new Date()));
     }
 
     /**
@@ -182,5 +185,10 @@ public class BaseTaskController {
         destMap.put("referer", referer);
         destMap.put("requestIp", IpUtil.getRequestIpAddr(request));
         return Result.setResult(Result.SUCCESS, "调用成功", JsonUtil.objectToJson(destMap));
+    }
+
+    @RequestMapping(value = "/offerFormId", method = RequestMethod.GET)
+    public Result offerFormId(@RequestParam String userId, @RequestParam String formId) {
+        return baseTaskService.offerFormId(userId, formId);
     }
 }

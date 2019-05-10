@@ -59,6 +59,8 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
     private Set<Staff> staffs =Sets.newLinkedHashSet();
 
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
+    private List<WeiXinMsgFromId> weiXinMsgFromIds = Lists.newLinkedList();
 
     @Override
     public boolean equals(Object o) {

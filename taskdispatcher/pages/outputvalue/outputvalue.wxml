@@ -5,21 +5,37 @@
  \* @time: 2019/5/7 15:14
  \* Description: 我的产值
  \*/-->
-<i-panel>
+<i-panel style="">
+  <i-row>
+    <view style="text-align:center;margin-top:0.5rem;">
+      本月
+    </view>
+  </i-row>
   <i-row>
     <i-col span="12">
-      <view style="padding:0.5em;border-right:0.1em dashed #000;text-align:center;">
-        <view class="mb05em">本月工作量排名</view>
-        <view class="mb05em">{{outputValue.rank}}</view>
-        <view class="mb05em">距离上一名相差</view>
-        <view class="mb05em">{{outputValue.workloadAwayFromLastOne}}人月</view>
+      <view style="padding:0.5em;text-align:center;">
+        <view class="mb05em">已完成</view>
+        <view class="mb05em">{{outputValue.doneWorkload}}人天</view>
       </view>
     </i-col>
     <i-col span="12">
       <view style="padding:0.5em;text-align:center;">
-        <view class="mb05em">执行中的工作量</view>
-        <view class="mb05em">{{outputValue.doingWorkload}}人月</view>
+        <view class="mb05em">执行中</view>
+        <view class="mb05em">{{outputValue.doingWorkload}}人天</view>
       </view>
     </i-col>
   </i-row>
+  <i-row>
+    <view style="text-align:center;width:100%;height:4.5rem;padding-bottom:0.5rem;">
+      <view style="width:90%;height:100%;margin:0 5%;">
+        <ec-canvas id="mychart-dom-bar" canvas-id="mychart-bar" ec="{{ ec }}">
+        </ec-canvas>
+      </view>
+    </view>
+  </i-row>
 </i-panel>
+<view class="BubbleBox" style="text-align:center;">
+  <view>亲，您本月的已完成工作量排名：</view>
+  <view>{{outputValue.rank}}</view>
+  <view>距离上一名相差{{outputValue.workloadAwayFromLastOne}}人天，加油哦！~</view>
+</view>

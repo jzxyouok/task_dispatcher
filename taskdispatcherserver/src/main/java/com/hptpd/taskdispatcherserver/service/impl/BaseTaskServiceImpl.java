@@ -76,6 +76,9 @@ public class BaseTaskServiceImpl implements BaseTaskService {
     @Resource(name = "labelRep")
     private LabelRep labelRep;
 
+    @Resource(name = "weiXinMsgFormIdRep")
+    private WeiXinMsgFormIdRep weiXinMsgFormIdRep;
+
     @Transactional
     @Override
     public Result dispatchTask(TaskVo taskVo) {
@@ -505,21 +508,6 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         if (!userRep.findById(userId).isPresent()) {
             return Result.setResult(Result.ERROR, "不存在该用户");
         }
-        Map<String, Object> dest = Maps.newHashMap();
-
-        List<Staff> staffs = staffRep.findByUserId(userId);
-        List<String> taskStates = Lists.newArrayList();
-        taskStates.add(TaskVo.TASK_DOING);
-        taskStates.add(TaskVo.WAIT_ACCEPT);
-        taskStates.add(TaskVo.EVALUATING);
-        taskStates.add(TaskVo.COMMIT_REJECTED);
-        taskStates.add(TaskVo.EXPERT_EVALUATING);
-        List<Task> tasks = taskRep.findByStaffsInAndTaskStateIn(staffs, taskStates);
-        float doingWorkload = 0F;
-        for (Task task : tasks) {
-            doingWorkload += Float.parseFloat(task.getRealWorkload());
-        }
-
         SimpleDateFormat simpDateFormat = new SimpleDateFormat("yyyy-MM");
         Date currentDate = null;
         try {
@@ -527,6 +515,30 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         } catch (Exception e) {
             return Result.setResult(Result.ERROR, "时间参数异常");
         }
+        Map<String, Object> dest = Maps.newHashMap();
+
+        List<Staff> staffs = staffRep.findByUserId(userId);
+        List<String> doingWorkloadTaskStates = Lists.newArrayList();
+        doingWorkloadTaskStates.add(TaskVo.TASK_DOING);
+        doingWorkloadTaskStates.add(TaskVo.WAIT_ACCEPT);
+        doingWorkloadTaskStates.add(TaskVo.EVALUATING);
+        doingWorkloadTaskStates.add(TaskVo.COMMIT_REJECTED);
+        doingWorkloadTaskStates.add(TaskVo.EXPERT_EVALUATING);
+        List<Task> doingTasks = taskRep.findByStaffsInAndTaskStateIn(staffs, doingWorkloadTaskStates);
+        float doingWorkload = 0F;
+        for (Task task : doingTasks) {
+            doingWorkload += Float.parseFloat(task.getRealWorkload());
+        }
+
+
+        List<String> doneWorkloadTaskStates = Lists.newArrayList();
+        doneWorkloadTaskStates.add(TaskVo.DONE);
+        List<Task> doneTasks = taskRep.findByStaffsInAndTaskStateInAndDoneTimeIsAfter(staffs, doneWorkloadTaskStates, DateUtil.getMonthBegin(currentDate));
+        float doneWorkload = 0F;
+        for (Task task : doneTasks) {
+            doneWorkload += Float.parseFloat(task.getRealWorkload());
+        }
+
         int index = 1;
         Double lastOneWorkload = 0D, myWorkload = 0D;
         boolean isHasRank = false;
@@ -541,6 +553,7 @@ public class BaseTaskServiceImpl implements BaseTaskService {
         }
 
         dest.put("doingWorkload", doingWorkload);
+        dest.put("doneWorkload", doneWorkload);
         if (!isHasRank) {
             dest.put("rank", "没有已完成工作");
         } else if (index > 8) {
@@ -554,5 +567,22 @@ public class BaseTaskServiceImpl implements BaseTaskService {
             dest.put("workloadAwayFromLastOne", lastOneWorkload - myWorkload);
         }
         return Result.setResult(Result.SUCCESS, "获取成功", JsonUtil.objectToJson(dest));
+    }
+
+    @Override
+    public Result offerFormId(String userId, String formId) {
+        if (null == userId || userId.isEmpty() || null == formId || formId.isEmpty()) {
+            return Result.setResult(Result.ERROR, "传入参数异常");
+        }
+        Optional<User> userOpt = userRep.findById(userId);
+        if (!userOpt.isPresent()) {
+            return Result.setResult(Result.ERROR, "用户不存在");
+        }
+        WeiXinMsgFromId weiXinMsgFromId = new WeiXinMsgFromId();
+        weiXinMsgFromId.setUser(userOpt.get());
+        weiXinMsgFromId.setTime(new Date());
+        weiXinMsgFromId.setFromId(formId);
+        weiXinMsgFormIdRep.save(weiXinMsgFromId);
+        return Result.setResult(Result.SUCCESS, "保存成功");
     }
 }

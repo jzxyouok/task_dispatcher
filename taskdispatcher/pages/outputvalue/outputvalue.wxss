@@ -2,3 +2,26 @@
 .mb05em{
   margin-bottom:0.5em;
 }
+
+.BubbleBox{
+    margin-top: 1rem;
+    width:95%;
+    height:5rem;
+    border:5px solid #2db7f5;
+    position:relative;
+    background-color:#FFF;
+}
+.BubbleBox:before,.BubbleBox:after{
+    content:"";display:block;
+    border-width:20px;
+    position:absolute; bottom:-40px;
+    left:100px;
+    border-style:solid dashed dashed;
+    border-color:#2db7f5 transparent transparent;
+    font-size:0;
+    line-height:0;
+}
+.BubbleBox:after{
+    bottom:-33px;
+    border-color:#FFF transparent transparent;
+}

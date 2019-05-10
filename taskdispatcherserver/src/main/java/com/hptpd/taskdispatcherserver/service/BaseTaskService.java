@@ -130,4 +130,12 @@ public interface BaseTaskService {
      * @return Result
      */
     Result getUserOutputValue(String userId, String date);
+
+    /**
+     * 提供消息推送用的formId
+     * @param userId String
+     * @param formId String
+     * @return Result
+     */
+    Result offerFormId(String userId, String formId);
 }
