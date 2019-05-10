@@ -36,7 +36,7 @@
         <block wx:if="{{ROLE.PROPOSER==role}}">
           <i-cell wx:if="{{taskDetail.comment}}" title="点评：">{{taskDetail.comment}}</i-cell>
           <i-cell wx:if="{{taskDetail.expertComment}}" title="评审意见：">{{taskDetail.expertComment}}</i-cell>
-          <i-row wx:if="TASK_STATUS.WAIT_ACCEPT==taskDetail.taskState">
+          <i-row wx:if="{{TASK_STATUS.WAIT_ACCEPT==taskDetail.taskState}}">
             <i-col span="12" i-class="col-class"><i-button bind:click="commitNoPass" type="error">验收驳回</i-button></i-col>
             <i-col span="12" i-class="col-class"><i-button bind:click="commitPass" type="success">验收完成</i-button></i-col>
           </i-row>
