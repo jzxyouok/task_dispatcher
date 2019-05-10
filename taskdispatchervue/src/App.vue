@@ -3,20 +3,17 @@
     <img alt="Vue logo" src="./assets/logo.png" width="100">
     <h1>任务发布后台系统</h1>
     <HelloWorld msg="Welcome to Your Vue.js App"/>
-    <TimePicker/>
     <Table/>
   </div>
 </template>
 
 <script>
 
-import TimePicker from './components/TimePicker.vue'
 import Table from './components/Table.vue'
 
 export default {
   name: 'app',
   components: {
-    TimePicker,
     Table
   }
 }
