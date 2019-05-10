@@ -1,16 +1,15 @@
 <template >
    <div class="block">
     <el-row :gutter="20">
-     <el-col :span="6" :offset="6">
+     <el-col :span="12" :offset="6">
     <div><span class="demonstration">月份：</span>
     <el-date-picker
       v-model="month"
       type="month"
-      placeholder="选择月" value-format="yyyy-MM">
+      placeholder="选择月" value-format="yyyy-MM" @change="getMonth()" >
     </el-date-picker>
     </div>
     </el-col>
-     <el-col :span="6" ><div class="grid-content">  <el-button type="info" @click="getMonth()">查询</el-button></div></el-col>
     </el-row>
 
   <el-table
